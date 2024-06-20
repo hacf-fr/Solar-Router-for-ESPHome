@@ -19,6 +19,7 @@ http_request:
   id: http_request_data
   useragent: esphome/device
   timeout: 10s
+  verify_ssl: false
 
 # ----------------------------------------------------------------------------------------------------
 # Define scripts for power collection
@@ -40,7 +41,6 @@ script:
                 url: http://${power_meter_ip_address}/solar_api/v1/GetMeterRealtimeData.cgi
                 headers:
                   Content-Type: application/json
-                verify_ssl: False
                 on_response:
                   then:
                     - lambda: |-
