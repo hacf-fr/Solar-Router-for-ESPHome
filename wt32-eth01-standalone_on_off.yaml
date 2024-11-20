@@ -67,7 +67,6 @@ substitutions:
 
   # Regulator configuration ------------------------------------------------------
   # Define GPIO pin connected to mecanical relay.
-  regulator_gate_pin: GPIO14
 
 packages:
   common: !include
@@ -82,7 +81,9 @@ packages:
     refresh: 5s
   regulator: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    file: solar_router/regulator_mecanical_relay.yaml
+    file: solar_router/regulator_solid_state_relay.yaml
+    vars:
+      regulator_gate_pin: GPIO14
     refresh: 5s
   solar_router: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/

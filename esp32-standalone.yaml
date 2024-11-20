@@ -56,14 +56,6 @@ http_request:
 # edit other part of the script to perform configuration.
 
 substitutions:
-  # Regulator --------------------------------------------------------------------
-  regulator: "ac_dimmer"
-
-  # Regulator configuration 
-  # Define GPIO pin connected to AC Dimmer for gate and zero crossing detection.
-  regulator_gate_pin: GPIO22
-  regulator_zero_crossing_pin: GPIO23
-
   # LEDs -------------------------------------------------------------------------
   # Green LED is reflecting regulation status
   # Yellow LED is reflecting power meter status
@@ -81,6 +73,9 @@ packages:
   regulator: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
     file: solar_router/regulator_triac.yaml
+    vars:
+      regulator_gate_pin: GPIO22
+      regulator_zero_crossing_pin: GPIO23
     refresh: 5s
   solar_router: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/

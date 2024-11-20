@@ -17,13 +17,8 @@ packages:
   regulator:
     url: http://github.com/XavierBerger/ESPHome-Solar-Router/
     file: solar_router/regulator_mecanical_relay.yaml
+    vars:
+      regulator_gate_pin: GPIO22
 ```
 
-This package require the definition of pin connected to the gate of the relay : `regulator_gate_pin`
-
-```yaml linenums="1"
-substitutions:
-  # Regulator configuration ------------------------------------------------------
-  # Define GPIO pin connected to the relay gate.
-  regulator_gate_pin: GPIO22
-```
+This package require the definition of pin connected to the gate of the relay. Set `regulator_gate_pin` into `vars` according to your hardware

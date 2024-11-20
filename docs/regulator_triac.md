@@ -29,14 +29,9 @@ packages:
   regulator:
     url: http://github.com/XavierBerger/ESPHome-Solar-Router/
     file: solar_router/regulator_triac.yaml
+    vars:
+      regulator_gate_pin: GPIO22
+      regulator_zero_crossing_pin: GPIO23
 ```
 
-This package require the definition of pin connected to the triac module for zero crossing detection (`regulator_zero_crossing_pin`) and gate/PWM control (`regulator_gate_pin`)
-
-```yaml linenums="1"
-substitutions:
-  # Regulator configuration ------------------------------------------------------
-  # Define GPIO pin connected to AC Dimmer for gate and zero crossing detection.
-  regulator_gate_pin: GPIO22
-  regulator_zero_crossing_pin: GPIO23
-```
+This package require the definition of pin connected of the triac module for zero crossing detection (`regulator_zero_crossing_pin`) and gate/PWM control (`regulator_gate_pin`) to be added into `vars` section.
