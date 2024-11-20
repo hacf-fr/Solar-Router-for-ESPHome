@@ -36,12 +36,6 @@ wifi:
 # ----------------------------------------------------------------------------------------------------
 # Customisation
 # ----------------------------------------------------------------------------------------------------
-
-substitutions:
-  # LEDs -------------------------------------------------------------------------
-  # Yellow LED is reflecting power meter
-  yellow_led_pin: GPIO1
-
 packages:
   power_meter: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/

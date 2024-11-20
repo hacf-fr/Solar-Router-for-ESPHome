@@ -22,6 +22,7 @@ switch:
         - lambda: |- 
             id(real_power).publish_state(NAN);
             id(power_meter_activated) = 0;
+            id(green_led).turn_off();
             id(start_tempo_counter).publish_state(NAN);
             id(stop_tempo_counter).publish_state(NAN);
             id(energy_divertion).turn_off();

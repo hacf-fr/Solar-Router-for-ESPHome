@@ -33,17 +33,6 @@ wifi:
 # ----------------------------------------------------------------------------------------------------
 # Customisation
 # ----------------------------------------------------------------------------------------------------
-
-substitutions:
-  # LEDs -------------------------------------------------------------------------
-  # Green LED is reflecting regulation status
-  # Yellow LED is reflecting power meter
-  green_led_pin: GPIO1
-  green_led_inverted : "True"
-  yellow_led_pin: GPIO2
-
-
-
 packages:
   power_meter: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
@@ -60,6 +49,10 @@ packages:
   solar_router: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
     file: solar_router/engine_on_off.yaml
+    vars:
+      green_led_pin: GPIO1
+      green_led_inverted : "True"
+      yellow_led_pin: GPIO2
     refresh: 5s
 
 

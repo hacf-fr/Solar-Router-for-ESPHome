@@ -48,14 +48,6 @@ web_server:
 
 # This part of the script is designed to be use for customisation. It shouldn't be necessary to
 # edit other part of the script to perform configuration.
-
-substitutions:
-  # LEDs -------------------------------------------------------------------------
-  # Green LED is reflecting regulation status
-  # Yellow LED is reflecting power meter status
-  green_led_pin: GPIO19
-  yellow_led_pin: GPIO18
-
 packages:
   power_meter: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
@@ -73,5 +65,8 @@ packages:
   solar_router: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
     file: solar_router/engine.yaml
+    vars:
+      green_led_pin: GPIO19
+      yellow_led_pin: GPIO18
     refresh: 5s
 

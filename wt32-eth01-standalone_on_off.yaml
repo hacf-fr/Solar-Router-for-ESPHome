@@ -57,17 +57,6 @@ web_server:
 # ----------------------------------------------------------------------------------------------------
 # Customisation
 # ----------------------------------------------------------------------------------------------------
-
-substitutions:
-  # LEDs -------------------------------------------------------------------------
-  # Green LED is reflecting regulation status
-  # Yellow LED is reflecting power meter
-  green_led_pin: GPIO32
-  yellow_led_pin: GPIO33
-
-  # Regulator configuration ------------------------------------------------------
-  # Define GPIO pin connected to mecanical relay.
-
 packages:
   common: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
@@ -88,4 +77,7 @@ packages:
   solar_router: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
     file: solar_router/engine_on_off.yaml
+    vars:
+      green_led_pin: GPIO32
+      yellow_led_pin: GPIO33
     refresh: 5s
