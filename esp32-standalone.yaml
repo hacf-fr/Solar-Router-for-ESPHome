@@ -76,30 +76,17 @@ substitutions:
   yellow_led_pin: GPIO18
 
 
-# Uncomment the following lines if you want to use the source from github
-# packages:
-#   power_meter:
-#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-#     file: solar_router/power_meter_fronius.yaml
-#     refresh: 5s
-#   regulator:
-#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-#     file: solar_router/regulator_triac.yaml
-#     # file: solar_router/regulator_relay.yaml
-#     refresh: 5s
-#   solar_router:
-#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-#     file: solar_router/engine.yaml
-#     refresh: 5s
-
-# And Comment the following lines if you want to use the source from github
 packages:
-  common:
-    <<: !include solar_router/common.yaml
-  power_meter:
-    <<: !include solar_router/power_meter_fronius.yaml
-  regulator:
-    <<: !include solar_router/regulator_triac.yaml
-  solar_router:
-    <<: !include solar_router/engine.yaml
+  power_meter: !include
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    file: solar_router/power_meter_fronius.yaml
+    refresh: 5s
+  regulator: !include
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    file: solar_router/regulator_triac.yaml
+    refresh: 5s
+  solar_router: !include
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    file: solar_router/engine.yaml
+    refresh: 5s
 

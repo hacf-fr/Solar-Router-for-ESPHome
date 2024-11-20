@@ -73,20 +73,20 @@ substitutions:
   # Define GPIO pin connected to mecanical relay.
   regulator_gate_pin: GPIO14
 
-# Uncomment the following lines if you want to use the source from github
-# packages:
-#   power_meter:
-#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-#     file: solar_router/power_meter_fronius.yaml
-#     refresh: 5s
-
-# Remove the following lines if you want to use the source from github
 packages:
-  common:
-    <<: !include solar_router/common.yaml
-  power_meter:
-    <<: !include solar_router/power_meter_fronius.yaml
-  regulator:
-    <<: !include solar_router/regulator_mecanical_relay.yaml
-  solar_router:
-    <<: !include solar_router/engine_on_off.yaml
+  common: !include
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    file: solar_router/common.yaml
+    refresh: 5s
+  power_meter: !include
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    file: solar_router/power_meter_fronius.yaml
+    refresh: 5s
+  regulator: !include
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    file: solar_router/regulator_mecanical_relay.yaml
+    refresh: 5s
+  solar_router: !include
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    file: solar_router/engine_on_off.yaml
+    refresh: 5s

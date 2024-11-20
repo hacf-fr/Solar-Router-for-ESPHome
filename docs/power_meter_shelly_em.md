@@ -25,15 +25,15 @@ substitutions:
     This power meter allow to define HTTP Authentication Header with the variable `power_meter_auth_header`.
     This variable can be set in `substitution` section.
 
-This package is activated/deactivated with a global variable `power_meter_activated`. This `globals` is provided by the [solar router engine](engine.md) package.
-
-If this power meter is use inside a proxy, it is required to add this `globals` into you configuration yaml as follow:
+This power meter can be use in a proxy (ony using a power meter) with the following lines:
 
 ```yaml linenums="1"
-globals:
-  - id: power_meter_activated
-    type: int
-    initial_value: "1"
+packages:
+  power_meter: !include
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    file: solar_router/power_meter_shelly_em.yaml
+    vars:
+      power_meter_activated_at_start: 1
 ```
 
 !!! warning "Network dependency"
