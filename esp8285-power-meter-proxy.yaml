@@ -38,11 +38,6 @@ wifi:
 # ----------------------------------------------------------------------------------------------------
 
 substitutions:
-  # Power meter source -----------------------------------------------------------
-  # Define ip address of Shelly EM probe
-  power_meter_ip_address: "192.168.1.26:8000"
-  emeter_index: "0"
-
   # LEDs -------------------------------------------------------------------------
   # Yellow LED is reflecting power meter
   yellow_led_pin: GPIO1
@@ -53,6 +48,8 @@ packages:
     file: solar_router/power_meter_shelly_em.yaml
     vars:
       power_meter_activated_at_start: 1
+      power_meter_ip_address: "192.168.1.26:8000"
+      emeter_index: "0"
     refresh: 5s
 
 

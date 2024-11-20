@@ -58,9 +58,6 @@ web_server:
 # ----------------------------------------------------------------------------------------------------
 
 substitutions:
-  # Power meter source -----------------------------------------------------------
-  # Define ip address of Shelly EM probe
-  power_meter_ip_address: "192.168.1.21"
 
   # LEDs -------------------------------------------------------------------------
   # Yellow LED is reflecting power meter
@@ -76,4 +73,5 @@ packages:
     file: solar_router/power_meter_fronius.yaml
     vars:
       power_meter_activated_at_start: 1
+      power_meter_ip_address: "192.168.1.21"
     refresh: 5s

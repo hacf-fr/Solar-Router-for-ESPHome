@@ -11,18 +11,13 @@ packages:
   power_meter:
     url: http://github.com/XavierBerger/ESPHome-Solar-Router/
     file: solar_router/power_meter_fronius.yaml
+    vars:
+      power_meter_ip_address: "192.168.1.21"
 ```
 
-This package needs to know the IP address of the inverter. This IP address has to be defined by `power_meter_ip_address` into `subtsitution` section of your configuration as in example ballow:
+This package needs to know the IP address of the inverter. This IP address has to be defined by `power_meter_ip_address` into `vars` section as show upper.
 
-```yaml linenums="1"
-substitutions:
-  # Power meter source -----------------------------------------------------------
-  # Define ip address of Fronius inverter
-  power_meter_ip_address: "192.168.1.21"
-```
-
-This power meter can be use in a proxy (ony using a power meter) with the following lines:
+This power meter can be use in a proxy (a Solar Router only using a power meter) with the following lines:
 
 ```yaml linenums="1"
 packages:
@@ -30,6 +25,7 @@ packages:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
     file: solar_router/power_meter_fronius.yaml
     vars:
+      power_meter_ip_address: "192.168.1.21"
       power_meter_activated_at_start: 1
 ```
 

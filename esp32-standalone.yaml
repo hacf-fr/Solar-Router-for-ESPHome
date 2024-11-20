@@ -56,11 +56,6 @@ http_request:
 # edit other part of the script to perform configuration.
 
 substitutions:
-  # Power meter source -----------------------------------------------------------
-  # Define ip address of Power Meter (Fronius Inverter)
-  power_meter_ip_address: "192.168.1.21"
-
-
   # Regulator --------------------------------------------------------------------
   regulator: "ac_dimmer"
 
@@ -80,6 +75,8 @@ packages:
   power_meter: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
     file: solar_router/power_meter_fronius.yaml
+    vars:
+      power_meter_ip_address: "192.168.1.21"
     refresh: 5s
   regulator: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/

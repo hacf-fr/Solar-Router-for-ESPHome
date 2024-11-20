@@ -35,10 +35,6 @@ wifi:
 # ----------------------------------------------------------------------------------------------------
 
 substitutions:
-  # Power meter source -----------------------------------------------------------
-  # define sensor to use in Home Assistant power meter
-  main_power_sensor: "sensor.grid_exchange"
-
   # LEDs -------------------------------------------------------------------------
   # Green LED is reflecting regulation status
   # Yellow LED is reflecting power meter
@@ -54,6 +50,8 @@ packages:
   power_meter: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
     file: solar_router/power_meter_home_assistant.yaml
+    vars:
+      main_power_sensor: "sensor.grid_exchange"
     refresh: 5s
   regulator: !include
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
