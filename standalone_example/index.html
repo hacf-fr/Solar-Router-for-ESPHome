@@ -116,7 +116,9 @@
 <span class=normal><a href=#__codelineno-0-107>107</a></span>
 <span class=normal><a href=#__codelineno-0-108>108</a></span>
 <span class=normal><a href=#__codelineno-0-109>109</a></span>
-<span class=normal><a href=#__codelineno-0-110>110</a></span></pre></div></td><td class=code><div><pre><span></span><code><span id=__span-0-1><a id=__codelineno-0-1 name=__codelineno-0-1></a><span class=c1># ----------------------------------------------------------------------------------------------------</span>
+<span class=normal><a href=#__codelineno-0-110>110</a></span>
+<span class=normal><a href=#__codelineno-0-111>111</a></span>
+<span class=normal><a href=#__codelineno-0-112>112</a></span></pre></div></td><td class=code><div><pre><span></span><code><span id=__span-0-1><a id=__codelineno-0-1 name=__codelineno-0-1></a><span class=c1># ----------------------------------------------------------------------------------------------------</span>
 </span><span id=__span-0-2><a id=__codelineno-0-2 name=__codelineno-0-2></a><span class=c1># ESPHome configuration - This part depends on your hardware target</span>
 </span><span id=__span-0-3><a id=__codelineno-0-3 name=__codelineno-0-3></a><span class=c1># ----------------------------------------------------------------------------------------------------</span>
 </span><span id=__span-0-4><a id=__codelineno-0-4 name=__codelineno-0-4></a>
@@ -194,38 +196,40 @@
 </span><span id=__span-0-76><a id=__codelineno-0-76 name=__codelineno-0-76></a><span class=w>  </span><span class=nt>yellow_led_pin</span><span class=p>:</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">GPIO18</span>
 </span><span id=__span-0-77><a id=__codelineno-0-77 name=__codelineno-0-77></a>
 </span><span id=__span-0-78><a id=__codelineno-0-78 name=__codelineno-0-78></a><span class=w>  </span><span class=c1># Temperature sensor</span>
-</span><span id=__span-0-79><a id=__codelineno-0-79 name=__codelineno-0-79></a><span class=w>  </span><span class=nt>DS18B20_pin</span><span class=p>:</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">GPIO13</span>
-</span><span id=__span-0-80><a id=__codelineno-0-80 name=__codelineno-0-80></a>
-</span><span id=__span-0-81><a id=__codelineno-0-81 name=__codelineno-0-81></a><span class=c1># Uncomment the following lines if you want to use the source from github</span>
-</span><span id=__span-0-82><a id=__codelineno-0-82 name=__codelineno-0-82></a><span class=c1># packages:</span>
-</span><span id=__span-0-83><a id=__codelineno-0-83 name=__codelineno-0-83></a><span class=c1>#   power_meter:</span>
-</span><span id=__span-0-84><a id=__codelineno-0-84 name=__codelineno-0-84></a><span class=c1>#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/</span>
-</span><span id=__span-0-85><a id=__codelineno-0-85 name=__codelineno-0-85></a><span class=c1>#     file: solar_router/power_meter_fronius.yaml</span>
-</span><span id=__span-0-86><a id=__codelineno-0-86 name=__codelineno-0-86></a><span class=c1>#     refresh: 5s</span>
-</span><span id=__span-0-87><a id=__codelineno-0-87 name=__codelineno-0-87></a><span class=c1>#   regulator:</span>
-</span><span id=__span-0-88><a id=__codelineno-0-88 name=__codelineno-0-88></a><span class=c1>#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/</span>
-</span><span id=__span-0-89><a id=__codelineno-0-89 name=__codelineno-0-89></a><span class=c1>#     file: solar_router/regulator_triac.yaml</span>
-</span><span id=__span-0-90><a id=__codelineno-0-90 name=__codelineno-0-90></a><span class=c1>#     # file: solar_router/regulator_relay.yaml</span>
-</span><span id=__span-0-91><a id=__codelineno-0-91 name=__codelineno-0-91></a><span class=c1>#     refresh: 5s</span>
-</span><span id=__span-0-92><a id=__codelineno-0-92 name=__codelineno-0-92></a><span class=c1>#   solar_router:</span>
-</span><span id=__span-0-93><a id=__codelineno-0-93 name=__codelineno-0-93></a><span class=c1>#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/</span>
-</span><span id=__span-0-94><a id=__codelineno-0-94 name=__codelineno-0-94></a><span class=c1>#     file: solar_router/engine.yaml</span>
-</span><span id=__span-0-95><a id=__codelineno-0-95 name=__codelineno-0-95></a><span class=c1>#     refresh: 5s</span>
-</span><span id=__span-0-96><a id=__codelineno-0-96 name=__codelineno-0-96></a>
-</span><span id=__span-0-97><a id=__codelineno-0-97 name=__codelineno-0-97></a><span class=c1># And Comment the following lines if you want to use the source from github</span>
-</span><span id=__span-0-98><a id=__codelineno-0-98 name=__codelineno-0-98></a><span class=nt>packages</span><span class=p>:</span>
-</span><span id=__span-0-99><a id=__codelineno-0-99 name=__codelineno-0-99></a><span class=w>  </span><span class=nt>common</span><span class=p>:</span>
-</span><span id=__span-0-100><a id=__codelineno-0-100 name=__codelineno-0-100></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/common.yaml</span>
-</span><span id=__span-0-101><a id=__codelineno-0-101 name=__codelineno-0-101></a><span class=w>  </span><span class=nt>power_meter</span><span class=p>:</span>
-</span><span id=__span-0-102><a id=__codelineno-0-102 name=__codelineno-0-102></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/power_meter_fronius.yaml</span>
-</span><span id=__span-0-103><a id=__codelineno-0-103 name=__codelineno-0-103></a><span class=w>  </span><span class=nt>regulator</span><span class=p>:</span>
-</span><span id=__span-0-104><a id=__codelineno-0-104 name=__codelineno-0-104></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/regulator_triac.yaml</span>
-</span><span id=__span-0-105><a id=__codelineno-0-105 name=__codelineno-0-105></a><span class=w>  </span><span class=nt>solar_router</span><span class=p>:</span>
-</span><span id=__span-0-106><a id=__codelineno-0-106 name=__codelineno-0-106></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/engine.yaml</span>
-</span><span id=__span-0-107><a id=__codelineno-0-107 name=__codelineno-0-107></a><span class=w>  </span><span class=nt>energy_counter</span><span class=p>:</span><span class=w> </span>
-</span><span id=__span-0-108><a id=__codelineno-0-108 name=__codelineno-0-108></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/energy_counter_theorical.yaml</span>
-</span><span id=__span-0-109><a id=__codelineno-0-109 name=__codelineno-0-109></a><span class=w>  </span><span class=nt>temperature_limiter</span><span class=p>:</span>
-</span><span id=__span-0-110><a id=__codelineno-0-110 name=__codelineno-0-110></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/temperature_limiter_DS18B20.yaml</span>
+</span><span id=__span-0-79><a id=__codelineno-0-79 name=__codelineno-0-79></a><span class=w>  </span><span class=nt>temperature_sensor</span><span class=p>:</span><span class=w> </span><span class=s>&quot;input_number.test_temperature&quot;</span>
+</span><span id=__span-0-80><a id=__codelineno-0-80 name=__codelineno-0-80></a><span class=w>  </span><span class=nt>red_led_pin</span><span class=p>:</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">GPIO4</span>
+</span><span id=__span-0-81><a id=__codelineno-0-81 name=__codelineno-0-81></a>
+</span><span id=__span-0-82><a id=__codelineno-0-82 name=__codelineno-0-82></a>
+</span><span id=__span-0-83><a id=__codelineno-0-83 name=__codelineno-0-83></a><span class=c1># Uncomment the following lines if you want to use the source from github</span>
+</span><span id=__span-0-84><a id=__codelineno-0-84 name=__codelineno-0-84></a><span class=c1># packages:</span>
+</span><span id=__span-0-85><a id=__codelineno-0-85 name=__codelineno-0-85></a><span class=c1>#   power_meter:</span>
+</span><span id=__span-0-86><a id=__codelineno-0-86 name=__codelineno-0-86></a><span class=c1>#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/</span>
+</span><span id=__span-0-87><a id=__codelineno-0-87 name=__codelineno-0-87></a><span class=c1>#     file: solar_router/power_meter_fronius.yaml</span>
+</span><span id=__span-0-88><a id=__codelineno-0-88 name=__codelineno-0-88></a><span class=c1>#     refresh: 5s</span>
+</span><span id=__span-0-89><a id=__codelineno-0-89 name=__codelineno-0-89></a><span class=c1>#   regulator:</span>
+</span><span id=__span-0-90><a id=__codelineno-0-90 name=__codelineno-0-90></a><span class=c1>#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/</span>
+</span><span id=__span-0-91><a id=__codelineno-0-91 name=__codelineno-0-91></a><span class=c1>#     file: solar_router/regulator_triac.yaml</span>
+</span><span id=__span-0-92><a id=__codelineno-0-92 name=__codelineno-0-92></a><span class=c1>#     # file: solar_router/regulator_relay.yaml</span>
+</span><span id=__span-0-93><a id=__codelineno-0-93 name=__codelineno-0-93></a><span class=c1>#     refresh: 5s</span>
+</span><span id=__span-0-94><a id=__codelineno-0-94 name=__codelineno-0-94></a><span class=c1>#   solar_router:</span>
+</span><span id=__span-0-95><a id=__codelineno-0-95 name=__codelineno-0-95></a><span class=c1>#     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/</span>
+</span><span id=__span-0-96><a id=__codelineno-0-96 name=__codelineno-0-96></a><span class=c1>#     file: solar_router/engine.yaml</span>
+</span><span id=__span-0-97><a id=__codelineno-0-97 name=__codelineno-0-97></a><span class=c1>#     refresh: 5s</span>
+</span><span id=__span-0-98><a id=__codelineno-0-98 name=__codelineno-0-98></a>
+</span><span id=__span-0-99><a id=__codelineno-0-99 name=__codelineno-0-99></a><span class=c1># And Comment the following lines if you want to use the source from github</span>
+</span><span id=__span-0-100><a id=__codelineno-0-100 name=__codelineno-0-100></a><span class=nt>packages</span><span class=p>:</span>
+</span><span id=__span-0-101><a id=__codelineno-0-101 name=__codelineno-0-101></a><span class=w>  </span><span class=nt>common</span><span class=p>:</span>
+</span><span id=__span-0-102><a id=__codelineno-0-102 name=__codelineno-0-102></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/common.yaml</span>
+</span><span id=__span-0-103><a id=__codelineno-0-103 name=__codelineno-0-103></a><span class=w>  </span><span class=nt>power_meter</span><span class=p>:</span>
+</span><span id=__span-0-104><a id=__codelineno-0-104 name=__codelineno-0-104></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/power_meter_fronius.yaml</span>
+</span><span id=__span-0-105><a id=__codelineno-0-105 name=__codelineno-0-105></a><span class=w>  </span><span class=nt>regulator</span><span class=p>:</span>
+</span><span id=__span-0-106><a id=__codelineno-0-106 name=__codelineno-0-106></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/regulator_triac.yaml</span>
+</span><span id=__span-0-107><a id=__codelineno-0-107 name=__codelineno-0-107></a><span class=w>  </span><span class=nt>solar_router</span><span class=p>:</span>
+</span><span id=__span-0-108><a id=__codelineno-0-108 name=__codelineno-0-108></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/engine.yaml</span>
+</span><span id=__span-0-109><a id=__codelineno-0-109 name=__codelineno-0-109></a><span class=w>  </span><span class=nt>energy_counter</span><span class=p>:</span><span class=w> </span>
+</span><span id=__span-0-110><a id=__codelineno-0-110 name=__codelineno-0-110></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/energy_counter_theorical.yaml</span>
+</span><span id=__span-0-111><a id=__codelineno-0-111 name=__codelineno-0-111></a><span class=w>  </span><span class=nt>temperature_limiter</span><span class=p>:</span>
+</span><span id=__span-0-112><a id=__codelineno-0-112 name=__codelineno-0-112></a><span class=w>    </span><span class=nt>&lt;&lt;</span><span class=p>:</span><span class=w> </span><span class=kt>!include</span><span class=w> </span><span class="l l-Scalar l-Scalar-Plain">solar_router/temperature_limiter_home_assistant.yaml</span>
 </span></code></pre></div></td></tr></table></div> <aside class=md-source-file> <span class=md-source-file__fact> <span class=md-icon title="Last update"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg> </span> <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">November 8, 2024 17:30:39</span> </span> </aside> </article> </div> <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script> </div> </main> <footer class=md-footer> <div class="md-footer-meta md-typeset"> <div class="md-footer-meta__inner md-grid"> <div class=md-copyright> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a> </div> </div> </div> </footer> </div> <div class=md-dialog data-md-component=dialog> <div class="md-dialog__inner md-typeset"></div> </div> <script id=__config type=application/json>{"base": "..", "features": ["tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script> <script src=../assets/javascripts/bundle.83f73b43.min.js></script> <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
 document$.subscribe(() => { lightbox.reload() });
 </script></body> </html>
