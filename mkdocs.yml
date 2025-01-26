@@ -80,9 +80,11 @@ plugins:
           default: true
           name: 🇬🇧 English
           build: true
+          link: /Solar-Router-for-ESPHome/
         - locale: fr
           name: 🇫🇷 Français
           build: true
+          link: /Solar-Router-for-ESPHome/fr/
           nav_translations:
             Home: Accueil
             Disclamer: Avertissement
