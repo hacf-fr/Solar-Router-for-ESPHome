@@ -1,0 +1,63 @@
+# ----------------------------------------------------------------------------------------------------
+# User interaction
+# ----------------------------------------------------------------------------------------------------
+
+substitutions:
+  power_meter_activated_at_start: "1"
+  
+# Activate or not power meter
+globals:
+    - id: power_meter_activated
+      type: int
+      initial_value: ${power_meter_activated_at_start}
+      restore_value: True
+
+
+sensor:  
+  # Sensor showing the actual power exchange
+  - id: real_power
+    platform: template
+    name: "Real Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
+    
+  # Sensor showing the actual power consumption
+  - id: consumption
+    platform: template
+    name: "Consumption"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
+    internal: true
+    
+    
+# Script updating the actual power exchange
+script:
+  # Get power reports from JSY-MK-194T and update globals (real_power)
+  # Power exchanged with the grid is names "Value"
+  - id: power_meter_source
+    mode: single
+    then:
+      - lambda: |-
+          // Retrieve the last value from the Modbus sensor
+          float value = id(AP_Ch2).state;
+
+          // Check if the value is valid
+          if (!isnan(value)) {
+            id(real_power).publish_state(value);
+          } else {
+            id(real_power).publish_state(NAN);
+          }
+
+
+time:
+  - platform: sntp
+    on_time:
+      - seconds: /1
+        then:
+          - if:
+              condition:
+                lambda: return id(power_meter_activated) != 0;
+              then:
+                - script.execute: power_meter_source

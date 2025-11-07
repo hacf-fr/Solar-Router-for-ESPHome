@@ -1,0 +1,31 @@
+# ----------------------------------------------------------------------------------------------------
+# Define sensor for power collection
+# ----------------------------------------------------------------------------------------------------
+substitutions:
+  power_meter_activated_at_start: "1"
+  
+# Activate or not power meter
+globals:
+    - id: power_meter_activated
+      type: int
+      initial_value: ${power_meter_activated_at_start}
+      restore_value: True
+      
+sensor:
+  # Sensor showing the actual power exchange
+  - platform: homeassistant
+    id: real_power
+    entity_id: ${main_power_sensor}
+    internal: False
+    name: "Real Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+
+  # Sensor showing the actual consumption
+  - platform: homeassistant
+    id: consumption
+    entity_id: ${consumption_sensor}
+    internal: False
+    name: "Consumption"
+    device_class: "power"
+    unit_of_measurement: "W"

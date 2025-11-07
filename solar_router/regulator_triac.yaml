@@ -1,7 +1,9 @@
 # ----------------------------------------------------------------------------------------------------
 # Define scripts for energy divertion
 # ----------------------------------------------------------------------------------------------------
-
+substitutions:
+  regulator_zero_cross_inverted: yes
+  
 script:
   # Apply regulation on triac using light component
   - id: regulation_control
@@ -11,6 +13,7 @@ script:
       - light.turn_on:
           id: dimmer_controller
           brightness: !lambda return id(regulator_opening).state/100.0;
+          state: true          
 
 # ----------------------------------------------------------------------------------------------------
 # Triac control
@@ -25,7 +28,7 @@ output:
       number: ${regulator_zero_crossing_pin}
       mode:
         input: true
-      inverted: yes
+      inverted: ${regulator_zero_cross_inverted}
 
 # Manage triac opening with light component brightness
 light:
