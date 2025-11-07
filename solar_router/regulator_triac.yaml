@@ -25,7 +25,7 @@ output:
       number: ${regulator_zero_crossing_pin}
       mode:
         input: true
-      inverted: yes
+      inverted: no
 
 # Manage triac opening with light component brightness
 light:
