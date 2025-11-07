@@ -23,7 +23,33 @@ switch:
             id(real_power).publish_state(NAN);
             id(consumption).publish_state(NAN);
             id(power_meter_activated) = 0;
-
+  # --------------------------------------------------------------------------
+  # Nouveau switch : coupure manuelle du triac (actif uniquement en mode manuel)
+  # --------------------------------------------------------------------------
+  - platform: template
+    name: "Coupure manuelle triac"
+    id: manual_triac_cutoff
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    on_turn_off:
+      then:
+        - if:
+            condition:
+              not:
+                switch.is_on: activate
+            then:
+              - logger.log: "Coupure manuelle → triac désactivé (angle = 0)"
+              - number.set:
+                  id: regulator_opening
+                  value: 0
+              - number.set:
+                  id: router_level
+                  value: 0
+              - script.execute: regulation_control
+    on_turn_on:
+      then:
+        - logger.log: "Coupure manuelle désactivée → triac redevient contrôlable"
+        
 number:
   # Router level from 0 to 100
   # This value serves two purposes:
@@ -72,8 +98,16 @@ number:
     mode: slider
     internal: ${hide_regulators}
     on_value:
-      then:
-        - script.execute: regulation_control
+        - if:
+            condition:
+              or:
+                - switch.is_on: activate
+                - switch.is_on: manual_triac_cutoff
+            then:
+              - script.execute: regulation_control
+            else:
+              - logger.log: "Triac coupé manuellement → changement ignoré"
+
 
   # Define the reactivity of router level
   - platform: template
