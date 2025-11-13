@@ -45,6 +45,7 @@ switch:
               - number.set:
                   id: router_level
                   value: 0
+              - light.turn_off: dimmer_controller
               - script.execute: regulation_control
     on_turn_on:
       then:
