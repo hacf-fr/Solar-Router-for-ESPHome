@@ -7,10 +7,18 @@ script:
   - id: regulation_control
     mode: single
     then:
-      # Apply opening level on triac using light component
-      - light.turn_on:
-          id: dimmer_controller
-          brightness: !lambda return id(regulator_opening).state/100.0;
+      - if:
+          condition:
+            and:
+              - switch.is_on: activate
+              - not:
+                  switch.is_on: manual_triac_cutoff
+          then:
+            - light.turn_on:
+                id: dimmer_controller
+                brightness: !lambda return id(regulator_opening).state / 100.0;
+          else:
+            - light.turn_off: dimmer_controller
 
 # ----------------------------------------------------------------------------------------------------
 # Triac control
