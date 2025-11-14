@@ -27,7 +27,7 @@ switch:
   # Nouveau switch : coupure manuelle du triac (actif uniquement en mode manuel)
   # --------------------------------------------------------------------------
   - platform: template
-    name: "Coupure manuelle triac"
+    name: "ON OFF on manual mode"
     id: manual_triac_cutoff
     optimistic: true
     restore_mode: RESTORE_DEFAULT_ON
