@@ -83,19 +83,15 @@ light:
           name: blink
           colors:
             - state: True
-              brightness: 100%
               duration: 250ms
             - state: False
-              brightness: 100%
               duration: 250ms
       - strobe:
           name: fast
           colors:
             - state: True
-              brightness: 100%
               duration: 50ms
             - state: False
-              brightness: 100%
               duration: 50ms
 
   - id: green_led
@@ -108,8 +104,6 @@ light:
           name: blink
           colors:
             - state: True
-              brightness: 100%
               duration: 250ms
             - state: False
-              brightness: 100%
               duration: 250ms
