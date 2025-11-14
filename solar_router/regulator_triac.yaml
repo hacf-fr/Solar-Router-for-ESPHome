@@ -17,7 +17,9 @@ script:
             - light.turn_on:
                 id: dimmer_controller
                 brightness: !lambda return id(regulator_opening).state / 100.0;
+            - logger.log: "*****Mise en route du dimmer_controller avec l'angle défini"
           else:
+            - logger.log: "******Coupure du dimmer_controller"
             - light.turn_off: dimmer_controller
 
 # ----------------------------------------------------------------------------------------------------
