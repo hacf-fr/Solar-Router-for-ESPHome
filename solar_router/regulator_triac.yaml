@@ -9,7 +9,7 @@ script:
     then:
       - if:
           condition:
-            and:
+            or:
               - switch.is_on: activate
               - not:
                   switch.is_on: manual_triac_cutoff
