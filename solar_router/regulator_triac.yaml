@@ -11,8 +11,7 @@ script:
           condition:
             or:
               - switch.is_on: activate
-              - not:
-                  switch.is_on: manual_triac_cutoff
+              - switch.is_on: manual_triac_cutoff
           then:
             - light.turn_on:
                 id: dimmer_controller
