@@ -12,7 +12,7 @@ one_wire:
 
 sensor:
   - platform: dallas_temp
-    resolution: 9bit   # 93 ms au lieu de 750 ms
+    resolution: 9   # 93 ms au lieu de 750 ms
     id: safety_temperature
     address: ${DS18B20_address}
     one_wire_id: dallas_d7
