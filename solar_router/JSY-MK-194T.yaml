@@ -352,7 +352,7 @@ sensor:
 # Sensor showing the actual energy diverted consumption
   - id: energy_diverted
     platform: total_daily_energy
-    name: 'Total energy diverted'
+    name: 'Total daily energy diverted'
     power_id: power_divertion
     unit_of_measurement: 'kWh'
     state_class: total_increasing
