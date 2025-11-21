@@ -297,7 +297,7 @@ sensor:
     state_class: "measurement"  
 
   # Sensor showing the actual power exchange
-  - platform: homeassistant
+  - platform: template
     id: real_power
     entity_id: ${AP_Ch1}
     internal: False
