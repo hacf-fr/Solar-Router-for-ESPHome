@@ -1,3 +1,5 @@
+<<: !include power_meter_common.yaml
+
 substitutions:
   U_Ch1_internal: "true"
   I_Ch1_internal: "true"
