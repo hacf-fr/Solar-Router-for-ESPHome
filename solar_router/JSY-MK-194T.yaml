@@ -40,7 +40,8 @@ sensor:
       - multiply: 0.0001
     register_count: 1
     response_size: 4
-    internal: !lambda 'return !(std::string("{U_Ch1_visibility}") == "true");'
+    internal: !lambda 'return !("${U_Ch1_visibility}" == "true");'
+
 
 # Intensité traversant le tore
   - platform: modbus_controller
