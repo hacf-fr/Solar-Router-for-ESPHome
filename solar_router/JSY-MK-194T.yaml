@@ -1,5 +1,5 @@
 substitutions:
-  U_Ch1_visibility: true
+  U_Ch1_visibility: "false"
   
 # Configuration UART pour le JSY-MK-194T
 uart:
