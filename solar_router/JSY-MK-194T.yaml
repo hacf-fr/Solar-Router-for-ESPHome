@@ -308,10 +308,6 @@ sensor:
   - platform: template
     name: "Grid Power"
     id: real_power
-    device_class: power
-    state_class: measurement
-    unit_of_measurement: "W"
-    accuracy_decimals: 0
     update_interval: 1s
     lambda: |-
       // Utilise le capteur pureseau1 qui gère déjà la direction
@@ -326,10 +322,6 @@ sensor:
   - platform: template
     name: "Total Consumption"
     id: consumption
-    device_class: power
-    state_class: measurement
-    unit_of_measurement: "W"
-    accuracy_decimals: 0
     update_interval: 1s
     lambda: |-
       // OPTION 1 : Retourner 0 si vous n'utilisez pas ce capteur
