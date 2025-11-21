@@ -40,7 +40,7 @@ sensor:
       - multiply: 0.0001
     register_count: 1
     response_size: 4
-    internal: !lambda 'return id(U_Ch1_visibility) == "true";'
+    internal: ${U_Ch1_visibility}
 
 # Intensité traversant le tore
   - platform: modbus_controller
