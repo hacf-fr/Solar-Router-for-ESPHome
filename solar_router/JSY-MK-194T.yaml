@@ -305,8 +305,6 @@ sensor:
     device_class: "power"
     unit_of_measurement: "W"
     internal: False
-    lambda: |-
-      return id(AP_Ch1).state;
       
   # Sensor showing the actual consumption TODO: à supprimer si possible car ne sert qu'au calcul de la puissance dérivée semble t il
   - platform: homeassistant
