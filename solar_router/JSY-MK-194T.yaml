@@ -19,18 +19,22 @@ substitutions:
   PF_Ch2_internal: "true"
   NAE_Ch2_internal: "true"
   power_meter_activated_at_start: "1"
-  real_power_optional: ""
-  consumption_optional: ""
-  power_meter_activated_optional: ""
 
 # Activate or not power meter
 globals:
-  ${real_power_optional}
-
+#ifndef power_meter_activated
+  - id: power_meter_activated
+    type: int
+    initial_value: ${power_meter_activated_at_start}
+    restore_value: True
+#endif
 
 # ----------------------------------------------------------------------------------------------------
 # Sensor updated every second to give feedback in Home Assistant
 # ----------------------------------------------------------------------------------------------------
+
+
+
 
 # Configuration UART pour le JSY-MK-194T
 uart:
@@ -56,9 +60,27 @@ modbus_controller:
     # setup_priority: -10
 
 sensor:  
-  ${real_power_optional}
+  # Sensor showing the actual power consumption
   
-  ${consumption_optional}
+#ifndef real_power
+  - id: real_power
+    platform: template
+    name: "Real Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
+#endif
+
+#ifndef consumption
+  # Sensor showing the actual power consumption
+  - id: consumption
+    platform: template
+    name: "Consumption"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
+    internal: true
+#endif
 
 # tension de l'alimentation
   - platform: modbus_controller
