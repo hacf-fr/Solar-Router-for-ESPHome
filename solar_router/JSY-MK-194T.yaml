@@ -1,29 +1,46 @@
-
-<<: !include power_meter_common.yaml
+# ----------------------------------------------------------------------------------------------------
+# User interaction
+# ----------------------------------------------------------------------------------------------------
 
 substitutions:
-  U_Ch1_internal: "true"
-  I_Ch1_internal: "true"
-  AP_Ch1_internal: "true"
-  PAE_Ch1_internal: "true"
-  PF_Ch1_internal: "true"
-  NAE_Ch1_internal: "true"
-  PD_Ch1_internal: "true"
-  PD_Ch2_internal: "true"
-  frequency_internal: "true"
-  U_Ch2_internal: "true"
-  I_Ch2_internal: "true"
-  AP_Ch2_internal: "true"
-  PAE_Ch2_internal: "true"
-  PF_Ch2_internal: "true"
-  NAE_Ch2_internal: "true"
+  U_Ch1_internal: "false"
+  I_Ch1_internal: "false"
+  AP_Ch1_internal: "false"
+  PAE_Ch1_internal: "false"
+  PF_Ch1_internal: "false"
+  NAE_Ch1_internal: "false"
+  PD_Ch1_internal: "false"
+  PD_Ch2_internal: "false"
+  frequency_internal: "false"
+  U_Ch2_internal: "false"
+  I_Ch2_internal: "false"
+  AP_Ch2_internal: "false"
+  PAE_Ch2_internal: "false"
+  PF_Ch2_internal: "false"
+  NAE_Ch2_internal: "false"
+  power_meter_activated_at_start: "1"
+
+# Activate or not power meter
+globals:
+  - id: power_meter_activated
+    type: int
+    initial_value: ${power_meter_activated_at_start}
+    restore_value: True
+
+
+# ----------------------------------------------------------------------------------------------------
+# Sensor updated every second to give feedback in Home Assistant
+# ----------------------------------------------------------------------------------------------------
+
+
+
 
 # Configuration UART pour le JSY-MK-194T
 uart:
   id: uart_bus
-  tx_pin: ${uart_tx_pin}
-  rx_pin: ${uart_rx_pin}
-  baud_rate: ${uart_baud_rate}
+  tx_pin: GPIO26
+  rx_pin: GPIO27
+  baud_rate: 4800
   parity: NONE
   stop_bits: 1
 
@@ -37,11 +54,26 @@ modbus_controller:
     ## the Modbus device addr
     address: 0x1
     modbus_id: modbus1
-    update_interval: 0.75s
-    command_throttle: 50ms
+    update_interval: 2s
+    command_throttle: 100ms
     # setup_priority: -10
 
 sensor:  
+  # Sensor showing the actual power consumption
+  - id: real_power
+    platform: template
+    name: "Real Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
+
+  # Sensor showing the actual power consumption
+  - id: consumption
+    platform: template
+    name: "Consumption"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
 
 # tension de l'alimentation
   - platform: modbus_controller
@@ -338,15 +370,24 @@ script:
   - id: power_meter_source
     mode: single
     then:
+      - logger.log: "************************************************************"
       - lambda: |-
           // Récupère la dernière valeur du capteur Modbus
           float value = id(AP_Ch1).state;
+          ESP_LOGD("custom", "Valeur de AP_Ch1 = %.2f W", id(AP_Ch1).state);
 
           // Vérifie si la valeur est valide
           if (!isnan(value)) {
-            return id(real_power).state == value;
+            id(real_power).publish_state(value);
           } else {
-            return id(real_power).state == NAN;
+            id(real_power).publish_state(NAN);
+          }
+
+          // Vérifie si la valeur est valide
+          if (!isnan(value)) {
+            id(consumption).publish_state(value);
+          } else {
+            id(consumption).publish_state(NAN);
           }
 
   - id: energy_diverted_counter
@@ -383,10 +424,6 @@ time:
       - seconds: /1
         then:
           - script.execute: energy_diverted_counter
-
-      # Exécuté chaque seconde → power meter source (si activé)
-      - seconds: /1
-        then:
           - if:
               condition:
                 lambda: return id(power_meter_activated) != 0;
