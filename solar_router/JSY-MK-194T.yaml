@@ -308,16 +308,19 @@ script:
     mode: single
     then:
       - lambda: |-
-          diverted_energy = AP_Ch1; 
-          if (id(consumption).state >= diverted_energy or isnan(id(consumption).state)) 
+          // Ensure that consumption is a valid float
+          float consumption_state = id(consumption).state;  // Access the state of the consumption sensor
+          
+          // Check if consumption is greater than AP_Ch1 or is unknown
+          if (consumption_state >= id(AP_Ch1).state || isnan(consumption_state))  // Access the state of AP_Ch1 if it's a sensor
           {
               // Power diverted is consumed (or we don't know the consumption)
-              id(power_divertion).publish_state(diverted_energy);
+              id(power_divertion).publish_state(id(AP_Ch1).state);  // Use the state of AP_Ch1
           }
           else
           {
               // Power diverted is not consumed
-              id(power_divertion).publish_state(0.0);
+              id(power_divertion).publish_state(0.0);  // Make sure this is a float value
           }
 
 
