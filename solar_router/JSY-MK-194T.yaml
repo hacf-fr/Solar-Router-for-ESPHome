@@ -137,6 +137,7 @@ sensor:
     name: "Positive Active Energy Ch1"
     address: 0x004B
     unit_of_measurement: "kWh"
+    device_class: energy
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
@@ -153,6 +154,8 @@ sensor:
     id: PF_Ch1
     name: "Power Factor Ch1"
     address: 0x004C
+    unit_of_measurement: "%"
+    device_class: power factor
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
@@ -169,6 +172,7 @@ sensor:
     name: "Negative Active Energy Ch1"
     address: 0x004D
     unit_of_measurement: "kWh"
+    device_class: energy
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
@@ -217,6 +221,7 @@ sensor:
     name: "Frequency"
     address: 0x004F
     unit_of_measurement: "hz"    
+    device_class: frequency
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
@@ -233,6 +238,7 @@ sensor:
 #    name: "Voltage Ch2"
 #    address: 0x0050
 #    unit_of_measurement: "V"
+#    device_class: voltage
 #    register_type: holding
 #    value_type: U_DWORD
 #    accuracy_decimals: 1
@@ -249,6 +255,7 @@ sensor:
     name: "Current Ch2"
     address: 0x0051
     unit_of_measurement: "A"
+    device_class: current
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
@@ -265,6 +272,7 @@ sensor:
     name: "Active Power Ch2"
     address: 0x0052
     unit_of_measurement: "W"
+    device_class: power
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
@@ -288,7 +296,8 @@ sensor:
     id: PAE_Ch2
     name: "Positive Active Energy Ch2"
     address: 0x0053
-    unit_of_measurement: "kWh"
+    unit_of_measurement: "kWh"    
+    device_class: energy
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
@@ -303,6 +312,8 @@ sensor:
     modbus_controller_id: jsymk
     id: PF_Ch2
     name: "Power Factor Ch2"
+    unit_of_measurement: "%"
+    device_class: power factor
     address: 0x0054
     register_type: holding
     value_type: U_DWORD
@@ -320,6 +331,7 @@ sensor:
     name: "Negative Active Energy Ch2"
     address: 0x0055
     unit_of_measurement: "kWh"
+    device_class: energy
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
@@ -334,6 +346,7 @@ sensor:
     name: "Pu Reseau"
     id: pureseau1
     unit_of_measurement: "W"
+    device_class: power
     state_class: "measurement"  
 
 # ----------------------------------------------------------------------------------------------------
@@ -357,6 +370,7 @@ sensor:
     name: Power divertion
     id: power_divertion
     unit_of_measurement: 'W'
+    device_class: power
     
 # Define the power of load plugged on the solar router
 number:
@@ -367,6 +381,7 @@ number:
     max_value: 99999
     step: 1
     unit_of_measurement: "W"
+    device_class: power
     optimistic: True
     restore_value: true
     
