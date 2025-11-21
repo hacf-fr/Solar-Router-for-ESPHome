@@ -1,4 +1,6 @@
-
+substitutions:
+  U_Ch1_visibility: true
+  
 # Configuration UART pour le JSY-MK-194T
 uart:
   id: uart_bus
@@ -38,6 +40,7 @@ sensor:
       - multiply: 0.0001
     register_count: 1
     response_size: 4
+    internal: !lambda 'return id(U_Ch1_visibility) == "true";'
 
 # Intensité traversant le tore
   - platform: modbus_controller
