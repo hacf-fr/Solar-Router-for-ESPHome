@@ -13,6 +13,7 @@ switch:
     id: activate
     on_turn_on:
       then:
+        - switch.turn_off: manual_triac_cutoff
         - light.turn_on: green_led
         - lambda: id(power_meter_activated) = 1;
     on_turn_off:
