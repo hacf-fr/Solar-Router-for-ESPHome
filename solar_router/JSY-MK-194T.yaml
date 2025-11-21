@@ -1,5 +1,19 @@
 substitutions:
   U_Ch1_internal: "true"
+  I_Ch1_internal: "true"
+  AP_Ch1_internal: "true"
+  PAE_Ch1_internal: "true"
+  PF_Ch1_internal: "true"
+  NAE_Ch1_internal: "true"
+  PD_Ch1_internal: "true"
+  PD_Ch2_internal: "true"
+  frequency_internal: "true"
+  U_Ch2_internal: "true"
+  I_Ch2_internal: "true"
+  AP_Ch2_internal: "true"
+  PAE_Ch2_internal: "true"
+  PF_Ch2_internal: "true"
+  NAE_Ch2_internal: "true"
   
 # Configuration UART pour le JSY-MK-194T
 uart:
@@ -57,6 +71,7 @@ sensor:
     register_count: 1
     response_size: 4
     state_class: measurement
+    internal: ${I_Ch1_internal}
 
 # Puissance traversant le tore
   - platform: modbus_controller
@@ -73,6 +88,7 @@ sensor:
     register_count: 1
     response_size: 4
     state_class: measurement
+    internal: ${AP_Ch1_internal}
 
 # Energie active positive lue dans le tore
   - platform: modbus_controller
@@ -89,6 +105,7 @@ sensor:
     register_count: 1
     response_size: 4
     state_class: total
+    internal: ${PAE_Ch1_internal}
 
 # Facteur de forme CH1
   - platform: modbus_controller
@@ -103,6 +120,7 @@ sensor:
       - multiply: 0.001
     register_count: 1
     response_size: 4
+    internal: ${PF_Ch1_internal}
 
 # Energie NEG lue CH1
   - platform: modbus_controller
@@ -119,6 +137,7 @@ sensor:
     register_count: 1
     response_size: 4 
     state_class: total
+    internal: ${NAE_Ch1_internal}
     
 # Direction de la puissance dans CH1
   - platform: modbus_controller
@@ -133,6 +152,7 @@ sensor:
       - multiply: 1
     register_count: 1
     response_size: 4
+    internal: ${PD_Ch1_internal}
 
 # Direction de la puissance dans CH2
   - platform: modbus_controller
@@ -148,6 +168,7 @@ sensor:
       - multiply: 1
     register_count: 1
     response_size: 4
+    internal: ${PD_Ch2_internal}
 
 # Fréquence réseau 
   - platform: modbus_controller
@@ -163,6 +184,7 @@ sensor:
       - multiply: 0.01
     register_count: 1
     response_size: 4
+    internal: ${frequency_internal}
 
 # tension de l'alimentation => pas d'interet car U_Ch1 = U_Ch2 (une seule mesure)
 #  - platform: modbus_controller
@@ -178,6 +200,7 @@ sensor:
 #      - multiply: 0.0001
 #    register_count: 1
 #    response_size: 4
+#    internal: ${U_Ch2_internal}
     
 # Intensité lue dans la pince
   - platform: modbus_controller
@@ -193,6 +216,7 @@ sensor:
       - multiply: 0.0001
     register_count: 1
     response_size: 4
+    internal: ${I_Ch2_internal}
 
 # puissance lue dans la pince
   - platform: modbus_controller
@@ -208,6 +232,7 @@ sensor:
       - multiply: 0.0001
     register_count: 1
     response_size: 4 
+    internal: ${AP_Ch2_internal}
     on_value:
       then:
         - lambda: |-
@@ -231,6 +256,7 @@ sensor:
       - multiply: 0.0001
     register_count: 1
     response_size: 4
+    internal: ${PAE_Ch2_internal}
 
 # Energie lue dans le tore
   - platform: modbus_controller
@@ -245,6 +271,7 @@ sensor:
       - multiply: 0.001
     register_count: 1
     response_size: 4
+    internal: ${PF_Ch2_internal}
 
 # Energie NEG lue dans le tore
   - platform: modbus_controller
@@ -260,6 +287,7 @@ sensor:
       - multiply: 0.0001     
     register_count: 1
     response_size: 4 
+    internal: ${NAE_Ch2_internal}
     
 # Affichage dans HA et sur l'afficheur
   - platform: template
