@@ -297,34 +297,6 @@ sensor:
     unit_of_measurement: "W"
     state_class: "measurement"  
 
-    # ============================================
-# CAPTEURS POUR LE SOLAR ROUTER
-# ============================================
-
-# Capteur real_power : Puissance du réseau avec signe
-# (positif = import, négatif = export)
-# Ce capteur est REQUIS par le Solar Router (défini dans power_meter_common.yaml)
-  - platform: template
-    name: "Grid Power"
-    id: real_power
-    update_interval: 1s
-    lambda: |-
-      // Utilise le capteur pureseau1 qui gère déjà la direction
-      if (!isnan(id(pureseau1).state)) {
-        return id(pureseau1).state;
-      }
-      return 0.0;
-
-# Capteur consumption : Consommation totale de la maison
-# Ce capteur est OPTIONNEL - il est juste déclaré pour le Solar Router
-# mais n'a PAS besoin de valeur calculée si vous ne l'utilisez pas
-  - platform: template
-    name: "Total Consumption"
-    id: consumption
-    update_interval: 1s
-    lambda: |-
-      // OPTION 1 : Retourner 0 si vous n'utilisez pas ce capteur
-      return 0.0;
 # ----------------------------------------------------------------------------------------------------
 # Calculate daily energy diverted
 # ----------------------------------------------------------------------------------------------------
