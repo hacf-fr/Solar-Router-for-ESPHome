@@ -296,6 +296,14 @@ sensor:
     unit_of_measurement: "W"
     state_class: "measurement"  
 
+  # Sensor showing the actual power exchange
+  - platform: homeassistant
+    id: real_power
+    entity_id: ${AP_Ch1}
+    internal: False
+    name: "Real Power"
+    device_class: "power"
+    unit_of_measurement: "W"
 # ----------------------------------------------------------------------------------------------------
 # Calculate daily energy diverted
 # ----------------------------------------------------------------------------------------------------
