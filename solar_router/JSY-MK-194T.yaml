@@ -83,6 +83,8 @@ sensor:
     name: "Voltage Ch1"
     address: 0x0048
     unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
@@ -99,6 +101,7 @@ sensor:
     name: "Current Ch1"
     address: 0x0049
     unit_of_measurement: "A"
+    device_class: current
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
@@ -116,6 +119,7 @@ sensor:
     name: "Active Power Ch1"
     address: 0x004A
     unit_of_measurement: "W"
+    device_class: "power"
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
