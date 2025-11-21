@@ -5,6 +5,7 @@
 substitutions:
   power_meter_activated_at_start: "0"  
   real_power_defined: "1"
+  real_power_optional: ""
 
 # Activate or not power meter
 globals:
