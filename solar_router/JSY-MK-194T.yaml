@@ -1,3 +1,6 @@
+
+<<: !include power_meter_common.yaml
+
 substitutions:
   U_Ch1_internal: "true"
   I_Ch1_internal: "true"
@@ -14,8 +17,6 @@ substitutions:
   PAE_Ch2_internal: "true"
   PF_Ch2_internal: "true"
   NAE_Ch2_internal: "true"
-
-<<: !include power_meter_common.yaml
 
 # Configuration UART pour le JSY-MK-194T
 uart:
