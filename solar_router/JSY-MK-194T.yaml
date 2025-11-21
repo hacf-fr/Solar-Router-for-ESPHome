@@ -343,9 +343,9 @@ script:
 
           // Vérifie si la valeur est valide
           if (!isnan(value)) {
-            id(consumption).publish_state(value);
+            id(real_power).publish_state(value);
           } else {
-            id(consumption).publish_state(NAN);
+            id(real_power).publish_state(NAN);
           }
 
   - id: energy_diverted_counter
