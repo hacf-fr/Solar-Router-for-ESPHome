@@ -338,12 +338,16 @@ script:
     mode: single
     then:
       - lambda: |-
-          // Vérifie que AP_Ch1 existe et n'est pas NaN
-          if (!isnan(id(AP_Ch1))) {
-            id(consumption).publish_state(id(AP_Ch1));
+          // Récupère la dernière valeur du capteur Modbus
+          float value = id(AP_Ch1).state;
+
+          // Vérifie si la valeur est valide
+          if (!isnan(value)) {
+            id(consumption).publish_state(value);
           } else {
             id(consumption).publish_state(NAN);
           }
+
   - id: energy_diverted_counter
     mode: single
     then:
