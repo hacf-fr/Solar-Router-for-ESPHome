@@ -15,6 +15,7 @@ substitutions:
   PF_Ch2_internal: "true"
   NAE_Ch2_internal: "true"
 
+<<: !include power_meter_common.yaml
 
 # Configuration UART pour le JSY-MK-194T
 uart:
@@ -333,6 +334,16 @@ number:
     
 # Script updating the power consumed counter
 script:
+  - id: power_meter_source
+    mode: single
+    then:
+      - lambda: |-
+          // Vérifie que AP_Ch1 existe et n'est pas NaN
+          if (!isnan(id(AP_Ch1))) {
+            id(consumption).publish_state(id(AP_Ch1));
+          } else {
+            id(consumption).publish_state(NAN);
+          }
   - id: energy_diverted_counter
     mode: single
     then:
@@ -363,7 +374,18 @@ time:
 
   - platform: sntp
     on_time:
-      # Trigger action every second
+      # Exécuté chaque seconde → energy diverted
       - seconds: /1
         then:
           - script.execute: energy_diverted_counter
+
+      # Exécuté chaque seconde → power meter source (si activé)
+      - seconds: /1
+        then:
+          - if:
+              condition:
+                lambda: return id(power_meter_activated) != 0;
+              then:
+                - script.execute: power_meter_source
+              then:
+                - script.execute: power_meter_source
