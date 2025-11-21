@@ -19,30 +19,13 @@ substitutions:
   PF_Ch2_internal: "true"
   NAE_Ch2_internal: "true"
   power_meter_activated_at_start: "1"
-  real_power_optional_block: |-
-    - id: real_power
-      platform: template
-      name: "Real Power"
-      device_class: "power"
-      unit_of_measurement: "W"
-      update_interval: 1s
-  consumption_optional_block: |-
-    - id: consumption
-      platform: template
-      name: "Consumption"
-      device_class: "power"
-      unit_of_measurement: "W"
-      update_interval: 1s
-      internal: true
-  power_meter_activated_optional_block: |-
+
+# Activate or not power meter
+globals:
     - id: power_meter_activated
       type: int
       initial_value: ${power_meter_activated_at_start}
       restore_value: True
-
-# Activate or not power meter
-globals:
-  ${power_meter_activated_optional_block}
 # ----------------------------------------------------------------------------------------------------
 # Sensor updated every second to give feedback in Home Assistant
 # ----------------------------------------------------------------------------------------------------
@@ -73,14 +56,21 @@ modbus_controller:
 
 sensor:  
   # Sensor showing the actual power consumption
-  
-  # Inclusion conditionnelle du capteur real_power
-  ${real_power_optional_block}
+  - id: consumption
+    platform: template
+    name: "Consumption"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
+    internal: true
 
   # Sensor showing the actual power consumption
-  
-  # Inclusion conditionnelle du capteur consumption
-  ${consumption_optional_block}
+  - id: real_power
+    platform: template
+    name: "Real Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
 
 # tension de l'alimentation
   - platform: modbus_controller
