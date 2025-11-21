@@ -220,7 +220,7 @@ sensor:
     id: frequency
     name: "Frequency"
     address: 0x004F
-    unit_of_measurement: "hz"    
+    unit_of_measurement: "Hz"    
     device_class: frequency
     register_type: holding
     value_type: U_DWORD
