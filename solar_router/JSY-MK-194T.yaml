@@ -40,7 +40,7 @@ sensor:
       - multiply: 0.0001
     register_count: 1
     response_size: 4
-    internal: true
+    internal: ${U_Ch1_visibility}
 
 # Intensité traversant le tore
   - platform: modbus_controller
@@ -272,6 +272,24 @@ sensor:
 # Calculate daily energy diverted
 # ----------------------------------------------------------------------------------------------------
 
+# Sensor showing the actual energy diverted consumption
+  - id: energy_diverted
+    platform: total_daily_energy
+    name: 'Total energy diverted'
+    power_id: power_divertion
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
+  - platform: template
+    name: Power divertion
+    id: power_divertion
+    unit_of_measurement: 'W'
+    
 # Define the power of load plugged on the solar router
 number:
   - platform: template
@@ -303,24 +321,6 @@ script:
           }
 
 
-# Sensor showing the actual energy diverted consumption
-sensor:
-  - id: energy_diverted
-    platform: total_daily_energy
-    name: 'Total energy diverted'
-    power_id: power_divertion
-    unit_of_measurement: 'kWh'
-    state_class: total_increasing
-    device_class: energy
-    accuracy_decimals: 3
-    filters:
-      # Multiplication factor from W to kW is 0.001
-      - multiply: 0.001
-
-  - platform: template
-    name: Power divertion
-    id: power_divertion
-    unit_of_measurement: 'W'
 
 # Enable time component to 
 #  - Update energy diverted counter
