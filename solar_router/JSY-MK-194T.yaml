@@ -19,6 +19,8 @@ substitutions:
   PF_Ch2_internal: "true"
   NAE_Ch2_internal: "true"
   power_meter_activated_at_start: "1"
+  real_power_optional: ""
+  consumption_optional: ""
 
 # Activate or not power meter
 globals:
@@ -56,15 +58,9 @@ modbus_controller:
     # setup_priority: -10
 
 sensor:  
-
-  # Sensor showing the actual power consumption
-  - id: consumption
-    platform: template
-    name: "Consumption"
-    device_class: "power"
-    unit_of_measurement: "W"
-    update_interval: 1s
-    internal: true
+  ${real_power_optional}
+  
+  ${consumption_optional}
 
 # tension de l'alimentation
   - platform: modbus_controller
