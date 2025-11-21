@@ -1,5 +1,5 @@
 substitutions:
-  U_Ch1_visibility: "true"
+  U_Ch1_internal: "true"
   
 # Configuration UART pour le JSY-MK-194T
 uart:
@@ -40,7 +40,7 @@ sensor:
       - multiply: 0.0001
     register_count: 1
     response_size: 4
-    internal: !lambda 'return "${U_Ch1_visibility}" != "true";'
+    internal: ${U_Ch1_internal}
 
 # Intensité traversant le tore
   - platform: modbus_controller
