@@ -264,3 +264,71 @@ sensor:
     id: pureseau1
     unit_of_measurement: "W"
     state_class: "measurement"  
+
+# ----------------------------------------------------------------------------------------------------
+# Calculate daily energy diverted
+# ----------------------------------------------------------------------------------------------------
+
+# Define the power of load plugged on the solar router
+number:
+  - platform: template
+    name: "Load power"
+    id: load_power
+    min_value: 0
+    max_value: 99999
+    step: 1
+    unit_of_measurement: "W"
+    optimistic: True
+    restore_value: true
+    
+# Script updating the power consumed counter
+script:
+  - id: energy_diverted_counter
+    mode: single
+    then:
+      - lambda: |-
+          double diverted_energy = AP_Ch1; # la  puissance de l'appareil est directement lue par le JSY, on recupère directement sa valeur dans AP_Ch1
+          if (id(consumption).state >= diverted_energy or isnan(id(consumption).state)) 
+          {
+              // Power diverted is consumed (or we don't know the consumption)
+              id(power_divertion).publish_state(diverted_energy);
+          }
+          else
+          {
+              // Power diverted is not consumed
+              id(power_divertion).publish_state(0.0);
+          }
+
+
+# Sensor showing the actual energy diverted consumption
+sensor:
+  - id: energy_diverted
+    platform: total_daily_energy
+    name: 'Total energy diverted'
+    power_id: power_divertion
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
+  - platform: template
+    name: Power divertion
+    id: power_divertion
+    unit_of_measurement: 'W'
+
+# Enable time component to 
+#  - Update energy diverted counter
+#  - Reset energy at midnight
+time:
+  - platform: homeassistant
+    id: homeassistant_time_for_solar_router
+
+  - platform: sntp
+    on_time:
+      # Trigger action every second
+      - seconds: /1
+        then:
+          - script.execute: energy_diverted_counter
