@@ -19,13 +19,7 @@ substitutions:
   PF_Ch2_internal: "true"
   NAE_Ch2_internal: "true"
   power_meter_activated_at_start: "1"
-  real_power_optional: |-
-    - id: real_power
-      platform: template
-      name: "Real Power"
-      device_class: "power"
-      unit_of_measurement: "W"
-      update_interval: 1s
+  real_power_optional: ""
 
 # Activate or not power meter
 globals:
