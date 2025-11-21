@@ -308,7 +308,7 @@ script:
     mode: single
     then:
       - lambda: |-
-          double diverted_energy = AP_Ch1; 
+          diverted_energy = AP_Ch1; 
           if (id(consumption).state >= diverted_energy or isnan(id(consumption).state)) 
           {
               // Power diverted is consumed (or we don't know the consumption)
