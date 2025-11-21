@@ -373,21 +373,13 @@ script:
       - logger.log: "************************************************************"
       - lambda: |-
           // Récupère la dernière valeur du capteur Modbus
-          float value = id(AP_Ch1).state;
-          ESP_LOGD("custom", "Valeur de AP_Ch1 = %.2f W", id(AP_Ch1).state);
+          float value = id(AP_Ch2).state;
 
           // Vérifie si la valeur est valide
           if (!isnan(value)) {
             id(real_power).publish_state(value);
           } else {
             id(real_power).publish_state(NAN);
-          }
-
-          // Vérifie si la valeur est valide
-          if (!isnan(value)) {
-            id(consumption).publish_state(value);
-          } else {
-            id(consumption).publish_state(NAN);
           }
 
   - id: energy_diverted_counter
