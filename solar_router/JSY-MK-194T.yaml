@@ -74,6 +74,7 @@ sensor:
     device_class: "power"
     unit_of_measurement: "W"
     update_interval: 1s
+    internal: true
 
 # tension de l'alimentation
   - platform: modbus_controller
