@@ -38,9 +38,9 @@ globals:
 # Configuration UART pour le JSY-MK-194T
 uart:
   id: uart_bus
-  tx_pin: GPIO26
-  rx_pin: GPIO27
-  baud_rate: 4800
+  tx_pin: ${uart_tx_pin}
+  rx_pin: ${uart_rx_pin}
+  baud_rate: ${uart_baud_rate}
   parity: NONE
   stop_bits: 1
 
