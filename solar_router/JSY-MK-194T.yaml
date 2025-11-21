@@ -21,13 +21,11 @@ substitutions:
   power_meter_activated_at_start: "1"
   real_power_optional: ""
   consumption_optional: ""
+  power_meter_activated_optional: ""
 
 # Activate or not power meter
 globals:
-  - id: power_meter_activated
-    type: int
-    initial_value: ${power_meter_activated_at_start}
-    restore_value: True
+  ${real_power_optional}
 
 
 # ----------------------------------------------------------------------------------------------------
