@@ -1,0 +1,266 @@
+
+# Configuration UART pour le JSY-MK-194T
+uart:
+  id: uart_bus
+  tx_pin: ${uart_tx_pin}
+  rx_pin: ${uart_rx_pin}
+  baud_rate: ${uart_baud_rate}
+  parity: NONE
+  stop_bits: 1
+
+modbus:
+#flow_control_pin: 5
+  #send_wait_time: 200ms
+  id: modbus1
+
+modbus_controller:
+  - id: jsymk
+    ## the Modbus device addr
+    address: 0x1
+    modbus_id: modbus1
+    update_interval: 0.75s
+    command_throttle: 50ms
+    # setup_priority: -10
+
+sensor:  
+
+# tension de l'alimentation
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: U_Ch1
+    name: "Voltage Ch1"
+    address: 0x0048
+    unit_of_measurement: "V"
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.0001
+    register_count: 1
+    response_size: 4
+
+# Intensité traversant le tore
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: I_Ch1
+    name: "Current Ch1"
+    address: 0x0049
+    unit_of_measurement: "A"
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.0001
+    register_count: 1
+    response_size: 4
+    state_class: measurement
+
+# Puissance traversant le tore
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: AP_Ch1
+    name: "Active Power Ch1"
+    address: 0x004A
+    unit_of_measurement: "W"
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.0001
+    register_count: 1
+    response_size: 4
+    state_class: measurement
+
+# Energie active positive lue dans le tore
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: PAE_Ch1
+    name: "Positive Active Energy Ch1"
+    address: 0x004B
+    unit_of_measurement: "kWh"
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.0001
+    register_count: 1
+    response_size: 4
+    state_class: total
+
+# Facteur de forme CH1
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: PF_Ch1
+    name: "Power Factor Ch1"
+    address: 0x004C
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.001
+    register_count: 1
+    response_size: 4
+
+# Energie NEG lue CH1
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: NAE_Ch1
+    name: "Negative Active Energy Ch1"
+    address: 0x004D
+    unit_of_measurement: "kWh"
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.0001     
+    register_count: 1
+    response_size: 4 
+    state_class: total
+    
+# Direction de la puissance dans CH1
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: PD_Ch1
+    name: "Power Direction Ch1"
+    address: 0x004E
+    register_type: holding
+    value_type: U_DWORD
+    bitmask: 0X00010000
+    filters:
+      - multiply: 1
+    register_count: 1
+    response_size: 4
+
+# Direction de la puissance dans CH2
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: PD_Ch2
+    name: "Power Direction Ch2"
+    address: 0x004E
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 0
+    bitmask: 0X01000000
+    filters:
+      - multiply: 1
+    register_count: 1
+    response_size: 4
+
+# Fréquence réseau 
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: frequency
+    name: "Frequency"
+    address: 0x004F
+    unit_of_measurement: "hz"    
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+    register_count: 1
+    response_size: 4
+
+# tension de l'alimentation => pas d'interet car U_Ch1 = U_Ch2 (une seule mesure)
+#  - platform: modbus_controller
+#    modbus_controller_id: jsymk
+#    id: U_Ch2
+#    name: "Voltage Ch2"
+#    address: 0x0050
+#    unit_of_measurement: "V"
+#    register_type: holding
+#    value_type: U_DWORD
+#    accuracy_decimals: 1
+#    filters:
+#      - multiply: 0.0001
+#    register_count: 1
+#    response_size: 4
+    
+# Intensité lue dans la pince
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: I_Ch2
+    name: "Current Ch2"
+    address: 0x0051
+    unit_of_measurement: "A"
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.0001
+    register_count: 1
+    response_size: 4
+
+# puissance lue dans la pince
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: AP_Ch2
+    name: "Active Power Ch2"
+    address: 0x0052
+    unit_of_measurement: "W"
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.0001
+    register_count: 1
+    response_size: 4 
+    on_value:
+      then:
+        - lambda: |-
+            if ( id(PD_Ch2).state == 1 ) {
+              id(pureseau1).publish_state( id(AP_Ch2).state *-1);
+            } else {
+              id(pureseau1).publish_state( id(AP_Ch2).state );
+            }
+    
+# Energie lue dans la pince
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: PAE_Ch2
+    name: "Positive Active Energy Ch2"
+    address: 0x0053
+    unit_of_measurement: "kWh"
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.0001
+    register_count: 1
+    response_size: 4
+
+# Energie lue dans le tore
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: PF_Ch2
+    name: "Power Factor Ch2"
+    address: 0x0054
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.001
+    register_count: 1
+    response_size: 4
+
+# Energie NEG lue dans le tore
+  - platform: modbus_controller
+    modbus_controller_id: jsymk
+    id: NAE_Ch2
+    name: "Negative Active Energy Ch2"
+    address: 0x0055
+    unit_of_measurement: "kWh"
+    register_type: holding
+    value_type: U_DWORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.0001     
+    register_count: 1
+    response_size: 4 
+    
+# Affichage dans HA et sur l'afficheur
+  - platform: template
+    name: "Pu Reseau"
+    id: pureseau1
+    unit_of_measurement: "W"
+    state_class: "measurement"  
