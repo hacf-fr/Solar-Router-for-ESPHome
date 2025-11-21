@@ -299,11 +299,13 @@ sensor:
   # Sensor showing the actual power exchange
   - platform: template
     id: real_power
-    entity_id: ${AP_Ch1}
-    internal: False
     name: "Real Power"
     device_class: "power"
     unit_of_measurement: "W"
+    internal: False
+    lambda: |-
+      return id(AP_Ch1).state;
+
 # ----------------------------------------------------------------------------------------------------
 # Calculate daily energy diverted
 # ----------------------------------------------------------------------------------------------------
