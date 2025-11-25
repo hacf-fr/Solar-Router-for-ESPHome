@@ -22,19 +22,6 @@ sensor:
     unit_of_measurement: 'W'
     device_class: power
     
-# Define the power of load plugged on the solar router
-number:
-  - platform: template
-    name: "Load power"
-    id: load_power
-    min_value: 0
-    max_value: 99999
-    step: 1
-    unit_of_measurement: "W"
-    device_class: power
-    optimistic: True
-    restore_value: true
-    
 # Script updating the power consumed counter
 script:
   - id: energy_diverted_counter
