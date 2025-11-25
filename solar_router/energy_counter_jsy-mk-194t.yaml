@@ -62,9 +62,6 @@ script:
 #  - Update energy diverted counter
 #  - Reset energy at midnight
 time:
-  - platform: homeassistant
-    id: homeassistant_time_for_solar_router
-
   - platform: sntp
     on_time:
       # Exécuté chaque seconde → energy diverted
