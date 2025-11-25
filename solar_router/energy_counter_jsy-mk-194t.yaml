@@ -1,7 +1,6 @@
 # ----------------------------------------------------------------------------------------------------
 # Calculate daily energy diverted
 # ----------------------------------------------------------------------------------------------------
-<<: !include jsy-mk-194t_common.yaml
 
 sensor:  
 # Sensor showing the actual energy diverted consumption
