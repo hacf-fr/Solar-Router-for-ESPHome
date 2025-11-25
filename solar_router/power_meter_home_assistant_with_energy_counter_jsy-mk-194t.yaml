@@ -1,0 +1,13 @@
+# ----------------------------------------------------------------------------------------------------
+# Define sensor for power collection
+# ----------------------------------------------------------------------------------------------------
+
+sensor:
+  # Sensor showing the actual power exchange
+  - platform: homeassistant
+    id: real_power
+    entity_id: ${main_power_sensor}
+    internal: False
+    name: "Real Power"
+    device_class: "power"
+    unit_of_measurement: "W"
