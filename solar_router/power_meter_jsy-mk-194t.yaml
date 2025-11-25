@@ -277,14 +277,14 @@ sensor:
     register_count: 1
     response_size: 4 
     internal: ${AP_Ch2_internal}
-    on_value:
-      then:
-        - lambda: |-
-            if ( id(PD_Ch2).state == 1 ) {
-              id(pureseau1).publish_state( id(AP_Ch2).state *-1);
-            } else {
-              id(pureseau1).publish_state( id(AP_Ch2).state );
-            }
+#    on_value:
+#      then:
+#        - lambda: |-
+#            if ( id(PD_Ch2).state == 1 ) {
+#              id(pureseau1).publish_state( id(AP_Ch2).state *-1);
+#            } else {
+#              id(pureseau1).publish_state( id(AP_Ch2).state );
+#            }
     
 # Energie lue dans la pince
   - platform: modbus_controller
@@ -338,12 +338,12 @@ sensor:
     internal: ${NAE_Ch2_internal}
     
 # Affichage dans HA et sur l'afficheur
-  - platform: template
-    name: "Pu Reseau"
-    id: pureseau1
-    unit_of_measurement: "W"
-    device_class: power
-    state_class: "measurement"  
+#  - platform: template
+#    name: "Pu Reseau"
+#    id: pureseau1
+#    unit_of_measurement: "W"
+#    device_class: power
+#    state_class: "measurement"  
 
 # ----------------------------------------------------------------------------------------------------
 # Calculate daily energy diverted
