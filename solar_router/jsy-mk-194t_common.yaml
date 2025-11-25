@@ -299,3 +299,8 @@ sensor:
     register_count: 1
     response_size: 4 
     internal: ${NAE_Ch2_internal}
+
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time_for_solar_router
