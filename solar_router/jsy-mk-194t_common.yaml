@@ -248,14 +248,6 @@ sensor:
     register_count: 1
     response_size: 4 
     internal: ${AP_Ch2_internal}
-#    on_value:
-#      then:
-#        - lambda: |-
-#            if ( id(PD_Ch2).state == 1 ) {
-#              id(pureseau1).publish_state( id(AP_Ch2).state *-1);
-#            } else {
-#              id(pureseau1).publish_state( id(AP_Ch2).state );
-#            }
     
 # Energie lue dans la pince
   - platform: modbus_controller
