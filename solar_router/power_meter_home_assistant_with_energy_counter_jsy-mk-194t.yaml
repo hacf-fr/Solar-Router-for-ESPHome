@@ -20,3 +20,12 @@ sensor:
     name: "Real Power"
     device_class: "power"
     unit_of_measurement: "W"
+
+  # Sensor showing the actual consumption
+  - platform: homeassistant
+    id: consumption
+    entity_id: ${consumption_sensor}
+    internal: False
+    name: "Consumption"
+    device_class: "power"
+    unit_of_measurement: "W"
