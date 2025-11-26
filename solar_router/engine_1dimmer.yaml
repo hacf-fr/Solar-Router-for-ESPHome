@@ -85,15 +85,8 @@ number:
     mode: slider
     internal: ${hide_regulators}
     on_value:
-        - if:
-            condition:
-              or:
-                - switch.is_on: activate
-                - switch.is_on: manual_triac_cutoff
-            then:
-              - script.execute: regulation_control
-            else:
-              - logger.log: "Triac coupé manuellement → changement ignoré"
+      then:
+        - script.execute: regulation_control
 
 
   # Define the reactivity of router level
