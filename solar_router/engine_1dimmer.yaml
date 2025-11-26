@@ -88,7 +88,6 @@ number:
       then:
         - script.execute: regulation_control
 
-
   # Define the reactivity of router level
   - platform: template
     name: "Up Reactivity" 
