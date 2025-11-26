@@ -33,24 +33,9 @@ switch:
     optimistic: true
     restore_mode: RESTORE_DEFAULT_ON
     on_turn_off:
-      then:
-        - if:
-            condition:
-              not:
-                switch.is_on: activate
-            then:
-              - logger.log: "Coupure manuelle → triac désactivé (angle = 0)"
-              - number.set:
-                  id: regulator_opening
-                  value: 0
-              - number.set:
-                  id: router_level
-                  value: 0
-              - light.turn_off: dimmer_controller
-              - script.execute: regulation_control
+        - number.to_min: router_level
     on_turn_on:
-      then:
-        - logger.log: "Coupure manuelle désactivée → triac redevient contrôlable"
+        - switch.turn_off: activate
         
 number:
   # Router level from 0 to 100
