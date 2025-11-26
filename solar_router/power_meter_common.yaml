@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------
 
 substitutions:
-  power_meter_activated_at_start: "0"  
+  power_meter_activated_at_start: "0"
 
 # Activate or not power meter
 globals:
