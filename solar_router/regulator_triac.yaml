@@ -29,6 +29,7 @@ output:
   - platform: ac_dimmer
     id: ac_dimmer_output
     gate_pin: ${regulator_gate_pin}
+    method: leading 
     zero_cross_pin:
       number: ${regulator_zero_crossing_pin}
       mode:
