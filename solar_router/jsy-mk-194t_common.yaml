@@ -19,7 +19,7 @@ substitutions:
   PF_Ch2_internal: "true"
   NAE_Ch2_internal: "true"
 
-# Configuration UART pour le JSY-MK-194T
+# UART Configuration for JSY-MK-194T
 uart:
   id: uart_bus
   tx_pin: ${uart_tx_pin}
@@ -29,8 +29,6 @@ uart:
   stop_bits: 1
 
 modbus:
-#flow_control_pin: 5
-  #send_wait_time: 200ms
   id: modbus1
 
 modbus_controller:
@@ -40,10 +38,9 @@ modbus_controller:
     modbus_id: modbus1
     update_interval: 2s
     command_throttle: 100ms
-    # setup_priority: -10
 
 sensor:  
-# tension de l'alimentation
+# Voltage on Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: U_Ch1
@@ -61,7 +58,7 @@ sensor:
     response_size: 4
     internal: ${U_Ch1_internal}
 
-# Intensité traversant le tore
+# Current on Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: I_Ch1
@@ -79,7 +76,7 @@ sensor:
     state_class: measurement
     internal: ${I_Ch1_internal}
 
-# Puissance traversant le tore
+# Active Power of Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: AP_Ch1
@@ -97,7 +94,7 @@ sensor:
     state_class: measurement
     internal: ${AP_Ch1_internal}
 
-# Energie active positive lue dans le tore
+# Positive Active Energy of Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PAE_Ch1
@@ -115,7 +112,7 @@ sensor:
     state_class: total
     internal: ${PAE_Ch1_internal}
 
-# Facteur de forme CH1
+# Power Factor on Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PF_Ch1
@@ -132,7 +129,7 @@ sensor:
     response_size: 4
     internal: ${PF_Ch1_internal}
 
-# Energie NEG lue CH1
+# Negative Active Energy of Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: NAE_Ch1
@@ -150,7 +147,7 @@ sensor:
     state_class: total
     internal: ${NAE_Ch1_internal}
     
-# Direction de la puissance dans CH1
+# Power Direction on Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PD_Ch1
@@ -165,7 +162,7 @@ sensor:
     response_size: 4
     internal: ${PD_Ch1_internal}
 
-# Direction de la puissance dans CH2
+# Power Direction on Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PD_Ch2
@@ -181,7 +178,7 @@ sensor:
     response_size: 4
     internal: ${PD_Ch2_internal}
 
-# Fréquence réseau 
+# Frequency
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: frequency
@@ -198,7 +195,7 @@ sensor:
     response_size: 4
     internal: ${frequency_internal}
 
-# tension de l'alimentation => pas d'interet car U_Ch1 = U_Ch2 (une seule mesure)
+# Voltage on Channel 2 => same as Voltage on Channel 1
 #  - platform: modbus_controller
 #    modbus_controller_id: jsymk
 #    id: U_Ch2
@@ -215,7 +212,7 @@ sensor:
 #    response_size: 4
 #    internal: ${U_Ch2_internal}
     
-# Intensité lue dans la pince
+# Current on Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: I_Ch2
@@ -232,7 +229,7 @@ sensor:
     response_size: 4
     internal: ${I_Ch2_internal}
 
-# puissance lue dans la pince
+# Active Power of Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: AP_Ch2
@@ -249,7 +246,7 @@ sensor:
     response_size: 4 
     internal: ${AP_Ch2_internal}
     
-# Energie lue dans la pince
+# Positive Active Energy of Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PAE_Ch2
@@ -266,7 +263,7 @@ sensor:
     response_size: 4
     internal: ${PAE_Ch2_internal}
 
-# Energie lue dans le tore
+# Power Factor on Channel 2 
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PF_Ch2
@@ -283,7 +280,7 @@ sensor:
     response_size: 4
     internal: ${PF_Ch2_internal}
 
-# Energie NEG lue dans le tore
+# Negative Active Energy of Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: NAE_Ch2
