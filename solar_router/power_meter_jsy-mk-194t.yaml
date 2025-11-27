@@ -12,13 +12,9 @@ globals:
       initial_value: ${power_meter_activated_at_start}
       restore_value: True
 
-# ----------------------------------------------------------------------------------------------------
-# Calculate daily energy diverted
-# ----------------------------------------------------------------------------------------------------
 
 sensor:  
-
-  # Sensor showing the actual power consumption
+  # Sensor showing the actual power exchange
   - id: real_power
     platform: template
     name: "Real Power"
@@ -36,17 +32,18 @@ sensor:
     internal: true
     
     
-# Script updating the power consumed counter
+# Script updating the actual power exchange
 script:
+  # Get power reports from JSY-MK-194T and update globals (real_power)
+  # Power exchanged with the grid is names "Value"
   - id: power_meter_source
     mode: single
     then:
-      - logger.log: "************************************************************"
       - lambda: |-
-          // Récupère la dernière valeur du capteur Modbus
+          // Retrieve the last value from the Modbus sensor
           float value = id(AP_Ch2).state;
 
-          // Vérifie si la valeur est valide
+          // Check if the value is valid
           if (!isnan(value)) {
             id(real_power).publish_state(value);
           } else {
@@ -54,14 +51,9 @@ script:
           }
 
 
-
-# Enable time component to 
-#  - Update energy diverted counter
-#  - Reset energy at midnight
 time:
   - platform: sntp
     on_time:
-      # Exécuté chaque seconde → energy diverted
       - seconds: /1
         then:
           - if:
