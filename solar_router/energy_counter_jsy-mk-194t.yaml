@@ -1,9 +1,9 @@
 # ----------------------------------------------------------------------------------------------------
-# Calculate daily energy diverted
+# Calculate daily energy diverted with JSY-MK-194T
 # ----------------------------------------------------------------------------------------------------
 
 sensor:  
-# Sensor showing the actual energy diverted consumption
+  # Sensor showing the total daily energy diverted consumption
   - id: energy_diverted
     platform: total_daily_energy
     name: 'Total daily energy diverted'
@@ -51,7 +51,7 @@ script:
 time:
   - platform: sntp
     on_time:
-      # Exécuté chaque seconde → energy diverted
+      # Executed every second → energy diverted
       - seconds: /1
         then:
           - script.execute: energy_diverted_counter
