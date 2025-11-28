@@ -1,8 +1,8 @@
 # ----------------------------------------------------------------------------------------------------
 # Define scripts for energy divertion
 # ----------------------------------------------------------------------------------------------------
-substitutions: 
-  - regulator_zero_cross_inverted: yes
+substitutions:
+  regulator_zero_cross_inverted: yes
   
 script:
   # Apply regulation on triac using light component
