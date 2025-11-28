@@ -1,7 +1,9 @@
 # ----------------------------------------------------------------------------------------------------
 # Define scripts for energy divertion
 # ----------------------------------------------------------------------------------------------------
-
+substitutions: 
+  - regulator_zero_cross_inverted: yes
+  
 script:
   # Apply regulation on triac using light component
   - id: regulation_control
@@ -33,7 +35,7 @@ output:
       number: ${regulator_zero_crossing_pin}
       mode:
         input: true
-      inverted: no
+      inverted: ${regulator_zero_cross_inverted}
 
 # Manage triac opening with light component brightness
 light:
