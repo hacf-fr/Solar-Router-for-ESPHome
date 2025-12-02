@@ -1,12 +1,12 @@
 # Détails sur l'utilisation d'un capteur de puissance JSY-MK-194T
 
 Deux configurations sont possibles lors de l'utilisation de ce capteur :
-  - standalone, on utilise les deux capteur du JSY-MK-194T (Ch1 : capteur sur la charge, Ch2 capteur de puissance de la mainson au niveau du compteur EDF)
-  - hybride (exemple home assistant pour la mesure real_power + jsy-mk-194t pour l'energie dérivée) => utile si le routeur est loin du point de mesure, ou si contrat en 0 injection (il faudra creer dans HA un capteur virtuelle de simulation d'injection en estimant l'energie potentielle non produite cf par exemple le projet   https://github.com/M3c4tr0x/ESP-PowerSunSensor)
+  - standalone : on utilise les deux capteurs du JSY-MK-194T (Ch1 : capteur sur la charge, Ch2 : capteur de puissance de la maison au niveau du compteur EDF)
+  - hybride (exemple : Home Assistant pour la mesure real_power + JSY-MK-194T pour l’énergie dérivée) → utile si le routeur est loin du point de mesure, ou si le contrat est en 0 injection (il faudra créer dans HA un capteur virtuel de simulation d’injection en estimant l’énergie potentielle non produite, cf. par exemple le projet https://github.com/M3c4tr0x/ESP-PowerSunSensor)
 
 ## 1 - Partie Commune : la communication avec le JSY-MK-194T :
 
-Ce fichier gère la communication avec la carte, vous pouvez si vous le souhaitez, remonter les mesure du JSY-MK-194T dans home assistant, voir dans l'exemple ci-dessous
+Ce fichier gère la communication avec la carte. Vous pouvez, si vous le souhaitez, remonter les mesures du JSY-MK-194T dans Home Assistant, voir l'exemple ci-dessous.
 ```yaml linenums="1"
 packages:
   solar_router:
@@ -21,7 +21,7 @@ packages:
           uart_baud_rate: 4800
           AP_Ch2_internal: "false" # optionnel, permet d'afficher un des sensors du JSY-MK-194T
 ```
-liste des sensors du JSY-MK194-T accéssible :
+Liste des capteurs du JSY-MK-194T accessibles :
 ```yaml linenums="1"
   U_Ch1_internal: "true"       # Voltage on Channel 1
   I_Ch1_internal: "true"       # Current on Channel 1
@@ -41,8 +41,8 @@ liste des sensors du JSY-MK194-T accéssible :
 ```
 
 ## 2 - Mode Standalone
-Ce mode permet au routeur d'être 100% autonome au niveau des capteur de puissance, la régulation est donc plus fine et rapide qu'en passant par des entité home assistant. 
-Il est important de noter que ceci fonctionne uniquement si votre système injecte le surplus dans le réseau, dans le cas contraire, voir le paragraphe suivant.
+Ce mode permet au routeur d'être 100 % autonome au niveau des capteurs de puissance. La régulation est donc plus fine et plus rapide que lorsqu'on passe par des entités Home Assistant.
+Il est important de noter que ceci fonctionne uniquement si votre système injecte le surplus dans le réseau. Dans le cas contraire, voir le paragraphe suivant.
 
 ```yaml linenums="1"
 packages:
@@ -66,9 +66,8 @@ packages:
 ```
 
 ## 3 - Mode Hybride
-Ce mode permet l'utilisation du JSY-MK-194T pour mesurer l'energie dans la charge uniquement, la mesure au niveau du réseau doit se faire par home assistant, via un capteur virtuel qui remonte un puissance d'injection estimée.
-Il est utile dans les système où il n'y a pas d'injectione réel dans le réseau, ou si la mesure n'est pas accessible car trop éloignée.
-
+Ce mode permet l'utilisation du JSY-MK-194T pour mesurer l'énergie dans la charge uniquement. La mesure au niveau du réseau doit se faire via Home Assistant, à l'aide d'un capteur virtuel qui remonte une puissance d'injection estimée.
+Il est utile dans les systèmes où il n'y a pas d'injection réelle dans le réseau, ou si la mesure n'est pas accessible car trop éloignée.
 
 ```yaml linenums="1"
 packages:
@@ -96,13 +95,14 @@ packages:
           main_power_sensor: sensor.puissance_soutiree_reseau_simulee_prevision_filtree_2
           consumption_sensor: sensor.inverter_activepower_load_sys
 ```
-Ce package doit connaître le capteur à utiliser pour obtenir l'énergie échangée avec le réseau et l'énergie consommé par la maison. Le capteur déchange d'énergie avec le réseau doit être défini par `main_power_sensor` et la capteur de consommation par `consumption_sensor` dans la section `substitutions` de votre configuration comme présenté dans l'exemple ci-dessus.
+Ce package doit connaître le capteur à utiliser pour obtenir l'énergie échangée avec le réseau et l'énergie consommée par la maison.
+Le capteur d'échange d'énergie avec le réseau doit être défini par `main_power_sensor` et le capteur de consommation par `consumption_sensor` dans la section substitutions de votre configuration, comme présenté dans l'exemple ci-dessus.
 
-* `main_power_sensor` représent l'energie echangée avec le réseau. Il est attendu que ce capteur soit en Watts (W), qu'il soit positif (>0) lorsque l'électricité est consommée depuis le réseau et négatif (<0) lorsque l'électricité est envoyée au réseau. 
+* `main_power_sensor` représente l'énergie échangée avec le réseau. Il est attendu que ce capteur soit en watts (W), qu'il soit positif (>0) lorsque l'électricité est consommée depuis le réseau et négatif (<0) lorsque l'électricité est envoyée au réseau. 
 
-* `consumption_sensor` représente l'énergie consomée par votre maison. Cette imformation permet, par exemple, le calcul de l'énergie théorique reroutée.
+* `consumption_sensor` représente l'énergie consommée par votre maison. Cette information permet, par exemple, le calcul de l'énergie théorique reroutée.
 
-!!! warning "Disponibilité des données et fréquence de rafraîchissement"
-  Ce compteur électrique s'appuie sur Home Assistant pour recueillir la valeur de l'énergie échangée avec le réseau. Il dépend également de la fréquence de mise à jour des capteurs. Si un capteur est mis à jour trop lentement, la régulation peut ne pas fonctionner comme prévu.
-    
-  Contrairement aux compteurs électriques de Home Assistant, les compteurs électriques natifs sont autonomes et peuvent continuer à réguler même si Home Assistant est hors ligne. Certains compteurs électriques peuvent avoir un accès direct aux mesures et peuvent même être indépendants du réseau.
+!!! Warning – Disponibilité des données et fréquence de rafraîchissement
+Ce compteur électrique s'appuie sur Home Assistant pour recueillir la valeur de l'énergie échangée avec le réseau. Il dépend également de la fréquence de mise à jour des capteurs. Si un capteur est mis à jour trop lentement, la régulation peut ne pas fonctionner comme prévu.
+
+Contrairement aux compteurs électriques de Home Assistant, les compteurs électriques natifs sont autonomes et peuvent continuer à réguler même si Home Assistant est hors ligne. Certains compteurs électriques peuvent avoir un accès direct aux mesures et être même indépendants du réseau.
