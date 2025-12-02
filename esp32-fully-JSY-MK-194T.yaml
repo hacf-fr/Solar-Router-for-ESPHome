@@ -36,7 +36,7 @@ wifi:
 
 packages:
   solar_router:
-    url: https://github.com/M3c4tr0x/Solar-Router-for-ESPHome/
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       - path: solar_router/common.yaml 
