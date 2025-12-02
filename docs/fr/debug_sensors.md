@@ -1,6 +1,6 @@
 # debug sensors
 
-Permet de remonter certaines informations dans home assitant pour la mise au point / surveillance
+Permet de remonter certaines informations dans Home Assistant pour la mise au point et la surveillance.
 
 <img width="322" height="663" alt="image" src="https://github.com/user-attachments/assets/100217d4-8056-4abb-91b7-7876b9944a9b" />
  
