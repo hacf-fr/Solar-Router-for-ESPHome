@@ -63,14 +63,14 @@ number:
                     id: manual_triac_cutoff
                 - switch.is_on:
                     id: activate
-              then:
-                - number.set:
-                    id: regulator_opening
-                    value: !lambda return id(router_level).state;
-              else:
-                - number.set:
-                    id: regulator_opening
-                    value: 0;
+            then:
+              - number.set:
+                  id: regulator_opening
+                  value: !lambda return id(router_level).state;
+            else:
+              - number.set:
+                  id: regulator_opening
+                  value: 0;
         - if:
             condition:
               number.in_range:
