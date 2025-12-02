@@ -70,7 +70,7 @@ number:
             else:
               - number.set:
                   id: regulator_opening
-                  value: 0;
+                  value: 0
         - if:
             condition:
               number.in_range:
