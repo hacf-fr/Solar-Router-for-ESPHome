@@ -24,6 +24,7 @@ switch:
             id(real_power).publish_state(NAN);
             id(consumption).publish_state(NAN);
             id(power_meter_activated) = 0;
+            
   # --------------------------------------------------------------------------
   # Nouveau switch : coupure manuelle du triac (actif uniquement en mode manuel)
   # --------------------------------------------------------------------------
@@ -55,9 +56,21 @@ number:
     mode: slider
     on_value:
       then:
-        - number.set:
-            id: regulator_opening
-            value: !lambda return id(router_level).state;
+        - if:
+            condition:
+              or:
+                - switch.is_on:
+                    id: manual_triac_cutoff
+                - switch.is_on:
+                    id: activate
+              then:
+                - number.set:
+                    id: regulator_opening
+                    value: !lambda return id(router_level).state;
+              else:
+                - number.set:
+                    id: regulator_opening
+                    value: 0;
         - if:
             condition:
               number.in_range:
