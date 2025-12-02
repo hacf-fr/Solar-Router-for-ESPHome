@@ -103,6 +103,6 @@ Ce package doit connaître le capteur à utiliser pour obtenir l'énergie échan
 * `consumption_sensor` représente l'énergie consomée par votre maison. Cette imformation permet, par exemple, le calcul de l'énergie théorique reroutée.
 
 !!! warning "Disponibilité des données et fréquence de rafraîchissement"
-    Ce compteur électrique s'appuie sur Home Assistant pour recueillir la valeur de l'énergie échangée avec le réseau. Il dépend également de la fréquence de mise à jour des capteurs. Si un capteur est mis à jour trop lentement, la régulation peut ne pas fonctionner comme prévu.
-
-    Contrairement aux compteurs électriques de Home Assistant, les compteurs électriques natifs sont autonomes et peuvent continuer à réguler même si Home Assistant est hors ligne. Certains compteurs électriques peuvent avoir un accès direct aux mesures et peuvent même être indépendants du réseau.
+  Ce compteur électrique s'appuie sur Home Assistant pour recueillir la valeur de l'énergie échangée avec le réseau. Il dépend également de la fréquence de mise à jour des capteurs. Si un capteur est mis à jour trop lentement, la régulation peut ne pas fonctionner comme prévu.
+    
+  Contrairement aux compteurs électriques de Home Assistant, les compteurs électriques natifs sont autonomes et peuvent continuer à réguler même si Home Assistant est hors ligne. Certains compteurs électriques peuvent avoir un accès direct aux mesures et peuvent même être indépendants du réseau.
