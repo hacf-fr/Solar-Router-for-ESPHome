@@ -5,6 +5,13 @@ Ce package implémente le moteur du routeur solaire qui détermine quand et quel
 L'**Engine 1 x dimmer** appelle toutes les secondes le compteur d'énergie pour obtenir l'énergie réelle échangée avec le réseau. Si l'énergie produite est supérieure à l'énergie consommée et dépasse la cible d'échange définie, le moteur déterminera le **pourcentage d'ouverture du régulateur** et l'ajustera dynamiquement pour atteindre la cible.
 
 La régulation automatique du moteur peut être activée ou désactivée avec l'interrupteur d'activation.
+ - lors de son activation, l'interrupteur ON/OFF du mode manuel est coupé
+
+Un second interrupteur, permet le ON/OFF général en mode manuel, il est necessaire de l'ajouter pour rentre le projet compatible avec https://github.com/jmcollin78/solar_optimizer
+ - lors de son activation, l'interrupteur du mode automatique est coupé
+ - lors de la désactivation de cet interrupteur : la consigne d'angle de conduction du triac passe à 0
+
+Pour que le triac puisse être piloté, il faut qu'un de ces deux interrupteur soit activé, sinon le triac reste sur OFF
 
 ## Configuration
 
