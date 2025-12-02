@@ -11,13 +11,6 @@ esp32:
 
 # Enable logging
 logger:
-  level: DEBUG
-  logs:
-      # Masque les logs détaillés du Modbus (requêtes/réponses)
-      modbus: ERROR
-      modbus_controller: ERROR
-      modbus_controller.sensor: ERROR
-#      sensor: ERROR
       
 # Enable Home Assistant API
 api:
@@ -36,7 +29,7 @@ wifi:
 
 packages:
   solar_router:
-    url: https://github.com/M3c4tr0x/Solar-Router-for-ESPHome/
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       - path: solar_router/common.yaml 
