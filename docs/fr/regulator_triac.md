@@ -43,4 +43,4 @@ packages:
 
 Ce package nécessite la définition des broches connectées au module triac pour la détection du passage à zéro (`regulator_zero_crossing_pin`) et le contrôle de la gâchette/PWM (`regulator_gate_pin`)
 
- * Le paramètre `regulator_zero_cross_inverted` permet de définir si la detection de zero cross de fait sur niveau haut ou bas. Ce paramètre est optionnel mais il peut permettre de resourde des problèmes de flicker, il est conseiller d'essayer les deux (true ou false) pour voir lequel fonctionne le mieux.
+ * Le paramètre `regulator_zero_cross_inverted` permet de définir si la détection du zero cross se fait sur niveau haut ou bas. Ce paramètre est optionnel, mais il peut permettre de résoudre des problèmes de flicker. Il est conseillé d’essayer les deux valeurs (true ou false) pour voir laquelle fonctionne le mieux.
