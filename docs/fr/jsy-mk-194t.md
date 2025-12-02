@@ -7,7 +7,7 @@ Deux configurations sont possibles lors de l'utilisation de ce capteur :
 # 1 - Partie Commune : la communication avec le JSY-MK-194T :
 
 Ce fichier gère la communication avec la carte, vous pouvez si vous le souhaitez, remonter les mesure du JSY-MK-194T dans home assistant, voir dans l'exemple ci-dessous
-```
+```yaml linenums="1"
 packages:
   solar_router:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
@@ -22,8 +22,7 @@ packages:
           AP_Ch2_internal: "false" # optionnel, permet d'afficher un des sensors du JSY-MK-194T
 ```
 liste des sensors du JSY-MK194-T accéssible :
-```
-
+```yaml linenums="1"
   U_Ch1_internal: "true"       # Voltage on Channel 1
   I_Ch1_internal: "true"       # Current on Channel 1
   AP_Ch1_internal: "true"      # Active Power of Channel 1
