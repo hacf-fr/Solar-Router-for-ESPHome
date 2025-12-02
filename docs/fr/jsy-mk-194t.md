@@ -1,10 +1,10 @@
-Détails sur l'utilisation d'un capteur de puissance JSY-MK-194T
+# Détails sur l'utilisation d'un capteur de puissance JSY-MK-194T
 
 Deux configurations sont possibles lors de l'utilisation de ce capteur :
   - standalone, on utilise les deux capteur du JSY-MK-194T (Ch1 : capteur sur la charge, Ch2 capteur de puissance de la mainson au niveau du compteur EDF)
   - hybride (exemple home assistant pour la mesure real_power + jsy-mk-194t pour l'energie dérivée) => utile si le routeur est loin du point de mesure, ou si contrat en 0 injection (il faudra creer dans HA un capteur virtuelle de simulation d'injection en estimant l'energie potentielle non produite cf par exemple le projet   https://github.com/M3c4tr0x/ESP-PowerSunSensor)
 
-# 1 - Partie Commune : la communication avec le JSY-MK-194T :
+## 1 - Partie Commune : la communication avec le JSY-MK-194T :
 
 Ce fichier gère la communication avec la carte, vous pouvez si vous le souhaitez, remonter les mesure du JSY-MK-194T dans home assistant, voir dans l'exemple ci-dessous
 ```yaml linenums="1"
@@ -40,7 +40,7 @@ liste des sensors du JSY-MK194-T accéssible :
   NAE_Ch2_internal: "true"     # Negative Active Energy of Channel 2
 ```
 
-# 2 - Mode Standalone
+## 2 - Mode Standalone
 Ce mode permet au routeur d'être 100% autonome au niveau des capteur de puissance, la régulation est donc plus fine et rapide qu'en passant par des entité home assistant. 
 Il est important de noter que ceci fonctionne uniquement si votre système injecte le surplus dans le réseau, dans le cas contraire, voir le paragraphe suivant.
 
@@ -65,7 +65,7 @@ packages:
       - path: solar_router/power_meter_jsy-mk-194t.yaml
 ```
 
-# 3 - Mode Hybride
+## 3 - Mode Hybride
 Ce mode permet l'utilisation du JSY-MK-194T pour mesurer l'energie dans la charge uniquement, la mesure au niveau du réseau doit se faire par home assistant, via un capteur virtuel qui remonte un puissance d'injection estimée.
 Il est utile dans les système où il n'y a pas d'injectione réel dans le réseau, ou si la mesure n'est pas accessible car trop éloignée.
 
