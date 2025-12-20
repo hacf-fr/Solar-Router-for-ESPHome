@@ -1,0 +1,83 @@
+<<: !include power_meter_common.yaml
+
+esphome:
+  min_version: 2025.5.0
+  
+# ----------------------------------------------------------------------------------------------------
+# Use http request component
+# ----------------------------------------------------------------------------------------------------
+
+http_request:
+  id: http_request_data
+  useragent: esphome/device
+  timeout: 10s
+  verify_ssl: False
+
+# ----------------------------------------------------------------------------------------------------
+# Define scripts for power collection
+# ----------------------------------------------------------------------------------------------------
+
+script:
+  # Shelly script gather power reports from Energy Meter and update globals (real_power)
+  # act_power is transformed to power to keep compatibility
+  - id: power_meter_source
+    mode: single
+    then:
+      - if:
+          condition:
+            lambda: 'return network::is_connected();'
+          then:
+            - http_request.get:
+                url: http://${power_meter_ip_address}/rpc/Shelly.GetStatus
+                request_headers:
+                  Content-Type: application/json
+                  Authorization: ${power_meter_auth_header}
+                capture_response: true
+                max_response_buffer_size: 4096
+                on_response:
+                  then:
+                    - logger.log:
+                        format: 'Response status: %d, Duration: %u ms'
+                        args:
+                          - response->status_code
+                          - response->duration_ms
+                    - lambda: |-
+                        if (response->status_code != 200) {
+                            ESP_LOGW("custom", "HTTP Request failed with status: %d", response->status_code);
+                            id(real_power).publish_state(NAN);
+                        } else {
+
+                          bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
+                              // Shelly EM Pro 50 -> EM1.act_power
+                              if (!root["emeters"][${emeter_index}]["act_power"].is<float>()) {
+                                  ESP_LOGW("custom", "act_power not found");
+                                  return false;
+                              }
+
+                              // Map act_power -> power (compatibility)
+                              float power = root["emeters"][${emeter_index}]["act_power"].as<float>();
+                              id(real_power).publish_state(power);
+                              return true;
+                          });
+
+                          if (!parse_success) {
+                              ESP_LOGW("custom", "JSON Parsing failed");
+                              id(real_power).publish_state(NAN);
+                          }
+                        }
+                on_error:
+                  then:
+                    - lambda: |-
+                        ESP_LOGW("custom", "HTTP Request failed or timeout occurred");
+                        id(real_power).publish_state(NAN);
+
+time:
+  - platform: sntp
+    on_time:
+      - seconds: /1
+        then:
+          - if:
+              condition:
+                - lambda: return id(power_meter_activated) != 0;
+              then:
+                - script.execute: power_meter_source
