@@ -3,18 +3,12 @@
 esphome:
   min_version: 2025.5.0
 
-# ----------------------------------------------------------------------------------------------------
-# HTTP client
-# ----------------------------------------------------------------------------------------------------
 http_request:
   id: http_request_data
   useragent: esphome/device
   timeout: 10s
   verify_ssl: false
 
-# ----------------------------------------------------------------------------------------------------
-# Power meter script (Shelly EM Pro)
-# ----------------------------------------------------------------------------------------------------
 script:
   - id: power_meter_source
     mode: single
@@ -30,15 +24,8 @@ script:
                   Authorization: ${power_meter_auth_header}
                 capture_response: true
                 max_response_buffer_size: 4096
-
                 on_response:
                   then:
-                    - logger.log:
-                        format: "Shelly HTTP %d (%u ms)"
-                        args:
-                          - response->status_code
-                          - response->duration_ms
-
                     - lambda: |-
                         if (response->status_code != 200) {
                           ESP_LOGW("shelly", "HTTP error %d", response->status_code);
@@ -46,22 +33,22 @@ script:
                           return;
                         }
 
-                        bool ok = json::parse_json(body, [&](JsonObject root) -> bool {
-                          int index = ${emeter_index};
-                          String key = "em1:" + String(index);
+                        bool ok = json::parse_json(body, [](JsonObject root) -> bool {
+                          // em1:0 / em1:1
+                          char key[8];
+                          snprintf(key, sizeof(key), "em1:%d", ${emeter_index});
 
-                          if (!root[key.c_str()]["act_power"].is<float>()) {
-                            ESP_LOGW("shelly", "act_power not found for %s", key.c_str());
+                          if (!root[key]["act_power"].is<float>()) {
+                            ESP_LOGW("shelly", "act_power missing for %s", key);
                             return false;
                           }
 
-                          float power = root[key.c_str()]["act_power"].as<float>();
+                          float power = root[key]["act_power"].as<float>();
                           id(real_power).publish_state(power);
                           return true;
                         });
 
                         if (!ok) {
-                          ESP_LOGW("shelly", "JSON parse failed");
                           id(real_power).publish_state(NAN);
                         }
 
@@ -69,11 +56,8 @@ script:
                   then:
                     - lambda: |-
                         ESP_LOGW("shelly", "HTTP request failed");
-                        id(real_power).publish_state(NAN)
+                        id(real_power).publish_state(NAN);
 
-# ----------------------------------------------------------------------------------------------------
-# Periodic update
-# ----------------------------------------------------------------------------------------------------
 time:
   - platform: sntp
     on_time:
