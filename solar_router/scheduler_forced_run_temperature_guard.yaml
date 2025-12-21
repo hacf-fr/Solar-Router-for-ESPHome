@@ -1,49 +1,32 @@
-# Forced Scheduler with Temperature Guard and Daily Temperature Memory
-# - Stops scheduler when stop_temperature is reached or safety_limit is active
-# - Remembers if temperature was reached during the day (08h–19h)
-# - Prevents night forced heating if water was already hot
-# - Fully autonomous and reboot-safe
+# ============================================================
+# Forced Scheduler with Temperature Guard & Daily Memory
+#
+# - Stops Forced Scheduler if stop_temperature is reached
+# - Stops Forced Scheduler if Safety limit is active
+# - Remembers if temperature was reached during the day
+# - Memory is persistent across reboot
+# - Memory resets every day at 08:00
+# - Checks every minute
+# ============================================================
 
 substitutions:
   scheduler_unique_id: "Forced"
   custom_script: ${scheduler_unique_id}_fake_script
 
 globals:
-  # Remember if temperature was reached during the day
-  - id: temperature_atteinte_journee
+  - id: temperature_atteinte_60
     type: bool
-    restore_value: true
+    restore_value: yes
     initial_value: "false"
 
 script:
-  # Fake script (unchanged)
+  # Dummy script if user doesn't define one
   - id: ${scheduler_unique_id}_fake_script
     then:
 
-  # === DAILY TEMPERATURE MEMORY UPDATE ===
-  - id: ${scheduler_unique_id}_day_temperature_tracker
-    mode: single
-    then:
-      - lambda: |-
-          auto now = id(${scheduler_unique_id}_sntp).now();
-          if (!now.is_valid()) return;
-
-          int minutes = now.hour * 60 + now.minute;
-          bool is_day = (minutes >= 8 * 60) && (minutes < 19 * 60);
-
-          if (!is_day) return;
-
-          if (
-            !isnan(id(safety_temperature).state) &&
-            id(safety_temperature).state >= id(stop_temperature).state
-          ) {
-            if (!id(temperature_atteinte_journee)) {
-              ESP_LOGI("forced_scheduler", "Day temperature reached -> memorized");
-            }
-            id(temperature_atteinte_journee) = true;
-          }
-
-  # === TEMPERATURE / SAFETY GUARD ===
+  # ==========================================================
+  # TEMPERATURE / SAFETY GUARD
+  # ==========================================================
   - id: ${scheduler_unique_id}_temperature_guard
     mode: single
     then:
@@ -52,9 +35,11 @@ script:
           if (!now.is_valid()) return;
 
           int now_min = now.hour * 60 + now.minute;
+
           int begin_min =
             id(${scheduler_unique_id}_scheduler_begin_hour).state * 60 +
             id(${scheduler_unique_id}_scheduler_begin_min).state;
+
           int end_min =
             id(${scheduler_unique_id}_scheduler_end_hour).state * 60 +
             id(${scheduler_unique_id}_scheduler_end_min).state;
@@ -66,15 +51,36 @@ script:
             in_scheduler_window = (now_min >= begin_min || now_min < end_min);
           }
 
-          if (!in_scheduler_window) return;
-
           bool temp_reached =
             !isnan(id(safety_temperature).state) &&
             id(safety_temperature).state >= id(stop_temperature).state;
 
-          if (id(safety_limit) || temp_reached) {
+          // --------------------------------------------------
+          // DAYTIME (08:00 → 19:00) : remember if temp reached
+          // --------------------------------------------------
+          if (now.hour >= 8 && now.hour < 19) {
+            if (temp_reached || id(safety_limit)) {
+              id(temperature_atteinte_60) = true;
+            }
+            return;
+          }
+
+          // --------------------------------------------------
+          // NIGHT : block forced scheduler if already heated
+          // --------------------------------------------------
+          if (id(temperature_atteinte_60)) {
+            id(${scheduler_unique_id}_scheduler_activate).turn_off();
+            return;
+          }
+
+          // --------------------------------------------------
+          // Inside scheduler window → safety stop
+          // --------------------------------------------------
+          if (!in_scheduler_window) return;
+
+          if (temp_reached || id(safety_limit)) {
             ESP_LOGW("forced_scheduler",
-              "Stopping Forced Scheduler (temp=%.1f / safety=%d)",
+              "STOP Forced Scheduler (temp=%.1f safety=%d)",
               id(safety_temperature).state,
               id(safety_limit)
             );
@@ -98,19 +104,17 @@ switch:
                   value: 0
               - switch.turn_on: activate
 
-  # Visible in Home Assistant
+  # Exposed helper switch in Home Assistant
   - platform: template
-    name: "Temp atteinte aujourd'hui"
-    id: temperature_atteinte_journee_switch
+    name: "Temperature atteinte aujourd'hui"
+    id: temperature_atteinte_60_switch
     optimistic: true
     lambda: |-
-      return id(temperature_atteinte_journee);
+      return id(temperature_atteinte_60);
     turn_on_action:
-      - lambda: |-
-          id(temperature_atteinte_journee) = true;
+      - lambda: id(temperature_atteinte_60) = true;
     turn_off_action:
-      - lambda: |-
-          id(temperature_atteinte_journee) = false;
+      - lambda: id(temperature_atteinte_60) = false;
 
 number:
   - platform: template
@@ -132,6 +136,7 @@ number:
     step: 5
     initial_value: 5
     optimistic: true
+    mode: box
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler Begin Minute"
@@ -141,6 +146,7 @@ number:
     step: 5
     initial_value: 0
     optimistic: true
+    mode: box
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler End Minute"
@@ -150,6 +156,7 @@ number:
     step: 5
     initial_value: 0
     optimistic: true
+    mode: box
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler Begin Hour"
@@ -159,6 +166,7 @@ number:
     step: 1
     initial_value: 22
     optimistic: true
+    mode: box
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler End Hour"
@@ -168,23 +176,22 @@ number:
     step: 1
     initial_value: 6
     optimistic: true
+    mode: box
 
 time:
   - platform: sntp
     id: ${scheduler_unique_id}_sntp
     on_time:
       # Reset daily memory at 08:00
-      - seconds: 0
+      - hours: 8
         minutes: 0
-        hours: 8
+        seconds: 0
         then:
           - lambda: |-
-              ESP_LOGI("forced_scheduler", "Daily temperature memory reset");
-              id(temperature_atteinte_journee) = false;
+              id(temperature_atteinte_60) = false;
 
-      # Every minute: update memory + safety guard
+      # Temperature guard every minute
       - seconds: 0
         minutes: /1
         then:
-          - script.execute: ${scheduler_unique_id}_day_temperature_tracker
           - script.execute: ${scheduler_unique_id}_temperature_guard
