@@ -1,64 +1,57 @@
-# Differences from original scheduler:
-# - Scheduler parameters (hours, minutes, threshold) are now persistent across reboots
-# - Scheduler actions are applied immediately on boot if current time is inside the window
-# - Safety limit is checked before forcing router activation
-# - Uses numeric inputs (box) instead of sliders to prevent ESP crashes
+# Changes vs original scheduler:
+# 1) All scheduler parameters are now persistent across reboots (restore_value).
+# 2) Scheduler state is evaluated once after SNTP sync to apply immediately if inside the time window.
+# 3) Temperature safety (safety_limit) has absolute priority and stops routing instantly.
+# 4) UI remains identical to original (number/box, no sliders) to avoid ESP crashes.
 substitutions:
   scheduler_unique_id: "Forced"
   custom_script: ${scheduler_unique_id}_fake_script
 
-esphome:
-  on_boot:
-    priority: -100.0
-    then:
-      - script.execute: ${scheduler_unique_id}_scheduler_evaluate
-
 script:
-  # Fake empty script if user does not provide one
+  # Empty script if user does not define one
   - id: ${scheduler_unique_id}_fake_script
     then:
 
-  # Central scheduler evaluation (used on boot + every 5 minutes)
-  - id: ${scheduler_unique_id}_scheduler_evaluate
+  # Central evaluation script (safe to call)
+  - id: ${scheduler_unique_id}_evaluate
     mode: restart
     then:
-      - if:
-          condition:
-            - switch.is_on: ${scheduler_unique_id}_scheduler_activate
-            - lambda: |-
-                int beginTotal = id(${scheduler_unique_id}_scheduler_begin_hour).state * 60
-                               + id(${scheduler_unique_id}_scheduler_begin_min).state;
-                int endTotal = id(${scheduler_unique_id}_scheduler_end_hour).state * 60
-                             + id(${scheduler_unique_id}_scheduler_end_min).state;
-                int nowTotal = id(${scheduler_unique_id}_sntp).now().hour * 60
-                             + id(${scheduler_unique_id}_sntp).now().minute;
+      - lambda: |-
+          // Do nothing until time is valid
+          if (!id(${scheduler_unique_id}_sntp).now().is_valid()) {
+            return;
+          }
 
-                if (beginTotal <= endTotal) {
-                  return nowTotal >= beginTotal && nowTotal < endTotal;
-                } else {
-                  return nowTotal >= beginTotal || nowTotal < endTotal;
-                }
-          then:
-            # Inside scheduler window
-            - if:
-                condition:
-                  lambda: return !id(safety_limit);
-                then:
-                  - switch.turn_off: activate
-                  - number.set:
-                      id: router_level
-                      value: !lambda return id(${scheduler_unique_id}_scheduler_router_level).state;
-                  - script.execute: ${custom_script}
-          else:
-            # Outside scheduler window → restore router
-            - if:
-                condition:
-                  - switch.is_off: activate
-                then:
-                  - number.set:
-                      id: router_level
-                      value: 0
-                  - switch.turn_on: activate
+          // Safety has absolute priority
+          if (id(safety_limit)) {
+            id(router_level).publish_state(0);
+            id(activate).turn_on();
+            return;
+          }
+
+          int beginMin = (int) id(${scheduler_unique_id}_scheduler_begin_hour).state * 60
+                       + (int) id(${scheduler_unique_id}_scheduler_begin_min).state;
+          int endMin   = (int) id(${scheduler_unique_id}_scheduler_end_hour).state * 60
+                       + (int) id(${scheduler_unique_id}_scheduler_end_min).state;
+          int nowMin   = id(${scheduler_unique_id}_sntp).now().hour * 60
+                       + id(${scheduler_unique_id}_sntp).now().minute;
+
+          bool in_window;
+          if (beginMin <= endMin) {
+            in_window = (nowMin >= beginMin && nowMin < endMin);
+          } else {
+            in_window = (nowMin >= beginMin || nowMin < endMin);
+          }
+
+          if (id(${scheduler_unique_id}_scheduler_activate).state && in_window) {
+            id(activate).turn_off();
+            id(router_level).publish_state(
+              id(${scheduler_unique_id}_scheduler_router_level).state
+            );
+          } else {
+            id(router_level).publish_state(0);
+            id(activate).turn_on();
+          }
 
 switch:
   - platform: template
@@ -74,41 +67,10 @@ number:
     min_value: 0
     max_value: 100
     step: 1
+    mode: box
+    optimistic: true
+    restore_value: true
     initial_value: 100
-    restore_value: true
-    optimistic: true
-    mode: box
-    unit_of_measurement: "%"
-
-  - platform: template
-    name: "${scheduler_unique_id} Scheduler Checking End Threshold"
-    id: ${scheduler_unique_id}_scheduler_checking_end_threshold
-    min_value: 0
-    max_value: 720
-    step: 5
-    restore_value: true
-    optimistic: true
-    mode: box
-
-  - platform: template
-    name: "${scheduler_unique_id} Scheduler Begin Minute"
-    id: ${scheduler_unique_id}_scheduler_begin_min
-    min_value: 0
-    max_value: 59
-    step: 1
-    restore_value: true
-    optimistic: true
-    mode: box
-
-  - platform: template
-    name: "${scheduler_unique_id} Scheduler End Minute"
-    id: ${scheduler_unique_id}_scheduler_end_min
-    min_value: 0
-    max_value: 59
-    step: 1
-    restore_value: true
-    optimistic: true
-    mode: box
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler Begin Hour"
@@ -116,9 +78,20 @@ number:
     min_value: 0
     max_value: 23
     step: 1
-    restore_value: true
-    optimistic: true
     mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 0
+
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler Begin Minute"
+    id: ${scheduler_unique_id}_scheduler_begin_min
+    min_value: 0
+    max_value: 55
+    step: 5
+    mode: box
+    optimistic: true
+    restore_value: true
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler End Hour"
@@ -126,15 +99,33 @@ number:
     min_value: 0
     max_value: 23
     step: 1
-    restore_value: true
-    optimistic: true
     mode: box
+    optimistic: true
+    restore_value: true
+    initial_value: 2
+
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler End Minute"
+    id: ${scheduler_unique_id}_scheduler_end_min
+    min_value: 0
+    max_value: 55
+    step: 5
+    mode: box
+    optimistic: true
+    restore_value: true
 
 time:
   - platform: sntp
     id: ${scheduler_unique_id}_sntp
     on_time:
       - seconds: 0
-        minutes: /5
+        minutes: /1
         then:
-          - script.execute: ${scheduler_unique_id}_scheduler_evaluate
+          - script.execute: ${scheduler_unique_id}_evaluate
+
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - delay: 10s
+      - script.execute: ${scheduler_unique_id}_evaluate
