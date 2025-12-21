@@ -1,9 +1,3 @@
-# Stop Forced Scheduler when temperature is above stop_temperature
-# or when Safety limit reached is active
-# Track if temperature was reached during the day (08h–19h)
-# Variable is persistent and reset every day at 08:00
-# Auto-activate Forced Scheduler when heating is really needed
-
 substitutions:
   scheduler_unique_id: "Forced"
   custom_script: ${scheduler_unique_id}_fake_script
@@ -13,101 +7,27 @@ script:
   - id: ${scheduler_unique_id}_fake_script
     then:
 
-  # === DAY TEMPERATURE TRACKING ===
-  - id: ${scheduler_unique_id}_day_temperature_tracker
-    mode: single
-    then:
-      - lambda: |-
-          auto now = id(${scheduler_unique_id}_sntp).now();
-          if (!now.is_valid()) return;
-
-          int now_min = now.hour * 60 + now.minute;
-          if (now_min < 8 * 60 || now_min >= 19 * 60) return;
-
-          if (
-            !isnan(id(safety_temperature).state) &&
-            id(safety_temperature).state >= id(stop_temperature).state
-          ) {
-            if (!id(temperature_atteinte_60).state) {
-              ESP_LOGI("forced_scheduler", "Day temperature reached");
-              id(temperature_atteinte_60).turn_on();
-            }
-          }
-
-  # === SAFETY / TEMPERATURE GUARD ===
+  # === SAFETY CHECK SCRIPT ===
+  # Disable forced scheduler if temperature or safety limit is reached
   - id: ${scheduler_unique_id}_temperature_guard
     mode: single
     then:
       - lambda: |-
-          auto now = id(${scheduler_unique_id}_sntp).now();
-          if (!now.is_valid()) return;
-
-          int now_min = now.hour * 60 + now.minute;
-          int begin_min =
-            id(${scheduler_unique_id}_scheduler_begin_hour).state * 60 +
-            id(${scheduler_unique_id}_scheduler_begin_min).state;
-          int end_min =
-            id(${scheduler_unique_id}_scheduler_end_hour).state * 60 +
-            id(${scheduler_unique_id}_scheduler_end_min).state;
-
-          bool in_window =
-            (begin_min <= end_min)
-              ? (now_min >= begin_min && now_min < end_min)
-              : (now_min >= begin_min || now_min < end_min);
-
-          if (!in_window) return;
-
           if (
             id(safety_limit) ||
             (!isnan(id(safety_temperature).state) &&
              id(safety_temperature).state >= id(stop_temperature).state)
           ) {
-            ESP_LOGW("forced_scheduler", "STOP Forced Scheduler");
+            ESP_LOGW("forced_scheduler",
+              "STOP scheduler: temp=%.1f limit=%d",
+              id(safety_temperature).state,
+              id(safety_limit)
+            );
             id(${scheduler_unique_id}_scheduler_activate).turn_off();
           }
 
-  # === AUTO MANAGER (🔥 MISSING PIECE) ===
-  - id: ${scheduler_unique_id}_auto_manager
-    mode: single
-    then:
-      - lambda: |-
-          auto now = id(${scheduler_unique_id}_sntp).now();
-          if (!now.is_valid()) return;
-
-          int now_min = now.hour * 60 + now.minute;
-          int begin_min =
-            id(${scheduler_unique_id}_scheduler_begin_hour).state * 60 +
-            id(${scheduler_unique_id}_scheduler_begin_min).state;
-          int end_min =
-            id(${scheduler_unique_id}_scheduler_end_hour).state * 60 +
-            id(${scheduler_unique_id}_scheduler_end_min).state;
-
-          bool in_window =
-            (begin_min <= end_min)
-              ? (now_min >= begin_min && now_min < end_min)
-              : (now_min >= begin_min || now_min < end_min);
-
-          if (!in_window) return;
-
-          if (
-            !id(safety_limit) &&
-            !id(temperature_atteinte_60).state &&
-            !isnan(id(safety_temperature).state) &&
-            id(safety_temperature).state < id(stop_temperature).state
-          ) {
-            if (!id(${scheduler_unique_id}_scheduler_activate).state) {
-              ESP_LOGI("forced_scheduler", "AUTO → Activate Forced Scheduler");
-              id(${scheduler_unique_id}_scheduler_activate).turn_on();
-            }
-          }
-
 switch:
-  - platform: template
-    name: "Temp atteinte dans la journée"
-    id: temperature_atteinte_60
-    optimistic: true
-    restore_mode: RESTORE_DEFAULT_OFF
-
+  # Define if scheduler is active or not
   - platform: template
     name: "Activate ${scheduler_unique_id} Scheduler"
     optimistic: true
@@ -119,12 +39,14 @@ switch:
             condition:
               - switch.is_off: activate
             then:
+              # Set router level to 0 then Enable router
               - number.set:
                   id: router_level
                   value: 0
               - switch.turn_on: activate
 
 number:
+  # Scheduler Router level from 0 to 100
   - platform: template
     name: "${scheduler_unique_id} Scheduler Router Level"
     id: "${scheduler_unique_id}_scheduler_router_level"
@@ -190,30 +112,81 @@ time:
   - platform: sntp
     id: ${scheduler_unique_id}_sntp
     on_time:
-      # Reset daily flag at 08:00
-      - hours: 8
-        minutes: 0
-        seconds: 0
-        then:
-          - switch.turn_off: temperature_atteinte_60
 
-      # At 19:00 → decision for the night
-      - hours: 19
-        minutes: 0
-        seconds: 0
-        then:
-          - script.execute: ${scheduler_unique_id}_auto_manager
-
-      # Every minute
+      # === Every 1 minute: temperature safety check ===
       - seconds: 0
         minutes: /1
         then:
-          - script.execute: ${scheduler_unique_id}_day_temperature_tracker
           - script.execute: ${scheduler_unique_id}_temperature_guard
-          - script.execute: ${scheduler_unique_id}_auto_manager
 
-esphome:
-  on_boot:
-    priority: -100
-    then:
-      - script.execute: ${scheduler_unique_id}_auto_manager
+      # === Existing scheduler logic (unchanged) ===
+      - seconds: 0
+        minutes: /5
+        then:
+          - if:
+              condition:
+                - switch.is_on: ${scheduler_unique_id}_scheduler_activate
+              then:
+                - if:
+                    condition:
+                      lambda: |-
+                        int beginTotalMinutes =
+                          id(${scheduler_unique_id}_scheduler_begin_hour).state * 60 +
+                          id(${scheduler_unique_id}_scheduler_begin_min).state;
+                        int endTotalMinutes =
+                          id(${scheduler_unique_id}_scheduler_end_hour).state * 60 +
+                          id(${scheduler_unique_id}_scheduler_end_min).state;
+                        int checkTotalMinutes =
+                          id(${scheduler_unique_id}_sntp).now().hour * 60 +
+                          id(${scheduler_unique_id}_sntp).now().minute;
+
+                        if (beginTotalMinutes <= endTotalMinutes) {
+                          return checkTotalMinutes >= beginTotalMinutes &&
+                                 checkTotalMinutes < endTotalMinutes;
+                        } else {
+                          return checkTotalMinutes >= beginTotalMinutes ||
+                                 checkTotalMinutes < endTotalMinutes;
+                        }
+                    then:
+                      - switch.turn_off: activate
+                      - number.set:
+                          id: router_level
+                          value: !lambda return id(${scheduler_unique_id}_scheduler_router_level).state;
+                      - script.execute: ${custom_script}
+                    else:
+                      - if:
+                          condition:
+                            and:
+                              - switch.is_off: activate
+                              - lambda: |-
+                                  if (
+                                    id(${scheduler_unique_id}_scheduler_end_hour).state ==
+                                      id(${scheduler_unique_id}_sntp).now().hour &&
+                                    id(${scheduler_unique_id}_scheduler_end_min).state ==
+                                      id(${scheduler_unique_id}_sntp).now().minute
+                                  ) {
+                                    return true;
+                                  }
+
+                                  int beginTotalMinutes =
+                                    id(${scheduler_unique_id}_scheduler_end_hour).state * 60 +
+                                    id(${scheduler_unique_id}_scheduler_end_min).state;
+                                  int endTotalMinutes =
+                                    beginTotalMinutes +
+                                    id(${scheduler_unique_id}_scheduler_checking_end_threshold).state;
+                                  int checkTotalMinutes =
+                                    id(${scheduler_unique_id}_sntp).now().hour * 60 +
+                                    id(${scheduler_unique_id}_sntp).now().minute;
+
+                                  if (beginTotalMinutes <= endTotalMinutes) {
+                                    return checkTotalMinutes >= beginTotalMinutes &&
+                                           checkTotalMinutes <= endTotalMinutes;
+                                  } else {
+                                    return checkTotalMinutes >= beginTotalMinutes ||
+                                           checkTotalMinutes <= endTotalMinutes;
+                                  }
+                          then:
+                            - number.set:
+                                id: router_level
+                                value: 0
+                            - switch.turn_on: activate
