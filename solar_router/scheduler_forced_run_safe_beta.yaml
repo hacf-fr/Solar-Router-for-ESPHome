@@ -1,0 +1,80 @@
+# Differences vs original scheduler:
+# - Scheduler is automatically disabled when safety_limit (temperature reached) is true
+# - Day/Night logic: day (08-19) blocks forced scheduler if water is hot enough
+# - Forced scheduler only runs at night if temperature was NOT reached during the day
+# - Fully autonomous: no Home Assistant automation needed
+
+substitutions:
+  scheduler_unique_id: "Forced"
+  custom_script: ${scheduler_unique_id}_fake_script
+
+script:
+  - id: ${scheduler_unique_id}_fake_script
+    then:
+
+  # Main autonomy logic
+  - id: ${scheduler_unique_id}_auto_manager
+    mode: restart
+    then:
+      - lambda: |-
+          auto now = id(${scheduler_unique_id}_sntp).now();
+          if (!now.is_valid()) return;
+
+          int minutes = now.hour * 60 + now.minute;
+          bool is_day = (minutes >= 8 * 60) && (minutes < 19 * 60);
+
+          ESP_LOGI("scheduler", "Temp=%.1f / Limit=%d / Day=%d",
+                   id(safety_temperature).state,
+                   id(safety_limit),
+                   is_day);
+
+          // Temperature reached → everything stops
+          if (id(safety_limit)) {
+            id(${scheduler_unique_id}_scheduler_activate).turn_off();
+            id(activate).turn_on();   // re-enable router control
+            id(router_level).set(0);
+            return;
+          }
+
+          // Daytime: do NOT allow forced scheduler
+          if (is_day) {
+            id(${scheduler_unique_id}_scheduler_activate).turn_off();
+            return;
+          }
+
+          // Night AND temperature not reached → allow forced scheduler
+          id(${scheduler_unique_id}_scheduler_activate).turn_on();
+
+switch:
+  - platform: template
+    name: "Activate ${scheduler_unique_id} Scheduler"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    id: "${scheduler_unique_id}_scheduler_activate"
+
+number:
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler Router Level"
+    id: "${scheduler_unique_id}_scheduler_router_level"
+    min_value: 0
+    max_value: 100
+    initial_value: 100
+    step: 1
+    optimistic: true
+    mode: slider
+
+time:
+  - platform: sntp
+    id: ${scheduler_unique_id}_sntp
+    on_time:
+      # Every 5 minutes: autonomy manager
+      - seconds: 0
+        minutes: /5
+        then:
+          - script.execute: ${scheduler_unique_id}_auto_manager
+
+esphome:
+  on_boot:
+    priority: -1000
+    then:
+      - script.execute: ${scheduler_unique_id}_auto_manager
