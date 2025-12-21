@@ -1,18 +1,19 @@
 # Stop Forced Scheduler when temperature is above stop_temperature
 # or when Safety limit reached is active
 # Track if temperature was reached during the day (08h–19h)
-# Auto-enable Forced Scheduler at 19h or at boot if needed
+# Variable is persistent and reset every day at 08:00
+# Auto-activate Forced Scheduler when heating is really needed
 
 substitutions:
   scheduler_unique_id: "Forced"
   custom_script: ${scheduler_unique_id}_fake_script
 
 script:
-  # Fake empty script
+  # A fake empty script to run if user don't provide a custom one
   - id: ${scheduler_unique_id}_fake_script
     then:
 
-  # === DAY TEMPERATURE TRACKER (08h–19h) ===
+  # === DAY TEMPERATURE TRACKING ===
   - id: ${scheduler_unique_id}_day_temperature_tracker
     mode: single
     then:
@@ -33,7 +34,7 @@ script:
             }
           }
 
-  # === SAFETY GUARD DURING SCHEDULER WINDOW ===
+  # === SAFETY / TEMPERATURE GUARD ===
   - id: ${scheduler_unique_id}_temperature_guard
     mode: single
     then:
@@ -56,44 +57,62 @@ script:
 
           if (!in_window) return;
 
-          bool temp_reached =
-            !isnan(id(safety_temperature).state) &&
-            id(safety_temperature).state >= id(stop_temperature).state;
-
-          if (id(safety_limit) || temp_reached) {
+          if (
+            id(safety_limit) ||
+            (!isnan(id(safety_temperature).state) &&
+             id(safety_temperature).state >= id(stop_temperature).state)
+          ) {
             ESP_LOGW("forced_scheduler", "STOP Forced Scheduler");
             id(${scheduler_unique_id}_scheduler_activate).turn_off();
           }
 
-  # === AUTO ENABLE FORCED SCHEDULER (boot + 19h) ===
-  - id: ${scheduler_unique_id}_auto_enable_forced
+  # === AUTO MANAGER (🔥 MISSING PIECE) ===
+  - id: ${scheduler_unique_id}_auto_manager
     mode: single
     then:
       - lambda: |-
+          auto now = id(${scheduler_unique_id}_sntp).now();
+          if (!now.is_valid()) return;
+
+          int now_min = now.hour * 60 + now.minute;
+          int begin_min =
+            id(${scheduler_unique_id}_scheduler_begin_hour).state * 60 +
+            id(${scheduler_unique_id}_scheduler_begin_min).state;
+          int end_min =
+            id(${scheduler_unique_id}_scheduler_end_hour).state * 60 +
+            id(${scheduler_unique_id}_scheduler_end_min).state;
+
+          bool in_window =
+            (begin_min <= end_min)
+              ? (now_min >= begin_min && now_min < end_min)
+              : (now_min >= begin_min || now_min < end_min);
+
+          if (!in_window) return;
+
           if (
-            !id(temperature_atteinte_60).state &&
             !id(safety_limit) &&
+            !id(temperature_atteinte_60).state &&
             !isnan(id(safety_temperature).state) &&
             id(safety_temperature).state < id(stop_temperature).state
           ) {
-            ESP_LOGI("forced_scheduler", "Auto enable Forced Scheduler");
-            id(${scheduler_unique_id}_scheduler_activate).turn_on();
+            if (!id(${scheduler_unique_id}_scheduler_activate).state) {
+              ESP_LOGI("forced_scheduler", "AUTO → Activate Forced Scheduler");
+              id(${scheduler_unique_id}_scheduler_activate).turn_on();
+            }
           }
 
 switch:
-  # Persistent flag: temperature reached during the day
   - platform: template
     name: "Temp atteinte dans la journée"
     id: temperature_atteinte_60
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
 
-  # Forced Scheduler main switch
   - platform: template
     name: "Activate ${scheduler_unique_id} Scheduler"
-    id: "${scheduler_unique_id}_scheduler_activate"
     optimistic: true
-    restore_mode: RESTORE_DEFAULT_OFF
+    restore_mode: RESTORE_DEFAULT_ON
+    id: "${scheduler_unique_id}_scheduler_activate"
     on_turn_off:
       then:
         - if:
@@ -120,50 +139,50 @@ number:
   - platform: template
     name: "${scheduler_unique_id} Scheduler Checking End Threshold"
     id: "${scheduler_unique_id}_scheduler_checking_end_threshold"
+    optimistic: true
     min_value: 0
     max_value: 720
     step: 5
-    optimistic: true
     mode: box
     initial_value: 5
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler Begin Minute"
     id: "${scheduler_unique_id}_scheduler_begin_min"
+    optimistic: true
     min_value: 0
     max_value: 55
     step: 5
-    optimistic: true
     mode: box
     initial_value: 0
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler End Minute"
     id: "${scheduler_unique_id}_scheduler_end_min"
+    optimistic: true
     min_value: 0
     max_value: 55
     step: 5
-    optimistic: true
     mode: box
     initial_value: 0
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler Begin Hour"
     id: "${scheduler_unique_id}_scheduler_begin_hour"
+    optimistic: true
     min_value: 0
     max_value: 23
     step: 1
-    optimistic: true
     mode: box
     initial_value: 22
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler End Hour"
     id: "${scheduler_unique_id}_scheduler_end_hour"
+    optimistic: true
     min_value: 0
     max_value: 23
     step: 1
-    optimistic: true
     mode: box
     initial_value: 6
 
@@ -178,22 +197,23 @@ time:
         then:
           - switch.turn_off: temperature_atteinte_60
 
-      # Auto enable at 19:00
+      # At 19:00 → decision for the night
       - hours: 19
         minutes: 0
         seconds: 0
         then:
-          - script.execute: ${scheduler_unique_id}_auto_enable_forced
+          - script.execute: ${scheduler_unique_id}_auto_manager
 
-      # Every minute checks
+      # Every minute
       - seconds: 0
         minutes: /1
         then:
           - script.execute: ${scheduler_unique_id}_day_temperature_tracker
           - script.execute: ${scheduler_unique_id}_temperature_guard
+          - script.execute: ${scheduler_unique_id}_auto_manager
 
 esphome:
   on_boot:
     priority: -100
     then:
-      - script.execute: ${scheduler_unique_id}_auto_enable_forced
+      - script.execute: ${scheduler_unique_id}_auto_manager
