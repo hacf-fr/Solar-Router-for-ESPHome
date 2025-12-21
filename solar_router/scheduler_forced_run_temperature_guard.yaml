@@ -2,18 +2,18 @@
 # or when Safety limit reached is active
 # Track if temperature was reached during the day (08h–19h)
 # Variable is persistent and reset every day at 08:00
+# Forced Scheduler decision is evaluated at BOOT and at 19:00
 
 substitutions:
   scheduler_unique_id: "Forced"
   custom_script: ${scheduler_unique_id}_fake_script
 
 script:
-  # A fake empty script to run if user don't provide a custom one
+  # Fake empty script (compatibility)
   - id: ${scheduler_unique_id}_fake_script
     then:
 
-  # === DAY TEMPERATURE TRACKING ===
-  # If temperature reached during the day, mark it
+  # === DAY TEMPERATURE TRACKING (08h–19h) ===
   - id: ${scheduler_unique_id}_day_temperature_tracker
     mode: single
     then:
@@ -21,7 +21,6 @@ script:
           auto now = id(${scheduler_unique_id}_sntp).now();
           if (!now.is_valid()) return;
 
-          // Day window: 08:00 → 19:00
           int now_min = now.hour * 60 + now.minute;
           if (now_min < 8 * 60 || now_min >= 19 * 60) return;
 
@@ -30,13 +29,13 @@ script:
             id(safety_temperature).state >= id(stop_temperature).state
           ) {
             if (!id(temperature_atteinte_60).state) {
-              ESP_LOGI("forced_scheduler", "Day temp reached → disabling Forced Scheduler tonight");
+              ESP_LOGI("forced_scheduler",
+                "Temperature reached during the day → disable forced tonight");
               id(temperature_atteinte_60).turn_on();
             }
           }
 
-  # === SAFETY CHECK SCRIPT ===
-  # Disable forced scheduler if temperature or safety limit is reached
+  # === SAFETY GUARD DURING FORCED WINDOW ===
   - id: ${scheduler_unique_id}_temperature_guard
     mode: single
     then:
@@ -52,14 +51,13 @@ script:
             id(${scheduler_unique_id}_scheduler_end_hour).state * 60 +
             id(${scheduler_unique_id}_scheduler_end_min).state;
 
-          bool in_scheduler_window;
-          if (begin_min <= end_min) {
-            in_scheduler_window = (now_min >= begin_min && now_min < end_min);
-          } else {
-            in_scheduler_window = (now_min >= begin_min || now_min < end_min);
-          }
+          bool in_window;
+          if (begin_min <= end_min)
+            in_window = (now_min >= begin_min && now_min < end_min);
+          else
+            in_window = (now_min >= begin_min || now_min < end_min);
 
-          if (!in_scheduler_window) return;
+          if (!in_window) return;
 
           bool temp_reached =
             !isnan(id(safety_temperature).state) &&
@@ -67,27 +65,52 @@ script:
 
           if (id(safety_limit) || temp_reached) {
             ESP_LOGW("forced_scheduler",
-              "STOP Forced Scheduler (temp=%.1f / safety=%d)",
+              "STOP forced scheduler (temp=%.1f safety=%d)",
               id(safety_temperature).state,
               id(safety_limit)
             );
             id(${scheduler_unique_id}_scheduler_activate).turn_off();
           }
 
+  # === DECIDE IF FORCED SCHEDULER SHOULD RUN ===
+  # Executed at BOOT and at 19:00
+  - id: ${scheduler_unique_id}_forced_decision
+    mode: single
+    then:
+      - lambda: |-
+          auto now = id(${scheduler_unique_id}_sntp).now();
+          if (!now.is_valid()) return;
+
+          bool temp_ok =
+            !isnan(id(safety_temperature).state) &&
+            id(safety_temperature).state < id(stop_temperature).state;
+
+          if (
+            !id(safety_limit) &&
+            temp_ok &&
+            !id(temperature_atteinte_60).state
+          ) {
+            ESP_LOGI("forced_scheduler", "Forced Scheduler ENABLED");
+            id(${scheduler_unique_id}_scheduler_activate).turn_on();
+          } else {
+            ESP_LOGI("forced_scheduler", "Forced Scheduler DISABLED");
+            id(${scheduler_unique_id}_scheduler_activate).turn_off();
+          }
+
 switch:
-  # Track if temperature was reached during the day (persistent)
+  # Persistent day flag
   - platform: template
     name: "Temp atteinte dans la journée"
     id: temperature_atteinte_60
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
 
-  # Define if scheduler is active or not
+  # Forced Scheduler main switch
   - platform: template
     name: "Activate ${scheduler_unique_id} Scheduler"
+    id: "${scheduler_unique_id}_scheduler_activate"
     optimistic: true
     restore_mode: RESTORE_DEFAULT_ON
-    id: "${scheduler_unique_id}_scheduler_activate"
     on_turn_off:
       then:
         - if:
@@ -100,7 +123,6 @@ switch:
               - switch.turn_on: activate
 
 number:
-  # Scheduler Router level from 0 to 100
   - platform: template
     name: "${scheduler_unique_id} Scheduler Router Level"
     id: "${scheduler_unique_id}_scheduler_router_level"
@@ -113,58 +135,29 @@ number:
     mode: slider
 
   - platform: template
-    name: "${scheduler_unique_id} Scheduler Checking End Threshold"
-    id: "${scheduler_unique_id}_scheduler_checking_end_threshold"
-    optimistic: true
-    min_value: 0
-    max_value: 720
-    step: 5
-    mode: box
-    initial_value: 5
-
-  - platform: template
-    name: "${scheduler_unique_id} Scheduler Begin Minute"
-    id: "${scheduler_unique_id}_scheduler_begin_min"
-    optimistic: true
-    min_value: 0
-    max_value: 55
-    step: 5
-    mode: box
-    initial_value: 0
-
-  - platform: template
-    name: "${scheduler_unique_id} Scheduler End Minute"
-    id: "${scheduler_unique_id}_scheduler_end_min"
-    optimistic: true
-    min_value: 0
-    max_value: 55
-    step: 5
-    mode: box
-    initial_value: 0
-
-  - platform: template
     name: "${scheduler_unique_id} Scheduler Begin Hour"
     id: "${scheduler_unique_id}_scheduler_begin_hour"
-    optimistic: true
     min_value: 0
     max_value: 23
     step: 1
+    optimistic: true
     mode: box
     initial_value: 22
 
   - platform: template
     name: "${scheduler_unique_id} Scheduler End Hour"
     id: "${scheduler_unique_id}_scheduler_end_hour"
-    optimistic: true
     min_value: 0
     max_value: 23
     step: 1
+    optimistic: true
     mode: box
     initial_value: 6
 
 time:
   - platform: sntp
     id: ${scheduler_unique_id}_sntp
+
     on_time:
       # Reset daily flag at 08:00
       - hours: 8
@@ -173,9 +166,22 @@ time:
         then:
           - switch.turn_off: temperature_atteinte_60
 
-      # Every minute: track day temperature + safety guard
+      # Decision at 19:00
+      - hours: 19
+        minutes: 0
+        seconds: 0
+        then:
+          - script.execute: ${scheduler_unique_id}_forced_decision
+
+      # Every minute checks
       - seconds: 0
         minutes: /1
         then:
           - script.execute: ${scheduler_unique_id}_day_temperature_tracker
           - script.execute: ${scheduler_unique_id}_temperature_guard
+
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - script.execute: ${scheduler_unique_id}_forced_decision
