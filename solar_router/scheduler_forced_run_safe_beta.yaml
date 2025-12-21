@@ -1,28 +1,20 @@
 # Differences vs original scheduler:
-# - Forced scheduler is blocked during the day if temperature is reached
-# - Night forced run only happens if water was NOT hot enough during the day
-# - Safety_limit immediately stops forced run
-# - No C++ calls, ESPHome-safe logic only
+# - Scheduler keeps all original time inputs visible in Home Assistant
+# - Temperature safety can force stop the scheduler at any time
+# - Day (08–19): temperature reached disables forced scheduler for the day
+# - Night: scheduler runs only if temperature was not reached
 
 substitutions:
   scheduler_unique_id: "Forced"
   custom_script: ${scheduler_unique_id}_fake_script
 
-globals:
-  # Memorize if temperature was reached during the day
-  - id: day_temperature_reached
-    type: bool
-    restore_value: true
-    initial_value: "false"
-
 script:
-  # Dummy script
   - id: ${scheduler_unique_id}_fake_script
     then:
 
-  # Central autonomy logic
-  - id: ${scheduler_unique_id}_auto_manager
-    mode: restart
+  # Temperature safety manager
+  - id: ${scheduler_unique_id}_temperature_guard
+    mode: single
     then:
       - lambda: |-
           auto now = id(${scheduler_unique_id}_sntp).now();
@@ -32,45 +24,41 @@ script:
           bool is_day = (minutes >= 8 * 60) && (minutes < 19 * 60);
 
           ESP_LOGI("scheduler",
-            "Temp=%.1f Safety=%d Day=%d DayReached=%d",
+            "Temp=%.1f / Safety=%d / Day=%d",
             id(safety_temperature).state,
             id(safety_limit),
-            is_day,
-            id(day_temperature_reached)
+            is_day
           );
 
-          // Temperature reached at any moment
-          if (id(safety_limit)) {
-            id(${scheduler_unique_id}_scheduler_activate).turn_off();
-            id(day_temperature_reached) = is_day ? true : id(day_temperature_reached);
-            return;
-          }
-
-          // Daytime: never allow forced scheduler
-          if (is_day) {
-            id(${scheduler_unique_id}_scheduler_activate).turn_off();
-            return;
-          }
-
-          // Night: allow forced scheduler ONLY if water was NOT hot during the day
-          if (!id(day_temperature_reached)) {
-            id(${scheduler_unique_id}_scheduler_activate).turn_on();
-          } else {
-            id(${scheduler_unique_id}_scheduler_activate).turn_off();
-          }
+      - if:
+          condition:
+            lambda: |-
+              auto now = id(${scheduler_unique_id}_sntp).now();
+              int minutes = now.hour * 60 + now.minute;
+              return id(safety_limit) && (minutes >= 8 * 60) && (minutes < 19 * 60);
+          then:
+            - switch.turn_off: ${scheduler_unique_id}_scheduler_activate
+            - switch.turn_on: activate
+            - number.set:
+                id: router_level
+                value: 0
 
 switch:
   - platform: template
     name: "Activate ${scheduler_unique_id} Scheduler"
     optimistic: true
-    restore_mode: RESTORE_DEFAULT_OFF
+    restore_mode: RESTORE_DEFAULT_ON
     id: "${scheduler_unique_id}_scheduler_activate"
     on_turn_off:
       then:
-        - number.set:
-            id: router_level
-            value: 0
-        - switch.turn_on: activate
+        - if:
+            condition:
+              - switch.is_off: activate
+            then:
+              - number.set:
+                  id: router_level
+                  value: 0
+              - switch.turn_on: activate
 
 number:
   - platform: template
@@ -78,10 +66,60 @@ number:
     id: "${scheduler_unique_id}_scheduler_router_level"
     min_value: 0
     max_value: 100
-    initial_value: 100
     step: 1
     optimistic: true
     mode: slider
+    unit_of_measurement: "%"
+
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler Checking End Threshold"
+    id: "${scheduler_unique_id}_scheduler_checking_end_threshold"
+    min_value: 0
+    max_value: 720
+    step: 5
+    optimistic: true
+    mode: box
+    restore_value: true
+
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler Begin Hour"
+    id: "${scheduler_unique_id}_scheduler_begin_hour"
+    min_value: 0
+    max_value: 23
+    step: 1
+    optimistic: true
+    mode: box
+    restore_value: true
+
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler Begin Minute"
+    id: "${scheduler_unique_id}_scheduler_begin_min"
+    min_value: 0
+    max_value: 55
+    step: 5
+    optimistic: true
+    mode: box
+    restore_value: true
+
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler End Hour"
+    id: "${scheduler_unique_id}_scheduler_end_hour"
+    min_value: 0
+    max_value: 23
+    step: 1
+    optimistic: true
+    mode: box
+    restore_value: true
+
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler End Minute"
+    id: "${scheduler_unique_id}_scheduler_end_min"
+    min_value: 0
+    max_value: 55
+    step: 5
+    optimistic: true
+    mode: box
+    restore_value: true
 
 time:
   - platform: sntp
@@ -90,10 +128,4 @@ time:
       - seconds: 0
         minutes: /5
         then:
-          - script.execute: ${scheduler_unique_id}_auto_manager
-
-esphome:
-  on_boot:
-    priority: -1000
-    then:
-      - script.execute: ${scheduler_unique_id}_auto_manager
+          - script.execute: ${scheduler_unique_id}_temperature_guard
