@@ -1,18 +1,26 @@
 # Differences vs original scheduler:
-# - Scheduler is automatically disabled when safety_limit (temperature reached) is true
-# - Day/Night logic: day (08-19) blocks forced scheduler if water is hot enough
-# - Forced scheduler only runs at night if temperature was NOT reached during the day
-# - Fully autonomous: no Home Assistant automation needed
+# - Forced scheduler is blocked during the day if temperature is reached
+# - Night forced run only happens if water was NOT hot enough during the day
+# - Safety_limit immediately stops forced run
+# - No C++ calls, ESPHome-safe logic only
 
 substitutions:
   scheduler_unique_id: "Forced"
   custom_script: ${scheduler_unique_id}_fake_script
 
+globals:
+  # Memorize if temperature was reached during the day
+  - id: day_temperature_reached
+    type: bool
+    restore_value: true
+    initial_value: "false"
+
 script:
+  # Dummy script
   - id: ${scheduler_unique_id}_fake_script
     then:
 
-  # Main autonomy logic
+  # Central autonomy logic
   - id: ${scheduler_unique_id}_auto_manager
     mode: restart
     then:
@@ -23,27 +31,33 @@ script:
           int minutes = now.hour * 60 + now.minute;
           bool is_day = (minutes >= 8 * 60) && (minutes < 19 * 60);
 
-          ESP_LOGI("scheduler", "Temp=%.1f / Limit=%d / Day=%d",
-                   id(safety_temperature).state,
-                   id(safety_limit),
-                   is_day);
+          ESP_LOGI("scheduler",
+            "Temp=%.1f Safety=%d Day=%d DayReached=%d",
+            id(safety_temperature).state,
+            id(safety_limit),
+            is_day,
+            id(day_temperature_reached)
+          );
 
-          // Temperature reached → everything stops
+          // Temperature reached at any moment
           if (id(safety_limit)) {
             id(${scheduler_unique_id}_scheduler_activate).turn_off();
-            id(activate).turn_on();   // re-enable router control
-            id(router_level).set(0);
+            id(day_temperature_reached) = is_day ? true : id(day_temperature_reached);
             return;
           }
 
-          // Daytime: do NOT allow forced scheduler
+          // Daytime: never allow forced scheduler
           if (is_day) {
             id(${scheduler_unique_id}_scheduler_activate).turn_off();
             return;
           }
 
-          // Night AND temperature not reached → allow forced scheduler
-          id(${scheduler_unique_id}_scheduler_activate).turn_on();
+          // Night: allow forced scheduler ONLY if water was NOT hot during the day
+          if (!id(day_temperature_reached)) {
+            id(${scheduler_unique_id}_scheduler_activate).turn_on();
+          } else {
+            id(${scheduler_unique_id}_scheduler_activate).turn_off();
+          }
 
 switch:
   - platform: template
@@ -51,6 +65,12 @@ switch:
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     id: "${scheduler_unique_id}_scheduler_activate"
+    on_turn_off:
+      then:
+        - number.set:
+            id: router_level
+            value: 0
+        - switch.turn_on: activate
 
 number:
   - platform: template
@@ -67,7 +87,6 @@ time:
   - platform: sntp
     id: ${scheduler_unique_id}_sntp
     on_time:
-      # Every 5 minutes: autonomy manager
       - seconds: 0
         minutes: /5
         then:
