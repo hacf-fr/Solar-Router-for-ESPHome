@@ -1,3 +1,4 @@
+#stop scheduler when temp is above stop_temperature or Safety limit reached is activated 
 substitutions:
   scheduler_unique_id: "Forced"
   custom_script: ${scheduler_unique_id}_fake_script
