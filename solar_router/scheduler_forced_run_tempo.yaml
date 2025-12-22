@@ -1,4 +1,4 @@
-#et tempo 22h - 00h initial_value and scheduler checking treshold initial_value: 5
+#edf tempo 22h - 00h initial_value and scheduler checking treshold initial_value: 5
 substitutions:
   scheduler_unique_id: "Forced"
   custom_script: ${scheduler_unique_id}_fake_script
