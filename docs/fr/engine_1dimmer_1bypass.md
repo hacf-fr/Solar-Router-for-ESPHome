@@ -4,7 +4,7 @@ Ce package implémente le moteur du routeur solaire qui détermine quand et quel
 
 Lorsque le régulateur est utilisé intensivement pendant une période prolongée, il aura tendance à surchauffer. Ce moteur est conçu pour éviter ce problème en activant un relais de bypass et en éteignant le régulateur lorsque celui-ci est ouvert à 100% pendant une période prolongée. Pour éviter le scintillement, le relais de bypass n'est activé que lorsque le régulateur est ouvert à 100% pendant un nombre consécutif de régulations.
 
-L'**Engine 1 x dimmer + 1 x bypass** interroge chaque seconde le compteur d'énergie pour obtenir l'énergie réelle échangée avec le réseau. Si l'énergie produite est supérieure à l'énergie consommée et dépasse l'objectif d'échange défini, le moteur déterminera le **pourcentage d'ouverture du régulateur** et l'ajustera dynamiquement pour atteindre l'objectif. Lorsque le régulateur atteint 100% pendant une période prolongée, le relais de bypass est activé pour une efficacité maximale.
+L'**Engine 1 x dimmer + 1 x bypass** interroge le compteur d'énergie à chaque mise à jour de la valeur de celui-ci pour obtenir l'énergie réelle échangée avec le réseau. Si l'énergie produite est supérieure à l'énergie consommée et dépasse l'objectif d'échange défini, le moteur déterminera le **pourcentage d'ouverture du régulateur** et l'ajustera dynamiquement pour atteindre l'objectif. Lorsque le régulateur atteint 100% pendant une période prolongée, le relais de bypass est activé pour une efficacité maximale.
 
 La régulation automatique du moteur peut être activée ou désactivée avec l'interrupteur d'activation.
 
@@ -54,4 +54,4 @@ Il est necessaire de définir `green_led_pin` et `yellow_led_pin` dans la sectio
  * Le paramètre `hide_leds` permet de définir si les valeurs des leds sont affichées dans HA. Ce paramètre est optionnel.
 
 !!! tip "Ajustement du Bypass tempo"
-    Le `Bypass tempo` détermine combien de régulations consécutives à 100% sont nécessaires avant d'activer le relais de bypass. Une valeur plus basse rendra le bypass plus réactif mais pourrait causer des commutations plus fréquentes (scintillement). Comme il y a environ 1 régulation par seconde, `Bypass tempo` peut être approximé comme le temps en secondes avec le régulateur à 100% avant que le relais de bypass ne soit activé.
+    Le `Bypass tempo` détermine combien de régulations consécutives à 100% sont nécessaires avant d'activer le relais de bypass. Une valeur plus basse rendra le bypass plus réactif mais pourrait causer des commutations plus fréquentes (scintillement). Si votre capteur d'énergie se met à jour 1 fois par seconde, `Bypass tempo` peut être approximé comme le temps en secondes avec le régulateur à 100% avant que le relais de bypass ne soit activé, sinon celà correpond au nombre de mises à jours du capteur d'énergie.

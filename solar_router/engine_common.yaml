@@ -33,7 +33,7 @@ substitutions:
   hide_leds: "True"
 
 # Component managing time.
-# If activate switch is ON, power measurment and energy regulation are performed every secondes
+# If activate switch is ON, yellow led update is performed every secondes
 time:
   - platform: sntp
     id: yellow_led_engine_time_trigger

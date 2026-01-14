@@ -6,7 +6,7 @@ packages:
 
 switch:
   # Define is router is active or not
-  # When switch is ON, activate power meter (pooling timer will trigger every seconds)
+  # When switch is ON, activate power meter (each time power meter is updated the energy regulation will run)
   # When switch is OFF, deactivate power meter, turn off divertion and reset counters
   - platform: template
     name: "Activate Solar Routing"
