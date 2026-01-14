@@ -8,6 +8,20 @@ globals:
     type: bool
     initial_value: "false"
 
+sensor:
+  - platform: copy
+    source_id: real_power
+    name: "Real Power Internal"
+    id: real_power_internal
+    internal : 'True'
+    on_value: 
+      then:
+        - logger.log: "Real power updated, run energy_regulation if activated"
+        - if:
+            condition:
+              switch.is_on: activate
+            then:
+              script.execute: energy_regulation
 
 substitutions:
   # By default led are pin control is not inverted
@@ -22,6 +36,7 @@ substitutions:
 # If activate switch is ON, power measurment and energy regulation are performed every secondes
 time:
   - platform: sntp
+    id: yellow_led_engine_time_trigger
     on_time:
       # Trigger action every second
       - seconds: /1
@@ -30,13 +45,12 @@ time:
               condition:
                 switch.is_on: activate
               then:
-                - script.execute: energy_regulation
                 - light.turn_off: yellow_led
                 - if:
                     condition:
                       lambda: return id(real_power).state == NAN;
                     then:
-                      # When 0.0 is returns, it means that an error occurs
+                      # When NAN is returns, it means that an error occurs. Yellow LED blink fast
                       - light.turn_on:
                           id: yellow_led
                           effect: fast

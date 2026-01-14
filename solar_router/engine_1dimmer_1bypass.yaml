@@ -1,7 +1,8 @@
 # ----------------------------------------------------------------------------------------------------
 # User interaction
 # ----------------------------------------------------------------------------------------------------
-<<: !include engine_common.yaml
+packages:
+  - !include engine_common.yaml
 
 switch:
   # Define is router is active or not
