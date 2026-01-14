@@ -45,7 +45,7 @@ packages:
       - path: solar_router/common.yaml
       - path: solar_router/power_meter_shelly_em.yaml
         vars:
-          power_meter_activated_at_start: 1
+          power_meter_activated_at_start: "1"
           power_meter_ip_address: "192.168.1.26:8000"
           emeter_index: "0"
 

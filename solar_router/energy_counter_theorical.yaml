@@ -36,13 +36,15 @@ script:
 # Sensor showing the actual energy diverted consumption
 sensor:
   - id: energy_diverted
-    platform: total_daily_energy
+    platform: integration
     name: 'Total energy diverted'
-    power_id: power_divertion
+    sensor: power_divertion
     unit_of_measurement: 'kWh'
     state_class: total_increasing
     device_class: energy
     accuracy_decimals: 3
+    time_unit: h
+    restore: true
     filters:
       # Multiplication factor from W to kW is 0.001
       - multiply: 0.001
@@ -51,17 +53,20 @@ sensor:
     name: Power divertion
     id: power_divertion
     unit_of_measurement: 'W'
+    device_class: power
 
 # Enable time component to 
 #  - Update energy diverted counter
-#  - Reset energy at midnight
+#  - Reset energy counter at midnight
 time:
-  - platform: homeassistant
-    id: homeassistant_time_for_solar_router
-
   - platform: sntp
     on_time:
       # Trigger action every second
       - seconds: /1
         then:
           - script.execute: energy_diverted_counter
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        then:
+          - sensor.integration.reset: energy_diverted
