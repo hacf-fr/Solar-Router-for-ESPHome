@@ -2,7 +2,7 @@
 
 Ce package implémente le moteur du routeur solaire qui détermine si l'énergie peut être détournée vers une charge locale ou non.
 
-L'***Engine 1 x switch*** appelle chaque seconde le compteur d'énergie pour obtenir la puissance réelle consommée. Si l'énergie envoyée au réseau est supérieure au niveau de démarrage du détournement (en W) pendant le temps de démarrage (en s), le relais est fermé pour utiliser l'énergie localement. Lorsque l'énergie envoyée au réseau atteint le niveau défini (en W) pour arrêter le détournement pendant le temps d'arrêt (en s), le relais est ouvert et la consommation locale est arrêtée.
+L'***Engine 1 x switch*** appelle le compteur d'énergie à chaque mise à jour de la valeur de celui-ci pour obtenir la puissance réelle consommée. Si l'énergie envoyée au réseau est supérieure au niveau de démarrage du détournement (en W) pendant le temps de démarrage (en s), le relais est fermé pour utiliser l'énergie localement. Lorsque l'énergie envoyée au réseau atteint le niveau défini (en W) pour arrêter le détournement pendant le temps d'arrêt (en s), le relais est ouvert et la consommation locale est arrêtée.
 
 La régulation automatique du *engine_1switch* peut être activée ou désactivée avec l'interrupteur d'activation.
 

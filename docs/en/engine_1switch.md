@@ -3,7 +3,7 @@
 
 This package is implementing the engine of the solar router which determines energy can be diverted to a local load or not.
 
-**Engine 1 x switch** calls every second the power meter to get the actual power consumed. If energy sent to the grid is greater than the divertion start level (in W) during start tempo (in s), the relay is closed to use the energy locally. When the energy sent to the grid reach the level (in W) defined to stop the divertion during stop tempo (in s), the relay is openned and local consomption is stopped.
+**Engine 1 x switch** calls the power meter everytime it's updated to get the actual power consumed. If energy sent to the grid is greater than the divertion start level (in W) during start tempo (in s), the relay is closed to use the energy locally. When the energy sent to the grid reach the level (in W) defined to stop the divertion during stop tempo (in s), the relay is openned and local consomption is stopped.
 
 Engine 1 x switch's automatic regulation can be activated or deactivated with the activation switch.
 

@@ -4,7 +4,7 @@ This package implements the engine of the solar router which determines when and
 
 When the regulator is intensively used for an extended period, the regulator will tends to overheat. This engine is designed to avoid this issue by activating a bypass relay and turning off the regulator when the regulator is opened at 100% for an extended period. To avoid flickering, the bypass relay is activated only when the regulator is opened at 100% for a number of consecutive regulation.
 
-**Engine 1 x dimmer + 1 x bypass** calls every second the power meter to get the actual energy exchanged with the grid. If energy produced is greater than energy consumed and exceeds the defined exchange target, the engine will determine the **percentage of regulator opening** and adjusts it dynamically to reach the target. When the regulator reaches 100% for an extended period, the bypass relay is activated for maximum efficiency.
+**Engine 1 x dimmer + 1 x bypass** calls the power meter everytime it's updated to get the actual energy exchanged with the grid. If energy produced is greater than energy consumed and exceeds the defined exchange target, the engine will determine the **percentage of regulator opening** and adjusts it dynamically to reach the target. When the regulator reaches 100% for an extended period, the bypass relay is activated for maximum efficiency.
 
 Engine's automatic regulation can be activated or deactivated with the activation switch.
 
@@ -54,4 +54,4 @@ When this package is used it is required to define `green_led_pin` and `yellow_l
 * `hide_leds` allow to hide or show leds values from HA and is optionnal.
 
 !!! tip "Adjusting Bypass Tempo"
-    The `Bypass Tempo` determines how many consecutive regulations at 100% are needed before activating the bypass relay. A lower value will make the bypass more reactive but might cause more frequent switching (flickering). Because there's roughly 1 regulation per second, `Bypass Tempo` can be approximated as the time in second with the regulator at 100% before which the the bypass relay is activated.
+    The `Bypass Tempo` determines how many consecutive regulations at 100% are needed before activating the bypass relay. A lower value will make the bypass more reactive but might cause more frequent switching (flickering). If your powermeter is updated 1 time per second, `Bypass Tempo` can be approximated as the time in second with the regulator at 100% before which the the bypass relay is activated, else this correpond to the number of time that your powermeter is updated.
