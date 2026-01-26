@@ -43,7 +43,7 @@ script:
                             id(real_power).publish_state(NAN);
                         } else {
                           bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
-                              if (!root.containsKey("Body")) {
+                              if (!root["Body"].is<JsonObject>()) {
                                   ESP_LOGW("custom", "Invalid JSON structure");
                                   return false;
                               }
@@ -75,7 +75,7 @@ script:
                             id(consumption).publish_state(NAN);
                         } else {
                           bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
-                              if (!root.containsKey("Body")) {
+                              if (!root["Body"].is<JsonObject>()) {
                                   ESP_LOGW("custom", "Invalid JSON structure");
                                   id(consumption).publish_state(NAN);
                                   return false;
