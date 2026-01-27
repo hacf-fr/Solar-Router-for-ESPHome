@@ -97,7 +97,7 @@ packages:
       # in automatic mode, using JSY-MK-194T for derived energy calculation,
       # grid power measurement via Home Assistant (case where JSY has no access
       # to the measurement, or in zero-injection mode)
-      - path: solar_router/power_meter_home_assistant_with_energy_counter_jsy-mk-194t.yaml
+      - path: solar_router/power_meter_home_assistant.yaml
         vars:
           main_power_sensor: sensor.puissance_soutiree_reseau_simulee_prevision_filtree_2
           consumption_sensor: sensor.inverter_activepower_load_sys

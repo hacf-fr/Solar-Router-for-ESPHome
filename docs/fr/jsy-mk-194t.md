@@ -91,7 +91,7 @@ packages:
 
       # en mode automatique et en ayant configuré un JSY-MK-194T pour le calcul de l'energie dérivée, mesure de puissance échangé 
       # avec le réseau via home assistant ( cas où le JSY n'a pas accès à la mesure, ou si on est en 0 injection)
-      - path: solar_router/power_meter_home_assistant_with_energy_counter_jsy-mk-194t.yaml
+      - path: solar_router/power_meter_home_assistant.yaml
         vars:
           main_power_sensor: sensor.puissance_soutiree_reseau_simulee_prevision_filtree_2
           consumption_sensor: sensor.inverter_activepower_load_sys
