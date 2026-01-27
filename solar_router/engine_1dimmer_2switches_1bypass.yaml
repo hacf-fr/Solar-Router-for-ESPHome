@@ -49,27 +49,27 @@ switch:
     id: activate
     on_turn_on:
       then:
-        - light.turn_on: green_led
         - lambda: |-
+            id(green_led).turn_on();
+            id(power_meter_activated) = 1;
             id(relay1_tempo_counter).publish_state(id(full_power_duration).state);
             id(relay2_tempo_counter).publish_state(id(full_power_duration).state);
             id(relay3_tempo_counter).publish_state(id(full_power_duration).state);
-            id(power_meter_activated) = 1;
     on_turn_off:
       then:
         - light.turn_off: green_led
         - lambda: |- 
-            id(router_level).publish_state(0);
-            id(real_power).publish_state(NAN);
             id(consumption).publish_state(NAN);
-            id(relay1_tempo_counter).publish_state(0);
-            id(relay2_tempo_counter).publish_state(0);
-            id(relay3_tempo_counter).publish_state(0);
-            id(power_meter_activated) = 0;
             id(energy_divertion1).turn_off();
             id(energy_divertion2).turn_off();
             id(energy_divertion3).turn_off();
+            id(power_meter_activated) = 0;
+            id(real_power).publish_state(NAN);
             id(regulator_opening).publish_state(0);
+            id(relay1_tempo_counter).publish_state(0);
+            id(relay2_tempo_counter).publish_state(0);
+            id(relay3_tempo_counter).publish_state(0);
+            id(router_level).publish_state(0);
 
   - platform: template
     name: "Energy divertion Relay 1"

@@ -14,19 +14,20 @@ switch:
     id: activate
     on_turn_on:
       then:
-        - light.turn_on: green_led
-        - lambda: id(power_meter_activated) = 1;
+        - lambda: |-
+            id(green_led).turn_on();
+            id(power_meter_activated) = 1;
     on_turn_off:
       then:
         - light.turn_off: green_led
         - lambda: |- 
-            id(router_level).publish_state(0);
-            id(real_power).publish_state(NAN);
-            id(consumption).publish_state(NAN);
             id(bypass_tempo_counter).publish_state(NAN);
-            id(power_meter_activated) = 0;
+            id(consumption).publish_state(NAN);
             id(energy_divertion).turn_off();
+            id(power_meter_activated) = 0;
+            id(real_power).publish_state(NAN);
             id(regulator_opening).publish_state(0);
+            id(router_level).publish_state(0);
         - script.execute: energy_regulation
 
   # Define the bypass relay
