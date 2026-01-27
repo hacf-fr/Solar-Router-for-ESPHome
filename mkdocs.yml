@@ -20,7 +20,7 @@ nav:
       - Overview: power_meter.md
       - Fronius: power_meter_fronius.md
       - Home Assistant: power_meter_home_assistant.md
-      - jsy-mk-194t: power_meter_jsy-mk-194t.md
+      - JSY-MK-194T : power_meter_jsy-mk-194t.md
       - Proxy client: power_meter_proxy_client.md
       - Shelly EM: power_meter_shelly_em.md
   - Regulator:
@@ -36,7 +36,7 @@ nav:
       - 1 x switch: engine_1switch.md
   - Energy Counter: 
       - Theorical: energy_counter_theorical.md
-      - jsy-mk-194t: power_meter_jsy-mk-194t.md
+      - JSY-MK-194T : energy_counter_jsy-mk-194t.md
   - Temperature limiter:
       - Overview: temperature_limiter.md
       - Home Assistant: temperature_limiter_home_assistant.md
