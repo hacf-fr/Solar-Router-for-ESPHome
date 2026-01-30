@@ -22,4 +22,4 @@ output:
   - platform: slow_pwm
     id: ssr_output
     pin: ${regulator_gate_pin}
-    period: 20ms
+    period: 100ms
