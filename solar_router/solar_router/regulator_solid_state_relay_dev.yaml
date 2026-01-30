@@ -1,0 +1,25 @@
+# ----------------------------------------------------------------------------------------------------
+# Define scripts for energy divertion
+# ----------------------------------------------------------------------------------------------------
+
+script:
+  # Apply regulation on relay
+  - id: regulation_control
+    mode: single
+    then:
+      # Apply opening level on relay ldec output
+      - output.turn_on: ssr_output
+      - output.set_level:
+          id: ssr_output
+          level: !lambda return id(regulator_opening).state/100.0;
+
+# ----------------------------------------------------------------------------------------------------
+# relay control
+# ----------------------------------------------------------------------------------------------------
+
+# Control the relay through GPIO
+output:
+  - platform: slow_pwm
+    id: ssr_output
+    pin: ${regulator_gate_pin}
+    period: 20ms
