@@ -1,6 +1,6 @@
 esphome:
-  name: esp8266
-  friendly_name: ESP8266
+  name: esp8266-3
+  friendly_name: ESP8266-3
   min_version: 2025.3.2
 
 esp8266:

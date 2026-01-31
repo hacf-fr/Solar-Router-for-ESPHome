@@ -1,5 +1,5 @@
 esphome:
-  name: solarrouter
+  name: solarrouter-jsy
   friendly_name: SolarRouter
   min_version: 2025.9.0
   name_add_mac_suffix: false
@@ -49,7 +49,7 @@ packages:
           uart_baud_rate: 4800
           AP_Ch2_internal: "false"
 
-      #Read diverted energy with JSY-MK-194T
+      # Read diverted energy with JSY-MK-194T
       - path: solar_router/energy_counter_jsy-mk-194t.yaml
 
       # In automatic mode, measuring power exchanged with the grid via JSY-MK-194T

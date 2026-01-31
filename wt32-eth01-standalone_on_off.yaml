@@ -3,8 +3,8 @@
 # ----------------------------------------------------------------------------------------------------
 
 esphome:
-  name: wt32-eth01-2
-  friendly_name: wt32-eth01-2
+  name: wt32-eth01-3
+  friendly_name: wt32-eth01-3
   min_version: 2026.1.0
 
 esp32:

@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------
 
 esphome:
-  name: solarrouter
+  name: solarrouter-s2
   friendly_name: SolarRouter
   min_version: 2026.1.0
 
