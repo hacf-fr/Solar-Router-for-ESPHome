@@ -23,6 +23,13 @@ sensor:
             then:
               script.execute: energy_regulation
 
+  - platform: template
+    name: "Regulator Opening Sensor"
+    id: regulator_opening_sensor
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    lambda: return id(regulator_opening).state;
+
 substitutions:
   # By default led are pin control is not inverted
   green_led_inverted: "False"
@@ -32,7 +39,9 @@ substitutions:
   # By default leds are hidden
   hide_leds: "True"
 
-# Component managing time.
+# ----------------------------------------------------------------------------------------------------
+# Time management
+# ----------------------------------------------------------------------------------------------------
 # If activate switch is ON, yellow led update is performed every secondes
 time:
   - platform: sntp
@@ -49,7 +58,7 @@ time:
                     condition:
                       lambda: return id(real_power).state == NAN;
                     then:
-                      # When NAN is returns, it means that an error occurs. Yellow LED blink fast
+                      # When NAN is returned, it means that an error occurs
                       - light.turn_on:
                           id: yellow_led
                           effect: fast
