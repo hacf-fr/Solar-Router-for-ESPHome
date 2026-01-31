@@ -17,12 +17,15 @@ logger:
 api:
   encryption:
     key: !secret proxy_api_encryption_key
-    
+
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   reboot_timeout: 24h
 
+# ----------------------------------------------------------------------------------------------------
+# Customisation
+# ----------------------------------------------------------------------------------------------------
 packages:
   solar_router:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
@@ -39,10 +42,9 @@ packages:
       - path: solar_router/engine_1switch.yaml
         vars:
           green_led_pin: GPIO1
-          green_led_inverted: 'True'
+          green_led_inverted: "True"
           yellow_led_pin: GPIO2
       - path: solar_router/temperature_limiter_home_assistant.yaml
         vars:
           temperature_sensor: "input_number.test_temperature"
           red_led_pin: GPIO4
-

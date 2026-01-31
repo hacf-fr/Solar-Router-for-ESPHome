@@ -34,9 +34,6 @@ wifi:
 # ----------------------------------------------------------------------------------------------------
 # Customisation
 # ----------------------------------------------------------------------------------------------------
-
-# This part of the script is designed to be use for customisation. It shouldn't be necessary to
-# edit other part of the script to perform configuration.
 packages:
   solar_router:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/

@@ -40,12 +40,12 @@ ota:
 
 # Configure RJ45 ethernet
 # To activate RJ45 ethernet :
-#   Uncomment this section parameters and comment WiFi section 
+#   Uncomment this section parameters and comment WiFi section
 ethernet:
   type: LAN8720
   mdc_pin: GPIO23
   mdio_pin: GPIO18
-  clk: 
+  clk:
     pin: GPIO0
     mode: CLK_EXT_IN
   phy_addr: 1
