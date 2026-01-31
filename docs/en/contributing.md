@@ -42,8 +42,8 @@ To contribute to **Solar Router for ESPHome**, develop a new feature on your com
 
     !!! Tip "Local development"
         **Solar-Router-For-ESPHome** is designed to use files stored on GitHub.  
-        The `tools` directory contains the script `convert_to_local_source.py` which allows you to convert a `yaml` file pointing to GitHub into a source file `work_in_progress.yaml` pointing to files located in the `solar-router` subdirectory.  
-        Thus, local modifications will be taken into account immediately by the `esphome run work_in_progress.yaml` command.
+        The `tools` directory contains the script `convert_to_local_source.py` which allows you to convert a `yaml` file pointing to GitHub into a source file with the same name prefixed by `local` and pointing to files located in the `solar-router` subdirectory.  
+        Thus, local modifications will be taken into account immediately by the `esphome run local_<my_yaml_file>` command.
 
 - Once stabilized, push the changes to your repository
 - And finally, propose a *pull request* from your fork to the official repository

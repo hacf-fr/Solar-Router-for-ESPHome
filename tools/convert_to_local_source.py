@@ -104,7 +104,7 @@ def process_yaml_file(yaml_file, fake_secrets):
             index=0
             for item in config["packages"]["solar_router"]["files"]:
                 index = index + 1
-                package_name = f'{get_package_name(item["path"])}{index}'
+                package_name = f'{index}_{get_package_name(item["path"])}'
                 config["packages"][package_name] = IncludeTag(filename=item["path"])
                 if "vars" in item:
                     config["packages"][package_name].vars = item["vars"]
@@ -118,7 +118,7 @@ def process_yaml_file(yaml_file, fake_secrets):
         update_parameter(config, ["ap", "password"])
 
     dumped_yaml = yaml.dump(config, sort_keys=False, default_flow_style=False)
-    with open("work_in_progress.yaml", "w", encoding="UTF-8") as f:
+    with open(f"local_{os.path.basename(yaml_file)}", "w", encoding="UTF-8") as f:
         f.write(dumped_yaml)
 
 

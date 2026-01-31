@@ -8,3 +8,4 @@ work_in_progress.yaml
 /site/
 /venv/
 /.vs
+local_*.yaml

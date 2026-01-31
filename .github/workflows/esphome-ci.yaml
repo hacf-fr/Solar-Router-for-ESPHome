@@ -1,0 +1,75 @@
+name: ESPHome Full Build CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Step 1 : List all .yaml files
+  list-files:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: set-matrix
+        run: |
+          # Liste les .yaml, exclut secrets.yaml et les dossiers communs
+          FILES=$(ls *.yaml | grep -v "secrets.yaml" | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix=$FILES" >> $GITHUB_OUTPUT
+
+  # Step 2 : Compile files
+  build:
+    needs: list-files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        file: ${{ fromJson(needs.list-files.outputs.matrix) }}
+      fail-fast: false
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🤫 Create dummy secrets.yaml
+        run: |
+          if [ ! -f secrets.yaml ]; then
+            echo "wifi_ssid: 'dummy'" > secrets.yaml
+            echo "wifi_password: 'dummy'" >> secrets.yaml
+            echo "api_encryption_key: 'dummy_key_base64_longue_ici='" >> secrets.yaml
+            echo "proxy_api_encryption_key: 'dummy_key_base64_longue_ici='" >> secrets.yaml
+            echo "solar_water_heater_api_encryption_key: 'dummy_key_base64_longue_ici='" >> secrets.yaml
+            echo "wt32_eth01_api_encryption_key: 'dummy_key_base64_longue_ici='" >> secrets.yaml
+            echo "solar_router_ota_password: 'dummy_key_base64_longue_ici='" >> secrets.yaml
+            echo "solar_water_heater_ota_password: 'dummy_key_base64_longue_ici='" >> secrets.yaml
+            echo "wt32_eth01_ota_password: 'dummy_key_base64_longue_ici='" >> secrets.yaml
+          fi
+
+      - name: 💾 Cache PlatformIO & ESPHome
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio
+            .esphome
+          key: ${{ runner.os }}-esphome-${{ matrix.file }}-${{ hashFiles(matrix.file) }}
+          restore-keys: |
+            ${{ runner.os }}-esphome-${{ matrix.file }}-
+            ${{ runner.os }}-esphome-
+
+      - name: 🚀 Build ESPHome Binary
+        uses: esphome/build-action@v5
+        with:
+          yaml_file: ${{ matrix.file }}
+          version: latest
+          dry-run: false
+
+      # - name: 📦 Upload Artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     # On donne un nom unique à l'archive (ex: salon.yaml-bin)
+      #     name: ${{ matrix.file }}-bin
+      #     path: .esphome/build/${{ matrix.file }}/.pioenvs/*/firmware.bin
+      #     if-no-files-found: error

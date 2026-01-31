@@ -51,7 +51,6 @@ nav:
     - ChangeLog: changelog.md
     - License: license.md
     - Contributing: contributing.md
-    - compile_coverage.md
     - Alternatives: alternatives.md
     - About the project: about.md
 
