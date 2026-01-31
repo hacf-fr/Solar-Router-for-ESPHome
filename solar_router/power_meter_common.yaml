@@ -4,6 +4,7 @@
 
 substitutions:
   power_meter_activated_at_start: "0"
+  power_sign: "1"
 
 # Activate or not power meter
 globals:

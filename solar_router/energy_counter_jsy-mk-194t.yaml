@@ -1,0 +1,57 @@
+# ----------------------------------------------------------------------------------------------------
+# Calculate daily energy diverted with JSY-MK-194T
+# ----------------------------------------------------------------------------------------------------
+
+sensor:  
+  # Sensor showing the total daily energy diverted consumption
+  - id: energy_diverted
+    platform: total_daily_energy
+    name: 'Total daily energy diverted'
+    power_id: power_divertion
+    unit_of_measurement: 'kWh'
+    state_class: total_increasing
+    device_class: energy
+    accuracy_decimals: 3
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+
+  - platform: template
+    name: Power divertion
+    id: power_divertion
+    unit_of_measurement: 'W'
+    device_class: power
+    
+# Script updating the power consumed counter
+script:
+  - id: energy_diverted_counter
+    mode: single
+    then:
+      - lambda: |-
+          // Ensure that consumption is a valid float
+          float consumption_state = id(consumption).state;  // Access the state of the consumption sensor
+          
+          // Check if consumption is greater than AP_Ch1 or is unknown
+          if (consumption_state >= id(AP_Ch1).state || isnan(consumption_state))  // Access the state of AP_Ch1 if it's a sensor
+          {
+              // Power diverted is consumed (or we don't know the consumption)
+              id(power_divertion).publish_state(id(AP_Ch1).state);  // Use the state of AP_Ch1
+          }
+          else
+          {
+              // Power diverted is not consumed
+              id(power_divertion).publish_state(0.0);  // Make sure this is a float value
+          }
+
+
+
+# Enable time component to 
+#  - Update energy diverted counter
+#  - Reset energy at midnight
+time:
+  - platform: sntp
+    on_time:
+      # Executed every second → energy diverted
+      - seconds: /1
+        then:
+          - script.execute: energy_diverted_counter

@@ -12,13 +12,15 @@ nav:
   - Firmware:
       - Overview: firmware.md
       - Installation: installation.md
-      - Examples:
-          - Standalone: example_standalone.md
-          - With proxy: example_proxy.md
+  - Usage Examples:
+      - Standalone: example_standalone.md
+      - With proxy: example_proxy.md
+      - JSY-MK-194T: jsy-mk-194t.md
   - Power Meter:
       - Overview: power_meter.md
       - Fronius: power_meter_fronius.md
       - Home Assistant: power_meter_home_assistant.md
+      - JSY-MK-194T : power_meter_jsy-mk-194t.md
       - Proxy client: power_meter_proxy_client.md
       - Shelly EM: power_meter_shelly_em.md
   - Regulator:
@@ -34,6 +36,7 @@ nav:
       - 1 x switch: engine_1switch.md
   - Energy Counter: 
       - Theorical: energy_counter_theorical.md
+      - JSY-MK-194T : energy_counter_jsy-mk-194t.md
   - Temperature limiter:
       - Overview: temperature_limiter.md
       - Home Assistant: temperature_limiter_home_assistant.md
@@ -43,6 +46,7 @@ nav:
       - Forced Run: scheduler_forced_run.md
   - Home Assistant:
       - Recorder configuration: recorder_configuration.md
+      - Debug sensors: debug_sensors.md
   - About:
     - ChangeLog: changelog.md
     - License: license.md
@@ -93,24 +97,27 @@ plugins:
           build: true
           link: /Solar-Router-for-ESPHome/fr/
           nav_translations:
-            Home: Accueil
-            Disclamer: Avertissement
-            Solar Router / Diverter: Routeur solaire
-            Hardware: Materiel
-            Overview: Aperçu
-            Examples: Exemples
-            Standalone: Routeur autonome
-            With proxy: Router utilisant un proxy
-            Proxy client: Client proxy
-            Mecanical relay: Relais mécanique
-            Progressive regulation: Régulation progressive
-            ON/OFF regulation: Regulation tout ou rien
-            Theorical: Théorique
-            Recorder configuration: Configuration des recorder
-            Contributing: Contribution
-            License: Licence
             About: A propos
             Alternatives: Alternatives
+            Contributing: Contribution
+            Disclamer: Avertissement
+            Energy Counter: Compteur d'énergie
+            Usage Examples: Exemples d'utilisation
+            Hardware: Materiel
+            Home: Accueil
+            License: Licence
+            Mecanical relay: Relais mécanique
+            ON/OFF regulation: Regulation tout ou rien
+            Overview: Aperçu
+            Progressive regulation: Régulation progressive
+            Proxy client: Client proxy
+            Recorder configuration: Configuration des recorder
+            Scheduler: Plannificateur
+            Solar Router / Diverter: Routeur solaire
+            Standalone: Routeur autonome
+            Temperature Limiter: Limiteur de température
+            Theorical: Théorique
+            With proxy: Router utilisant un proxy
   - search
   - minify:
       minify_html: true

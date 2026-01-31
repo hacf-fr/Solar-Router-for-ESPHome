@@ -1,0 +1,40 @@
+<<: !include power_meter_common.yaml
+# ----------------------------------------------------------------------------------------------------
+# User interaction
+# ----------------------------------------------------------------------------------------------------
+    
+# Script updating the actual power exchange
+script:
+  # Get power reports from JSY-MK-194T and update globals (real_power)
+  # Power exchanged with the grid is names "Value"
+  - id: power_meter_source
+    mode: single
+    then:
+      - lambda: |-          
+          float value = id(AP_Ch2).state;
+          float direction = id(PD_Ch2).state;
+
+          if (!isnan(value)) {
+            // Apply direction from meter
+            if (!isnan(direction) && direction == 1) {
+              value = -value;
+            }
+
+            // Apply user-defined polarity (CT orientation)
+            value *= ${power_sign};
+
+            id(real_power).publish_state(value);
+          } else {
+            id(real_power).publish_state(NAN);
+          }
+
+time:
+  - platform: sntp
+    on_time:
+      - seconds: /1
+        then:
+          - if:
+              condition:
+                lambda: return id(power_meter_activated) != 0;
+              then:
+                - script.execute: power_meter_source
