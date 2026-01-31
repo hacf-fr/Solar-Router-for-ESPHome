@@ -32,6 +32,12 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
+      - name: 🔄 Update ref to current branch
+        run: |
+          BRANCH_NAME=${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}
+          echo "Remplace 'ref: main' by 'ref: $BRANCH_NAME' in ${{ matrix.file }}"
+          sed -i "s@ref: main@ref: ${BRANCH_NAME}@g" "${{ matrix.file }}"
+
       - name: 🤫 Create dummy secrets.yaml
         run: |
           cat > secrets.yaml << 'EOF'

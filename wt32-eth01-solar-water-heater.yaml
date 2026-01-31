@@ -62,6 +62,7 @@ web_server:
 packages:
   solar_router:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    ref: main
     refresh: 1d
     files:
       - path: solar_router/common.yaml
