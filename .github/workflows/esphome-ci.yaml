@@ -19,7 +19,17 @@ jobs:
           FILES=$(ls *.yaml | grep -v "secrets.yaml" | jq -R -s -c 'split("\n")[:-1]')
           echo "matrix=$FILES" >> "$GITHUB_OUTPUT"
 
-  # Step 2 : Compile files
+  # Step 2 : Check Coverage
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+      - name: 🧪 Run Coverage Check
+        run: |
+          ./tools/check_coverage.sh
+
+  # Step 3 : Compile files
   build:
     needs: list-files
     runs-on: ubuntu-latest
