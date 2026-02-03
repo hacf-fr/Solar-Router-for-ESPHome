@@ -86,7 +86,7 @@ jobs:
             ${{ runner.os }}-esphome-
 
       - name: 🚀 Build ESPHome Binary
-        uses: esphome/build-action@v6
+        uses: esphome/build-action@v7
         with:
           yaml-file: ${{ matrix.file }}
           version: latest
