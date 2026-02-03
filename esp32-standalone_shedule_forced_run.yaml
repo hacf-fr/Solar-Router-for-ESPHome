@@ -2,7 +2,7 @@
 # ESPHome configuration - This part depends on your hardware target
 # ----------------------------------------------------------------------------------------------------
 esphome:
-  name: solarrouter-r
+  name: solarrouter-schedule-forced-run
   friendly_name: SolarRouter
   min_version: 2026.1.0
 
@@ -53,7 +53,7 @@ http_request:
 packages:
   solar_router:
     url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
-    ref: main
+    ref: ci/code_coverage
     refresh: 1d
     files:
       - path: solar_router/common.yaml
