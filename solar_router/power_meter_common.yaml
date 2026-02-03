@@ -5,6 +5,7 @@
 substitutions:
   power_meter_activated_at_start: "0"
   power_sign: "1"
+  consumption_sensor_internal: "false"
 
 # Activate or not power meter
 globals:
@@ -18,7 +19,7 @@ globals:
 # Sensor updated every second to give feedback in Home Assistant
 # ----------------------------------------------------------------------------------------------------
 sensor:
-  # Sensor showing the actual power consumption
+  # Sensor showing the actual power on the grid
   - id: real_power
     platform: template
     name: "Real Power"
@@ -33,3 +34,4 @@ sensor:
     device_class: "power"
     unit_of_measurement: "W"
     update_interval: 1s
+    internal: ${consumption_sensor_internal}

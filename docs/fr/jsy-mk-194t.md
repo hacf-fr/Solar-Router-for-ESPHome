@@ -64,6 +64,8 @@ packages:
 
       # en mode automatique, mesure de puissance échangé avec le réseau via JSY-MK-194T
       - path: solar_router/power_meter_jsy-mk-194t.yaml
+		vars:
+		  consumption_sensor_internal: true # Permet d'éviter d'avoir le sensor "Consumption" d'affiché dans Home Assistant, car il n'est jamais utilisé et reste "indisponible" avec l'utilisation du JSY-MK-194T
 ```
 
 ## 3 - Mode Hybride

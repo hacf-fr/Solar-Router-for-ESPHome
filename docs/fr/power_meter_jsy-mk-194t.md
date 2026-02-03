@@ -57,6 +57,8 @@ packages:
     refresh: 1s
     files: 
       - path: solar_router/power_meter_jsy-mk-194t.yaml
+		vars:
+		  consumption_sensor_internal: true # Permet d'éviter d'avoir le sensor "Consumption" d'affiché dans Home Assistant, car il n'est jamais utilisé et reste "indisponible" avec l'utilisation du JSY-MK-194T
 ```
 
 Pour un exemple de mise en oeuvre, reporter vous à l'[exemple JSY-MK-149T](jsy-mk-194t.md).
