@@ -13,8 +13,8 @@ sensor:
     source_id: real_power
     name: "Real Power Internal"
     id: real_power_internal
-    internal : 'True'
-    on_value: 
+    internal: "True"
+    on_value:
       then:
         - logger.log: "Real power updated, run energy_regulation if activated"
         - if:
@@ -36,7 +36,6 @@ substitutions:
 # If activate switch is ON, yellow led update is performed every secondes
 time:
   - platform: sntp
-    id: yellow_led_engine_time_trigger
     on_time:
       # Trigger action every second
       - seconds: /1
@@ -76,13 +75,13 @@ time:
 output:
   - id: yellow_led_output
     platform: gpio
-    pin: 
+    pin:
       number: ${yellow_led_pin}
       inverted: ${yellow_led_inverted}
 
   - id: green_led_output
     platform: gpio
-    pin: 
+    pin:
       number: ${green_led_pin}
       inverted: ${green_led_inverted}
 
