@@ -43,7 +43,7 @@ To use more than one of these packages, add the following lines to your configur
 ```yaml linenums="1"
 packages:
   scheduler_forced_run:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/scheduler_forced_run.yaml
 ```
@@ -55,7 +55,7 @@ If you want to use several instances of this package, for example to program one
 ```yaml linenums="1"
 packages:
   scheduler_forced_run:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/scheduler_forced_run.yaml
         vars:
@@ -77,7 +77,7 @@ For example, to stop scheduling before the end time if a temperature sensor reac
 ```yaml linenums="1"
 packages:
   scheduler_forced_run:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/scheduler_forced_run.yaml
         vars:

@@ -7,7 +7,7 @@ Pour utiliser ce package, ajoutez les lignes suivantes à votre fichier de confi
 ```yaml linenums="1"
 packages:
   power_meter:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     file: solar_router/power_meter_shelly_em.yaml
     vars:
       power_meter_ip_address: "192.168.1.21"

@@ -15,7 +15,7 @@ and configure the GPIOs according to your hardware as shown in the example below
 ```yaml
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       # JSY-MK-194T management
@@ -55,7 +55,7 @@ in the example below:
 ```yaml
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       - path: solar_router/power_meter_jsy-mk-194t.yaml

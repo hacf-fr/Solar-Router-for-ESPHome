@@ -72,7 +72,7 @@ Chaque package nécessite une configuration qui se fait dans la section `substit
 
 Vous pouvez vous référer aux exemples pour voir comment configurer votre yaml pour une installation [autonome](example_standalone.md) ou une installation [basée sur un proxy](example_proxy.md).
 
-!!! example "Plus d'exemples sont disponibles sur [github](https://github.com/XavierBerger/Solar-Router-for-ESPHome)"
+!!! example "Plus d'exemples sont disponibles sur [github](https://github.com/hacf-fr/Solar-Router-for-ESPHome)"
 
 ### Étape 4 : Téléverser le firmware
 

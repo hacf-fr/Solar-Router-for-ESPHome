@@ -25,7 +25,7 @@ To use this package, add the following lines to your configuration file:
 ```yaml linenums="1"
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/engine_1dimmer.yaml
         vars:

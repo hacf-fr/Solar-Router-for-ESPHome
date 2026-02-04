@@ -12,7 +12,7 @@ This file manages communication with the board. If you wish, you can expose the 
 ```yaml
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       # JSY-MK-194T management
@@ -52,7 +52,7 @@ Note that this only works if your system injects surplus power into the grid. Ot
 ```yaml
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       # JSY-MK-194T management (as seen previously)
@@ -80,7 +80,7 @@ It is useful in systems with no real grid injection, or where the measurement po
 ```yaml
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       - path: solar_router/common.yaml 

@@ -34,7 +34,7 @@ Pour utiliser ce package, ajoutez les lignes suivantes à votre fichier de confi
 ```yaml linenums="1"
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/engine_1switch.yaml
         vars:

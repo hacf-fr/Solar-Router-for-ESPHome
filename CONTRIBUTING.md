@@ -1,2 +1,2 @@
 
-See https://xavierberger.github.io/Solar-Router-for-ESPHome/contributing/
+See https://hacf-fr.github.io/Solar-Router-for-ESPHome/contributing/

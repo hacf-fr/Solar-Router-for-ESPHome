@@ -38,7 +38,7 @@ To use this package, add the following lines to your configuration file:
 ```yaml linenums="1"
 packages:
   engine:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/engine_1dimmer_2switches.yaml
         vars:
@@ -80,14 +80,14 @@ You can find below the example of configuration for relays:
 ```yaml linenums="1"
 packages:
   relay1_regulator:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/regulator_mecanical_relay.yaml
         vars:
           relay_regulator_gate_pin: GPIO17
           relay_unique_id: "1"
   relay2_regulator:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/regulator_mecanical_relay.yaml
         vars:

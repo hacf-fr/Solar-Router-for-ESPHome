@@ -1,6 +1,6 @@
-[![doc](docs/images/SolarRouterforESPHomeDocumentation.svg)](https://xavierberger.github.io/Solar-Router-for-ESPHome/)  
-[![changelog](docs/images/SolarRouterforESPHomeChangeLog.svg)](https://xavierberger.github.io/Solar-Router-for-ESPHome/changelog/)  
-[![issues](docs/images/SolarRouterforESPHomeReportbugorrequestenhancement.svg)](https://github.com/XavierBerger/Solar-Router-for-ESPHome/issues)
+[![doc](docs/images/SolarRouterforESPHomeDocumentation.svg)](https://hacf-fr.github.io/Solar-Router-for-ESPHome/)  
+[![changelog](docs/images/SolarRouterforESPHomeChangeLog.svg)](https://hacf-fr.github.io/Solar-Router-for-ESPHome/changelog/)  
+[![issues](docs/images/SolarRouterforESPHomeReportbugorrequestenhancement.svg)](https://github.com/hacf-fr/Solar-Router-for-ESPHome/issues)
 
 # Solar Router for ESPHome 
 
@@ -12,7 +12,7 @@ This integration enables users to effortlessly monitor and control the router's 
 
 ### ⚡ Important Notice ⚡
 **This project involves working with 230 volts , which can be hazardous.**  
-**Please read the [disclaimer](https://xavierberger.github.io/Solar-Router-for-ESPHome/disclamer/) before proceeding with the "Solar Router for ESPHome" project.**
+**Please read the [disclaimer](https://hacf-fr.github.io/Solar-Router-for-ESPHome/disclamer/) before proceeding with the "Solar Router for ESPHome" project.**
 
 <div style="text-align:center">
 <img src="docs/images/SolarRouterClosed.png" alt="drawing" style="width:400px;"/>

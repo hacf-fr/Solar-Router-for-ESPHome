@@ -13,7 +13,7 @@ Ce fichier gère la communication avec la carte. Vous pouvez, si vous le souhait
 ```yaml linenums="1"
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       # gestion du JSY-MK-194T
@@ -51,7 +51,7 @@ Pour activer le compteur d'énergie, il suffit de l'ajouter à votre configurati
 ```yaml linenums="1"
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       - path: solar_router/energy_counter_jsy-mk-194t.yaml

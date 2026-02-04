@@ -17,7 +17,7 @@ Documentation must be added describing this new hardware and its constraints (e.
 
 To contribute to **Solar Router for ESPHome**, develop a new feature on your computer and propose a **pull request**, you must:
 
-- Fork the [**Solar Router for ESPHome** repository](https://github.com/XavierBerger/Solar-Router-for-ESPHome) on Github
+- Fork the [**Solar Router for ESPHome** repository](https://github.com/hacf-fr/Solar-Router-for-ESPHome) on Github
 - Clone your forked repository to your PC
 - Create a development branch from **main**
 - [Create and activate a Python virtual environment](https://docs.python.org/3/library/venv.html)
@@ -75,7 +75,7 @@ A **Regulator** must manage the percentage of energy sent to its load based on i
 
 The overall system state is managed by the `router_level` sensor, which controls all regulators. When `router_level` is at 0, all regulators must be off, and when it is at 100, all regulators must be at maximum. For systems with a single regulator, the regulator level generally reflects the `router_level`, but they remain separate because `router_level` is used for LED indicators and energy counting logic.
 
-Here is an example regulator implementation (excerpt from [regulator_triac.yaml](https://github.com/XavierBerger/Solar-Router-for-ESPHome/blob/main/solar_router/regulator_triac.yaml)) using the `light` component and its `brightness` to control energy diversion:
+Here is an example regulator implementation (excerpt from [regulator_triac.yaml](https://github.com/hacf-fr/Solar-Router-for-ESPHome/blob/main/solar_router/regulator_triac.yaml)) using the `light` component and its `brightness` to control energy diversion:
 
 ```yaml linenums="1"
 script:
@@ -110,12 +110,12 @@ To install `mkdocs`, you must install [Python](https://python.org) then:
 The documentation is stored in the `docs` directory. To see your changes in real time in your browser, run the `mkdocs serve` command and navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 !!! note "Updating the Changelog"
-    The Changelog is only available in the officially published [documentation](https://xavierberger.github.io/Solar-Router-for-ESPHome/changelog/).  
+    The Changelog is only available in the officially published [documentation](https://hacf-fr.github.io/Solar-Router-for-ESPHome/changelog/).  
     The Changelog is updated manually after a new version is released.
 
     The Changelog is generated using `git-cliff`.  
     Versions are based on tags.  
     Lines added to the changelog are based on *merge commit messages*.
 
-    The `tools\update_documentation.sh` script is designed to update `changelog.md`, generate and publish the `mkdocs` documentation on [github pages](https://xavierberger.github.io/Solar-Router-for-ESPHome/).  
+    The `tools\update_documentation.sh` script is designed to update `changelog.md`, generate and publish the `mkdocs` documentation on [github pages](https://hacf-fr.github.io/Solar-Router-for-ESPHome/).  
     **The documentation update script is intended to be used only by the repository maintainer.**

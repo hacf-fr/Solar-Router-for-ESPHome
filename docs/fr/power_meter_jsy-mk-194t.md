@@ -15,7 +15,7 @@ Ce fichier gère la communication avec la carte. Ajoutez `jsy-mk-194t_common.yam
 ```yaml linenums="1"
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       # gestion du JSY-MK-194T
@@ -53,7 +53,7 @@ Pour activer le power meter, il suffit de l'ajouter à votre configuration comme
 ```yaml linenums="1"
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       - path: solar_router/power_meter_jsy-mk-194t.yaml

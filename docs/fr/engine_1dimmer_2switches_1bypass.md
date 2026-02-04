@@ -31,7 +31,7 @@ La régulation automatique du moteur peut être activée ou désactivée à l'ai
 
 !!! Danger "Suivez les instructions de câblage"
     Ne branchez pas l'entrée Phase du régulateur au Normalement Fermé (NC) du relais ! Votre charge serait mise hors tension lors de la commutation du relais, créant potentiellement des arcs à l'intérieur du relais.
-    Plus d'informations dans cette [discussion](https://github.com/XavierBerger/Solar-Router-for-ESPHome/pull/51#issuecomment-2625724543).
+    Plus d'informations dans cette [discussion](https://github.com/hacf-fr/Solar-Router-for-ESPHome/pull/51#issuecomment-2625724543).
 
 ## Schema d'exemple de cablage
 
@@ -44,7 +44,7 @@ Pour utiliser ce package, ajoutez les lignes suivantes à votre fichier de confi
 ```yaml linenums="1"
 packages:
   engine:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/engine_1dimmer_2switches_1bypass.yaml
         vars:
@@ -84,21 +84,21 @@ Vous trouverez ci-dessous l'exemple de configuration pour les relais :
 ```yaml linenums="1"
 packages:
   relay1_regulator:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/regulator_mecanical_relay.yaml
         vars:
           relay_regulator_gate_pin: GPIO17
           relay_unique_id: "1"
   relay2_regulator:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/regulator_mecanical_relay.yaml
         vars:
           relay_regulator_gate_pin: GPIO18
           relay_unique_id: "2"
   relay3_bypass_regulator:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/regulator_mecanical_relay.yaml
         vars:

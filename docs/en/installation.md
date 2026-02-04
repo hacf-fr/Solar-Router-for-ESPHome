@@ -74,7 +74,7 @@ Each package requires a configuration which is done in `vars` section of `packag
 
 You can refer to examples to see how to configure your yaml for a [standalone](example_standalone.md) installation a [proxy based](example_proxy.md) installation.
 
-!!! example "More examples are available in [github](https://github.com/XavierBerger/Solar-Router-for-ESPHome)"
+!!! example "More examples are available in [github](https://github.com/hacf-fr/Solar-Router-for-ESPHome)"
 
 
 ### Step 4: Upload firmware

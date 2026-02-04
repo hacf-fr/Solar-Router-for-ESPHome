@@ -16,7 +16,7 @@ La régulation automatique du moteur peut être activée ou désactivée avec l'
 
 !!! Danger "Suivez les instructions de câblage"
     Ne branchez pas l'entrée Phase du régulateur au Normalement Fermé (NC) du relais ! Votre charge serait mise hors tension lors de la commutation du relais, créant potentiellement des arcs à l'intérieur du relais.
-    Plus d'informations dans cette [discussion](https://github.com/XavierBerger/Solar-Router-for-ESPHome/pull/51#issuecomment-2625724543).
+    Plus d'informations dans cette [discussion](https://github.com/hacf-fr/Solar-Router-for-ESPHome/pull/51#issuecomment-2625724543).
 
 ## Router level vs regulator opening
 
@@ -36,7 +36,7 @@ Pour utiliser ce package, ajoutez les lignes suivantes à votre fichier de confi
 ```yaml linenums="1"
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/engine_1dimmer_1bypass.yaml
         vars:

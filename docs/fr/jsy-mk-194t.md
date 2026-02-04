@@ -11,7 +11,7 @@ Ce fichier gère la communication avec la carte. Vous pouvez, si vous le souhait
 ```yaml linenums="1"
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       # gestion du JSY-MK-194T
@@ -48,7 +48,7 @@ Il est important de noter que ceci fonctionne uniquement si votre système injec
 ```yaml linenums="1"
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       # gestion du JSY-MK-194T (partie vue précedemment)
@@ -75,7 +75,7 @@ Il est utile dans les systèmes où il n'y a pas d'injection réelle dans le ré
 ```yaml linenums="1"
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       - path: solar_router/common.yaml 

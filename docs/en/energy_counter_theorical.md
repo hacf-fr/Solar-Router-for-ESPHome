@@ -13,7 +13,7 @@ To use this counter, add the following lines to your configuration file.
 ```yaml
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
       - path: solar_router/energy_counter_theorical.yaml
 ```

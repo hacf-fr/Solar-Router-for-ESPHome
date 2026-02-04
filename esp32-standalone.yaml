@@ -52,7 +52,7 @@ http_request:
 # ----------------------------------------------------------------------------------------------------
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     ref: main
     refresh: 1d
     files:

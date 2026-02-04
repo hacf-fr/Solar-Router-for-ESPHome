@@ -15,7 +15,7 @@ JSY-MK-194T measurements in Home Assistant; see the example below.
 ```yaml
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       # JSY-MK-194T management
@@ -55,7 +55,7 @@ in the example below:
 ```yaml
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       - path: solar_router/energy_counter_jsy-mk-194t.yaml

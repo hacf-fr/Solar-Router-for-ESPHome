@@ -9,7 +9,7 @@ Pour utiliser ce package, ajoutez les lignes suivantes à votre fichier de confi
 ```yaml
 packages:
   solar_router:
-    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1d
     files: 
       - path: solar_router/debug_sensors.yaml
