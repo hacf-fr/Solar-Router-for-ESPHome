@@ -1,0 +1,57 @@
+# ----------------------------------------------------------------------------------------------------
+# ESPHome configuration - This part depends on your hardware target
+# ----------------------------------------------------------------------------------------------------
+
+esphome:
+  name: esp32-s3
+  friendly_name: ESP32-S3
+  min_version: 2025.3.2
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+  baud_rate: 115200
+  level: INFO
+  logs:
+    component: ERROR
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret esp32_s3_api_encryption_key
+
+# Enable over-the-air updates
+ota:
+  - platform: esphome
+    password: !secret esp32_s3_ota_password
+
+# WiFi connection
+wifi:
+ ssid: !secret wifi_ssid
+ password: !secret wifi_password
+ # If you have a WiFi activity plannification, you may have to update the reboot timeout (Default: 15min)
+ reboot_timeout: 24h
+
+# Activate web interface
+web_server:
+  port: 80
+
+# ----------------------------------------------------------------------------------------------------
+# Customisation
+# ----------------------------------------------------------------------------------------------------
+packages:
+  solar_router:
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    ref: feature/enphase_envoy
+    refresh: 1d
+    files:
+      - path: solar_router/common.yaml
+      - path: solar_router/power_meter_enphase.yaml
+        vars:
+          power_meter_activated_at_start: 1
+          enphase_user: "email"
+          enphase_password: "password"
