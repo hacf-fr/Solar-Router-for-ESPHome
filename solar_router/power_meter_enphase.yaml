@@ -10,7 +10,7 @@ esphome:
 # Token management
 # ----------------------------------------------------------------------------------------------------
 substitutions:
-  enphase_user: "votre_email"
+  enphase_username: "votre_email"
   enphase_password: "votre_mot_de_passe"
 
 globals:
@@ -51,7 +51,7 @@ script:
                     - lambda: |-
                         if (response->status_code != 200) {
                             ESP_LOGW("custom", "HTTP Request failed with status: %d", response->status_code);
-                            id(enphase_token) = NAN;
+                            id(enphase_token) = "";
                         } else {
                           bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
                               if (!root.containsKey("access_token")) {
@@ -63,7 +63,7 @@ script:
                           });
                           if (!parse_success) {
                               ESP_LOGW("custom", "JSON Parsing failed");
-                              id(enphase_token) = NAN;
+                              id(enphase_token) = "";
                           }
                         }
 

@@ -53,5 +53,5 @@ packages:
       - path: solar_router/power_meter_enphase.yaml
         vars:
           power_meter_activated_at_start: 1
-          enphase_user: "email"
+          enphase_username: "email"
           enphase_password: "password"
