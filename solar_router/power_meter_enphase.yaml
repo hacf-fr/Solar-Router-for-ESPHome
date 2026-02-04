@@ -2,9 +2,6 @@
 
 esphome:
   min_version: 2024.11.1
-  on_boot:
-    then:
-      - script.execute: get_enphase_token
 
 # ----------------------------------------------------------------------------------------------------
 # Token management
@@ -16,7 +13,8 @@ substitutions:
 globals:
   - id: enphase_token
     type: std::string
-    initial_value: ""
+    restore_value: no
+    initial_value: '"TOKEN_INITIAL_VALUE"'
 
 
 # ----------------------------------------------------------------------------------------------------
@@ -34,7 +32,46 @@ script:
   # --------------------------------------------------------------------------------------------------
   # Define scripts to get authentication tocken 
   # --------------------------------------------------------------------------------------------------
-  - id: get_enphase_token
+  - id: get_enphase_token_from_server
+    # Enphase API Token JSON
+    # 
+    # Pour accéder aux API locales de votre passerelle Enphase IQ Gateway/Envoy-S, vous devez d'abord générer un token
+    # d'authentification. Ce token est essentiel pour effectuer des requêtes API sécurisées. Voici un résumé des étapes
+    # nécessaires pour obtenir ce token et l'utiliser dans vos appels API.
+    # Étapes pour obtenir le token
+    # 
+    #     Authentification :
+    #         Vous devez d'abord obtenir un Session ID en vous authentifiant avec votre adresse e-mail et 
+    #         votre mot de passe Enphase.
+    #         Utilisez la commande suivante avec cURL : 
+    #         bash curl -X POST https://enlighten.enphaseenergy.com/login/login.json? -F "user[email]=VOTREADRESSEEMAIL" -F "user[password]=VOTREMOTDEPASSE"
+    #         La réponse contiendra le session_id.
+    # 
+    #     Génération du token :
+    #         Une fois que vous avez le session_id, utilisez-le pour demander un token d'authentification.
+    #         Voici la commande cURL pour cela : 
+    #         bash curl -X POST https://entrez.enphaseenergy.com/tokens -H "Content-Type: application/json" -d "{"session_id": "LESESSIONID", "serial_num": "LENUMEROEDESERIEDEVOTREPASSERELLE", "username": "VOTRENOMDUTILISATEUR"}"
+    #         Remplacez LESESSIONID, LENUMEROEDESERIEDEVOTREPASSERELLE, et VOTRENOMDUTILISATEURENPHASE par vos informations respectives.
+    # 
+    #     Utilisation du token :
+    #         Une fois que vous avez obtenu le token, vous pouvez l'utiliser pour faire des requêtes API. 
+    #         Par exemple, pour obtenir des données de production : bash curl -f -k -H 'Accept: application/json' -H 'Authorization: Bearer VOTRETOKEN' -X GET https://ADRESSEIPDEVOTREPASSERELLE/api/v1/production/inverters 
+    # 
+    # Remarques importantes
+    # 
+    #     Durée de validité du token : 
+    #         Si vous êtes un utilisateur final, le token sera valide pendant un an. 
+    #         Pour les installateurs, il sera valide seulement quelques heures.
+    #     Format JSON : 
+    #         Les réponses des API seront en format JSON, que vous pourrez traiter avec des outils comme jq 
+    #         pour extraire les données spécifiques dont vous avez besoin.
+    # 
+    # En suivant ces étapes, vous pourrez intégrer les données de votre passerelle Enphase dans votre système, 
+    # comme Loxone, en utilisant les API locales. Si vous avez besoin d'aide supplémentaire pour le traitement 
+    # des données JSON ou pour des intégrations spécifiques, n'hésitez pas à demander.
+    # 
+    # 
+    # https://enphase.com/download/accessing-iq-gateway-local-apis-or-local-ui-token-based-authentication
     mode: single
     then:
       - if:
@@ -42,16 +79,16 @@ script:
             lambda: 'return network::is_connected();'
           then:
             - http_request.post:
-                url: "https://api.enphaseenergy.com/oauth/token"
+                url: "https://api.enphaseenergy.com/api/v2/login"
                 headers:
-                  Content-Type: application/x-www-form-urlencoded
-                body: "grant_type=password&username=${enphase_username}&password=${enphase_password}"
+                  Content-Type: "application/json"
+                body: '{"username": "${enphase_username}", "password": "${enphase_password}"}'
                 on_response:
                   then:
                     - lambda: |-
                         if (response->status_code != 200) {
                             ESP_LOGW("custom", "HTTP Request failed with status: %d", response->status_code);
-                            id(enphase_token) = "";
+                            id(enphase_token) = "Server access error";
                         } else {
                           bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
                               if (!root.containsKey("access_token")) {
@@ -59,19 +96,23 @@ script:
                                   return true;
                               }
                               ESP_LOGW("custom", "Invalid JSON structure");
+                              id(enphase_token) = "Can't find token in json";
                               return false;
                           });
                           if (!parse_success) {
                               ESP_LOGW("custom", "JSON Parsing failed");
-                              id(enphase_token) = "";
+                              id(enphase_token) = "Invalid JSON structure";
                           }
+                          id(enphase_token) = "Unknown error";
                         }
+                on_error:
+                  - lambda: id(enphase_token) = "Http error";
 
 
 # Texte pour afficher les 10 premiers caractères du token 
 text_sensor:
   - platform: template
-    name: "Enphase Token Preview"
+    name: "Enphase Token"
     lambda: |-
       if (id(enphase_token).length() > 10) {
         return id(enphase_token).substr(0, 10) + "...";
@@ -80,10 +121,53 @@ text_sensor:
       }
     update_interval: 60s
 
+button:
+  - platform: template
+    name: get_enphase_token
+    id: my_button
+    icon: "mdi:emoticon-outline"
+    on_press:
+      - script.execute: get_enphase_token_from_server
 
   # --------------------------------------------------------------------------------------------------
   # Define scripts for power collection
   # --------------------------------------------------------------------------------------------------
+  # Enphase API Token JSON avec ESPHome
+  # 
+  # Pour intégrer l'API d'Enphase avec ESPHome, vous devez générer un JSON Web Token (JWT) qui vous permettra d'accéder aux données de votre Enphase Envoy. Voici les étapes à suivre :
+  # 
+  #     Génération du Token JWT :
+  #         Connectez-vous à votre compte Enphase sur le site d'Enphase.
+  #         Utilisez vos identifiants pour générer un token JWT qui est valide pour 12 mois. Ce token inclut des informations comme votre numéro de série et votre adresse e-mail.
+  # 
+  #     Configuration d'ESPHome :
+  #         Dans votre fichier de configuration ESPHome, vous devez inclure le token JWT dans les en-têtes de vos requêtes HTTP.
+  #         Voici un exemple de configuration pour faire une requête à l'API d'Enphase :
+  # 
+  #     http_request:
+  #       - id: envoy_data
+  #         url: "https://envoy.local/ivp/meters/readings"
+  #         headers:
+  #           Authorization: "Bearer YOUR_JWT_TOKEN"
+  #         method: GET
+  #         on_response:
+  #           then:
+  #             - lambda: |-
+  #                 // Traitez votre réponse JSON ici
+  # 
+  #     Utilisation des Données :
+  #         Une fois que vous avez configuré votre requête HTTP, vous pouvez traiter la réponse JSON pour extraire les données nécessaires, comme la production d'énergie, la consommation, etc.
+  # 
+  #     Exemple de Traitement JSON :
+  #         Utilisez des fonctions de traitement JSON dans ESPHome pour extraire les valeurs spécifiques que vous souhaitez surveiller.
+  # 
+  # Assurez-vous de remplacer YOUR_JWT_TOKEN par le token que vous avez généré.
+  # 
+  # Note : Si vous rencontrez des problèmes d'accès ou de connexion, vérifiez que votre Enphase Envoy est correctement configuré sur votre réseau local et que vous avez les droits d'accès nécessaires.
+  # 
+
+
+
 #   - id: power_meter_source
 #     mode: single
 #     then:
