@@ -79,19 +79,43 @@ script:
             lambda: 'return network::is_connected();'
           then:
             - http_request.post:
-                url: "https://api.enphaseenergy.com/api/v2/login"
+                url: "https://enlighten.enphaseenergy.com/login/login.json?"
+                capture_response: true
                 headers:
-                  Content-Type: "application/json"
-                body: '{"username": "${enphase_username}", "password": "${enphase_password}"}'
+                  Content-Type: application/x-www-form-urlencoded
+                body: >
+                  user[email]=${enphase_username}
+                  &user[password]=${enphase_password}
+                  &secured_user=true
+                  &commit=Sign+In
                 on_response:
                   then:
+                    - logger.log:
+                        format: "Réponse HTTP %d : %s"
+                        args:
+                          - response->status_code
+                          - body.c_str()
                     - lambda: |-
                         if (response->status_code != 200) {
                             ESP_LOGW("custom", "HTTP Request failed with status: %d", response->status_code);
+                            ESP_LOGW("custom", "Body: %s", body.c_str());
+                            bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
+                              if (root.containsKey("message")) {
+                                  id(enphase_token)=root["message"].as<std::string>();
+                                  return true;
+                              }
+                              ESP_LOGW("custom", "Invalid JSON structure");
+                              id(enphase_token) = "Can't find token in json";
+                              return false;
+                          });
+                          if (!parse_success) {
+                              ESP_LOGW("custom", "JSON Parsing failed");
+                              id(enphase_token) = "Invalid JSON structure";
+                          }
                             id(enphase_token) = "Server access error";
                         } else {
                           bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
-                              if (!root.containsKey("access_token")) {
+                              if (root.containsKey("access_token")) {
                                   id(enphase_token)=root["access_token"].as<std::string>();
                                   return true;
                               }
