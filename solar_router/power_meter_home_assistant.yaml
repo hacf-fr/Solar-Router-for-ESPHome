@@ -1,4 +1,5 @@
-<<: !include power_meter_common.yaml
+packages:
+  - !include power_meter_common.yaml
 
 # ----------------------------------------------------------------------------------------------------
 # Define sensor for power collection
@@ -7,20 +8,28 @@
 sensor:
   # Sensor showing the actual power exchange
   - platform: homeassistant
-    id: real_power
+    id: real_power_reader
     entity_id: ${main_power_sensor}
     internal: False
-    name: "Real Power"
+    name: "Real Power Reader"
     device_class: "power"
     unit_of_measurement: "W"
     filters:
       - multiply: ${power_sign}
+    on_value:
+      then:
+        - lambda: |-
+            id(real_power).publish_state(x);
 
   # Sensor showing the actual consumption
   - platform: homeassistant
-    id: consumption
+    id: consumption_reader
     entity_id: ${consumption_sensor}
     internal: False
-    name: "Consumption"
+    name: "Consumption Reader"
     device_class: "power"
     unit_of_measurement: "W"
+    on_value:
+      then:
+        - lambda: |-
+            id(consumption).publish_state(x);

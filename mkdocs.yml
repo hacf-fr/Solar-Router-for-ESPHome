@@ -45,6 +45,7 @@ nav:
       - Overview: scheduler.md
       - Forced Run: scheduler_forced_run.md
   - Home Assistant:
+      - Blueprint Priority_to_EV: bleuprint_priority_to_ev.md
       - Recorder configuration: recorder_configuration.md
       - Debug sensors: debug_sensors.md
   - About:
