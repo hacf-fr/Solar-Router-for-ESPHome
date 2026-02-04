@@ -1,6 +1,6 @@
 # Compteur d'énergie JSY-MK-194T
 
-Le compteur d'énergie JSY-MK-194T partage avec le [power meter jsy-mk-194t](powermeter_jsy-mk-194t.md) un code 
+Le compteur d'énergie JSY-MK-194T partage avec le [power meter jsy-mk-194t](power_meter_jsy-mk-194t.md) un code 
 commun permettant de communique avec le module. La suite de cette documentation explique comment configurer cette partie 
 commune et comment configurer un compteur d'énergie JSY-MK-194T.
 
