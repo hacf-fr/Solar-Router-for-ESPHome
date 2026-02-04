@@ -2,546 +2,532 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>None./</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="None"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/"/>
     </url>
     <url>
         <loc>Noneabout/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneabout/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/about/"/>
     </url>
     <url>
         <loc>Nonealternatives/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonealternatives/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/alternatives/"/>
     </url>
     <url>
         <loc>Nonechangelog/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonechangelog/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/changelog/"/>
     </url>
     <url>
-        <loc>Nonecompile_coverage/</loc>
-        <lastmod>2026-01-31</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonecompile_coverage/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/compile_coverage/"/>
-    </url>
-    <url>
         <loc>Nonecontributing/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonecontributing/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/contributing/"/>
     </url>
     <url>
         <loc>Nonedebug_sensors/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonedebug_sensors/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/debug_sensors/"/>
     </url>
     <url>
         <loc>Nonedisclamer/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonedisclamer/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/disclamer/"/>
     </url>
     <url>
         <loc>Noneenergy_counter_jsy-mk-194t/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneenergy_counter_jsy-mk-194t/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/energy_counter_jsy-mk-194t/"/>
     </url>
     <url>
         <loc>Noneenergy_counter_theorical/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneenergy_counter_theorical/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/energy_counter_theorical/"/>
     </url>
     <url>
         <loc>Noneengine/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine/"/>
     </url>
     <url>
         <loc>Noneengine_1dimmer/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer/"/>
     </url>
     <url>
         <loc>Noneengine_1dimmer_1bypass/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_1bypass/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_1bypass/"/>
     </url>
     <url>
         <loc>Noneengine_1dimmer_2switches/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_2switches/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_2switches/"/>
     </url>
     <url>
         <loc>Noneengine_1dimmer_2switches_1bypass/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_2switches_1bypass/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_2switches_1bypass/"/>
     </url>
     <url>
         <loc>Noneengine_1switch/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1switch/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1switch/"/>
     </url>
     <url>
         <loc>Noneexample_proxy/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneexample_proxy/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/example_proxy/"/>
     </url>
     <url>
         <loc>Noneexample_standalone/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneexample_standalone/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/example_standalone/"/>
     </url>
     <url>
         <loc>Nonefirmware/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonefirmware/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/firmware/"/>
     </url>
     <url>
         <loc>Nonehardware/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonehardware/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/hardware/"/>
     </url>
     <url>
         <loc>Noneinstallation/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneinstallation/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/installation/"/>
     </url>
     <url>
         <loc>Nonejsy-mk-194t/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonejsy-mk-194t/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/jsy-mk-194t/"/>
     </url>
     <url>
         <loc>Nonelicense/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonelicense/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/license/"/>
     </url>
     <url>
         <loc>Nonepower_meter/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter/"/>
     </url>
     <url>
         <loc>Nonepower_meter_fronius/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_fronius/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_fronius/"/>
     </url>
     <url>
         <loc>Nonepower_meter_home_assistant/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_home_assistant/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_home_assistant/"/>
     </url>
     <url>
         <loc>Nonepower_meter_jsy-mk-194t/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_jsy-mk-194t/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_jsy-mk-194t/"/>
     </url>
     <url>
         <loc>Nonepower_meter_proxy_client/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_proxy_client/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_proxy_client/"/>
     </url>
     <url>
         <loc>Nonepower_meter_shelly_em/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_shelly_em/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_shelly_em/"/>
     </url>
     <url>
         <loc>Nonerecorder_configuration/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonerecorder_configuration/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/recorder_configuration/"/>
     </url>
     <url>
         <loc>Noneregulator_mecanical_relay/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_mecanical_relay/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_mecanical_relay/"/>
     </url>
     <url>
         <loc>Noneregulator_solid_state_relay/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_solid_state_relay/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_solid_state_relay/"/>
     </url>
     <url>
         <loc>Noneregulator_triac/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_triac/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_triac/"/>
     </url>
     <url>
         <loc>Nonescheduler/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonescheduler/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/scheduler/"/>
     </url>
     <url>
         <loc>Nonescheduler_forced_run/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonescheduler_forced_run/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/scheduler_forced_run/"/>
     </url>
     <url>
         <loc>Nonesolar_router/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonesolar_router/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/solar_router/"/>
     </url>
     <url>
         <loc>Nonetemperature_limiter/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter/"/>
     </url>
     <url>
         <loc>Nonetemperature_limiter_DS18B20/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter_DS18B20/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter_DS18B20/"/>
     </url>
     <url>
         <loc>Nonetemperature_limiter_home_assistant/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter_home_assistant/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter_home_assistant/"/>
     </url>
     <url>
         <loc>Nonefr/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/"/>
         <xhtml:link rel="alternate" hreflang="en" href="None"/>
     </url>
     <url>
         <loc>Nonefr/about/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/about/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneabout/"/>
     </url>
     <url>
         <loc>Nonefr/alternatives/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/alternatives/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonealternatives/"/>
     </url>
     <url>
         <loc>Nonefr/changelog/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/changelog/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonechangelog/"/>
     </url>
     <url>
-        <loc>Nonefr/compile_coverage/</loc>
-        <lastmod>2026-01-31</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/compile_coverage/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonecompile_coverage/"/>
-    </url>
-    <url>
         <loc>Nonefr/contributing/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/contributing/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonecontributing/"/>
     </url>
     <url>
         <loc>Nonefr/debug_sensors/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/debug_sensors/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonedebug_sensors/"/>
     </url>
     <url>
         <loc>Nonefr/disclamer/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/disclamer/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonedisclamer/"/>
     </url>
     <url>
         <loc>Nonefr/energy_counter_jsy-mk-194t/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/energy_counter_jsy-mk-194t/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneenergy_counter_jsy-mk-194t/"/>
     </url>
     <url>
         <loc>Nonefr/energy_counter_theorical/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/energy_counter_theorical/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneenergy_counter_theorical/"/>
     </url>
     <url>
         <loc>Nonefr/engine/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine/"/>
     </url>
     <url>
         <loc>Nonefr/engine_1dimmer/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer/"/>
     </url>
     <url>
         <loc>Nonefr/engine_1dimmer_1bypass/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_1bypass/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_1bypass/"/>
     </url>
     <url>
         <loc>Nonefr/engine_1dimmer_2switches/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_2switches/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_2switches/"/>
     </url>
     <url>
         <loc>Nonefr/engine_1dimmer_2switches_1bypass/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_2switches_1bypass/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_2switches_1bypass/"/>
     </url>
     <url>
         <loc>Nonefr/engine_1switch/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1switch/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1switch/"/>
     </url>
     <url>
         <loc>Nonefr/example_proxy/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/example_proxy/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneexample_proxy/"/>
     </url>
     <url>
         <loc>Nonefr/example_standalone/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/example_standalone/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneexample_standalone/"/>
     </url>
     <url>
         <loc>Nonefr/firmware/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/firmware/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonefirmware/"/>
     </url>
     <url>
         <loc>Nonefr/hardware/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/hardware/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonehardware/"/>
     </url>
     <url>
         <loc>Nonefr/installation/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/installation/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneinstallation/"/>
     </url>
     <url>
         <loc>Nonefr/jsy-mk-194t/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/jsy-mk-194t/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonejsy-mk-194t/"/>
     </url>
     <url>
         <loc>Nonefr/license/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/license/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonelicense/"/>
     </url>
     <url>
         <loc>Nonefr/power_meter/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter/"/>
     </url>
     <url>
         <loc>Nonefr/power_meter_fronius/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_fronius/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_fronius/"/>
     </url>
     <url>
         <loc>Nonefr/power_meter_home_assistant/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_home_assistant/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_home_assistant/"/>
     </url>
     <url>
         <loc>Nonefr/power_meter_jsy-mk-194t/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_jsy-mk-194t/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_jsy-mk-194t/"/>
     </url>
     <url>
         <loc>Nonefr/power_meter_proxy_client/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_proxy_client/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_proxy_client/"/>
     </url>
     <url>
         <loc>Nonefr/power_meter_shelly_em/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_shelly_em/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_shelly_em/"/>
     </url>
     <url>
         <loc>Nonefr/recorder_configuration/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/recorder_configuration/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonerecorder_configuration/"/>
     </url>
     <url>
         <loc>Nonefr/regulator_mecanical_relay/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_mecanical_relay/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_mecanical_relay/"/>
     </url>
     <url>
         <loc>Nonefr/regulator_solid_state_relay/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_solid_state_relay/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_solid_state_relay/"/>
     </url>
     <url>
         <loc>Nonefr/regulator_triac/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_triac/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_triac/"/>
     </url>
     <url>
         <loc>Nonefr/scheduler/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/scheduler/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonescheduler/"/>
     </url>
     <url>
         <loc>Nonefr/scheduler_forced_run/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/scheduler_forced_run/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonescheduler_forced_run/"/>
     </url>
     <url>
         <loc>Nonefr/solar_router/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/solar_router/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonesolar_router/"/>
     </url>
     <url>
         <loc>Nonefr/temperature_limiter/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter/"/>
     </url>
     <url>
         <loc>Nonefr/temperature_limiter_DS18B20/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter_DS18B20/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter_DS18B20/"/>
     </url>
     <url>
         <loc>Nonefr/temperature_limiter_home_assistant/</loc>
-        <lastmod>2026-01-31</lastmod>
+        <lastmod>2026-02-04</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter_home_assistant/"/>
         <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter_home_assistant/"/>
