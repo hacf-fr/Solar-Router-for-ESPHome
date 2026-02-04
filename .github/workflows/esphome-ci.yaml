@@ -32,7 +32,30 @@ jobs:
         run: |
           ./tools/check_coverage.sh
 
-  # Step 3 : Compile files
+  # Step 3 : Build & Validate Documentation
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v6
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          sed -i "/esphome/d" requirements.txt 
+          pip install -r requirements.txt
+
+      - name: 🏗️ MkDocs Build
+        run: |
+          # The --strict flag causes the build to fail if any warnings or broken links are detected
+          mkdocs build --strict
+
+  # Step 4 : Compile files
   build:
     needs: list-files
     runs-on: ubuntu-latest

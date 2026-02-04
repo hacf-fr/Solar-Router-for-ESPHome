@@ -1,7 +1,7 @@
 # JSY-MK-194T Energy Counter
 
 The JSY-MK-194T energy counter shares common code with the
-[JSY-MK-194T power meter](powermeter_jsy-mk-194t.md) to communicate with the module.
+[JSY-MK-194T power meter](power_meter_jsy-mk-194t.md) to communicate with the module.
 The rest of this documentation explains how to configure this common part
 and how to configure a JSY-MK-194T energy counter.
 
