@@ -4,6 +4,10 @@
 packages:
   - !include engine_common.yaml
 
+esphome:
+  includes:
+    - solar_router/engine_1switch.h
+
 switch:
   # Define is router is active or not
   # When switch is ON, activate power meter (each time power meter is updated the energy regulation will run)
@@ -15,19 +19,32 @@ switch:
     id: activate
     on_turn_on:
       then:
-        - lambda: |-
-            id(power_meter_activated) = 1;
-            id(green_led).turn_on();
+        - globals.set:
+            id: power_meter_activated
+            value: "1"
+        - light.turn_on:
+            id: green_led
     on_turn_off:
       then:
-        - lambda: |- 
-            id(consumption).publish_state(NAN);
-            id(green_led).turn_off();
-            id(power_meter_activated) = 0;
-            id(real_power).publish_state(NAN);
-            id(router_level).publish_state(0);
-            id(start_tempo_counter).publish_state(NAN);
-            id(stop_tempo_counter).publish_state(NAN);
+        - number.to_min:
+            id: router_level
+        - light.turn_off:
+            id: green_led
+        - sensor.template.publish:
+            id: consumption
+            state: .nan
+        - globals.set:
+            id: power_meter_activated
+            value: "0"
+        - sensor.template.publish:
+            id: real_power
+            state: .nan
+        - sensor.template.publish:
+            id: start_tempo_counter
+            state: .nan
+        - sensor.template.publish:
+            id: stop_tempo_counter
+            state: .nan
 
   # Define if energy has to be diverted or not.
   # Reset counter, manage router level (0 or 100) and manage LEDs
@@ -85,7 +102,7 @@ number:
                     - switch.is_on: activate
                   then:
                     - light.turn_on: green_led
-  
+
   # Define the power level to start divertion
   - platform: template
     name: "Start power level"
@@ -98,7 +115,6 @@ number:
     initial_value: 1200
     unit_of_measurement: "W"
     step: 1
-
 
   # Define the tempo before closing the relay
   - platform: template
@@ -153,7 +169,6 @@ sensor:
     unit_of_measurement: "s"
     update_interval: 1s
 
-
 # ----------------------------------------------------------------------------------------------------
 # Define scripts for energy regulation
 # ----------------------------------------------------------------------------------------------------
@@ -165,56 +180,4 @@ script:
     then:
       # Energy export is negative
       - lambda: |-
-          if (isnan(id(real_power).state) or id(safety_limit)){
-            // If we can have information about grid exchange or if safety_limit is active, do not divert any energy
-            id(router_level).publish_state(0);
-            return;
-          }
-          if (id(real_power).state < -id(start_power_level).state) 
-          {
-            // Energy divertion is needed
-            if ( id(router_level).state >= 100 ){
-              // Energy divertion is already done
-              id(start_tempo_counter).publish_state(NAN);
-              return;
-            }
-
-            id(stop_tempo_counter).publish_state(NAN);
-            if ( isnan(id(start_tempo_counter).raw_state) ){
-              id(start_tempo_counter).publish_state(id(start_tempo).state);
-            }
-
-            id(start_tempo_counter).publish_state(id(start_tempo_counter).state - 1);
-            if (id(start_tempo_counter).state <= 0)
-            {
-              id(router_level).publish_state(100);
-              id(start_tempo_counter).publish_state(NAN);
-            }
-            return;
-          }
-          if (id(real_power).state > -id(stop_power_level).state) 
-          {
-            // If energy divertion need to be stopped
-            if (id(router_level).state <= 0){
-              // Energy divertion is already stopped
-              id(stop_tempo_counter).publish_state(NAN);
-              return;
-            }
-
-            id(start_tempo_counter).publish_state(NAN);
-            if ( isnan(id(stop_tempo_counter).raw_state) ){
-              id(stop_tempo_counter).publish_state(id(stop_tempo).state);
-            }
-
-            id(stop_tempo_counter).publish_state(id(stop_tempo_counter).state - 1);
-            if (id(stop_tempo_counter).state <= 0)
-            {
-              id(router_level).publish_state(0);
-              id(stop_tempo_counter).publish_state(NAN);
-            }
-            return;
-          }
-          
-          id(start_tempo_counter).publish_state(NAN);
-          id(stop_tempo_counter).publish_state(NAN);
- 
+          engine_1switch::energy_regulation();
