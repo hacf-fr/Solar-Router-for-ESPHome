@@ -5,121 +5,122 @@ edit_uri: ""
 copyright: © Copyright hacf-fr (See authors in github repository) - 2024-2025
 
 nav:
-      - Home: index.md
-      - Disclamer: disclamer.md
-      - Solar Router / Diverter: solar_router.md
-      - Hardware: hardware.md
-      - Firmware:
-              - Overview: firmware.md
-              - Installation: installation.md
-      - Usage Examples:
-              - Standalone: example_standalone.md
-              - With proxy: example_proxy.md
-              - JSY-MK-194T: jsy-mk-194t.md
-      - Power Meter:
-              - Overview: power_meter.md
-              - Fronius: power_meter_fronius.md
-              - Home Assistant: power_meter_home_assistant.md
-              - JSY-MK-194T: power_meter_jsy-mk-194t.md
-              - Proxy client: power_meter_proxy_client.md
-              - Shelly EM: power_meter_shelly_em.md
-      - Regulator:
-              - Triac: regulator_triac.md
-              - Solid State Relay: regulator_solid_state_relay.md
-              - Mecanical relay: regulator_mecanical_relay.md
-      - Engine:
-              - Overview: engine.md
-              - 1 x dimmer: engine_1dimmer.md
-              - 1 x dimmer + bypass: engine_1dimmer_1bypass.md
-              - 1 x dimmer + 2 x switches: engine_1dimmer_2switches.md
-              - 1 x dimmer + 2 x switches + bypass: engine_1dimmer_2switches_1bypass.md
-              - 1 x switch: engine_1switch.md
-      - Energy Counter:
-              - Theorical: energy_counter_theorical.md
-              - JSY-MK-194T: energy_counter_jsy-mk-194t.md
-      - Temperature limiter:
-              - Overview: temperature_limiter.md
-              - Home Assistant: temperature_limiter_home_assistant.md
-              - DS18B20: temperature_limiter_DS18B20.md
-      - Scheduler:
-              - Overview: scheduler.md
-              - Forced Run: scheduler_forced_run.md
-      - Home Assistant:
-              - Recorder configuration: recorder_configuration.md
-              - Debug sensors: debug_sensors.md
-      - About:
-              - ChangeLog: changelog.md
-              - License: license.md
-              - Contributing: contributing.md
-              - Alternatives: alternatives.md
-              - About the project: about.md
+        - Home: index.md
+        - Disclamer: disclamer.md
+        - Solar Router / Diverter: solar_router.md
+        - Hardware: hardware.md
+        - Firmware:
+                  - Overview: firmware.md
+                  - Installation: installation.md
+        - Usage Examples:
+                  - Standalone: example_standalone.md
+                  - With proxy: example_proxy.md
+                  - JSY-MK-194T: jsy-mk-194t.md
+        - Power Meter:
+                  - Overview: power_meter.md
+                  - Fronius: power_meter_fronius.md
+                  - Home Assistant: power_meter_home_assistant.md
+                  - JSY-MK-194T: power_meter_jsy-mk-194t.md
+                  - Proxy client: power_meter_proxy_client.md
+                  - Shelly EM: power_meter_shelly_em.md
+        - Regulator:
+                  - Triac: regulator_triac.md
+                  - Solid State Relay: regulator_solid_state_relay.md
+                  - Mecanical relay: regulator_mecanical_relay.md
+        - Engine:
+                  - Overview: engine.md
+                  - 1 x dimmer: engine_1dimmer.md
+                  - 1 x dimmer + bypass: engine_1dimmer_1bypass.md
+                  - 1 x dimmer + 2 x switches: engine_1dimmer_2switches.md
+                  - 1 x dimmer + 2 x switches + bypass: engine_1dimmer_2switches_1bypass.md
+                  - 1 x switch: engine_1switch.md
+        - Energy Counter:
+                  - Theorical: energy_counter_theorical.md
+                  - JSY-MK-194T: energy_counter_jsy-mk-194t.md
+        - Temperature limiter:
+                  - Overview: temperature_limiter.md
+                  - Home Assistant: temperature_limiter_home_assistant.md
+                  - DS18B20: temperature_limiter_DS18B20.md
+                  - Fan controler: temperature_fan_control.md
+        - Scheduler:
+                  - Overview: scheduler.md
+                  - Forced Run: scheduler_forced_run.md
+        - Home Assistant:
+                  - Recorder configuration: recorder_configuration.md
+                  - Debug sensors: debug_sensors.md
+        - About:
+                  - ChangeLog: changelog.md
+                  - License: license.md
+                  - Contributing: contributing.md
+                  - Alternatives: alternatives.md
+                  - About the project: about.md
 
 theme:
-      name: material
-      features:
-            - tabs
-            - content.code.copy
-      font:
-            text: Ubuntu
-            code: Ubuntu Mono
+        name: material
+        features:
+                - tabs
+                - content.code.copy
+        font:
+                text: Ubuntu
+                code: Ubuntu Mono
 
 markdown_extensions:
-      - markdown.extensions.admonition
-      - markdown.extensions.toc:
-              permalink: true
-      - pymdownx.details
-      - pymdownx.snippets:
-              check_paths: true
-      - pymdownx.highlight:
-              anchor_linenums: true
-              line_spans: __span
-              pygments_lang_class: true
-      - pymdownx.inlinehilite
-      - pymdownx.superfences
-      - attr_list
-      - md_in_html
+        - markdown.extensions.admonition
+        - markdown.extensions.toc:
+                  permalink: true
+        - pymdownx.details
+        - pymdownx.snippets:
+                  check_paths: true
+        - pymdownx.highlight:
+                  anchor_linenums: true
+                  line_spans: __span
+                  pygments_lang_class: true
+        - pymdownx.inlinehilite
+        - pymdownx.superfences
+        - attr_list
+        - md_in_html
 
 plugins:
-      - i18n:
-              docs_structure: folder
-              reconfigure_material: true
-              reconfigure_search: true
-              languages:
-                    - locale: en
-                      default: true
-                      name: 🇬🇧 English
-                      build: true
-                      link: /Solar-Router-for-ESPHome/
-                    - locale: fr
-                      name: 🇫🇷 Français
-                      build: true
-                      link: /Solar-Router-for-ESPHome/fr/
-                      nav_translations:
-                            About: A propos
-                            Alternatives: Alternatives
-                            Contributing: Contribution
-                            Disclamer: Avertissement
-                            Energy Counter: Compteur d'énergie
-                            Usage Examples: Exemples d'utilisation
-                            Hardware: Materiel
-                            Home: Accueil
-                            License: Licence
-                            Mecanical relay: Relais mécanique
-                            ON/OFF regulation: Regulation tout ou rien
-                            Overview: Aperçu
-                            Progressive regulation: Régulation progressive
-                            Proxy client: Client proxy
-                            Recorder configuration: Configuration des recorder
-                            Scheduler: Plannificateur
-                            Solar Router / Diverter: Routeur solaire
-                            Standalone: Routeur autonome
-                            Temperature Limiter: Limiteur de température
-                            Theorical: Théorique
-                            With proxy: Router utilisant un proxy
-      - search
-      - minify:
-              minify_html: true
-      - git-revision-date-localized:
-              type: datetime
-      - glightbox
-      - include-markdown
+        - i18n:
+                  docs_structure: folder
+                  reconfigure_material: true
+                  reconfigure_search: true
+                  languages:
+                          - locale: en
+                            default: true
+                            name: 🇬🇧 English
+                            build: true
+                            link: /Solar-Router-for-ESPHome/
+                          - locale: fr
+                            name: 🇫🇷 Français
+                            build: true
+                            link: /Solar-Router-for-ESPHome/fr/
+                            nav_translations:
+                                    About: A propos
+                                    Alternatives: Alternatives
+                                    Contributing: Contribution
+                                    Disclamer: Avertissement
+                                    Energy Counter: Compteur d'énergie
+                                    Usage Examples: Exemples d'utilisation
+                                    Hardware: Materiel
+                                    Home: Accueil
+                                    License: Licence
+                                    Mecanical relay: Relais mécanique
+                                    ON/OFF regulation: Regulation tout ou rien
+                                    Overview: Aperçu
+                                    Progressive regulation: Régulation progressive
+                                    Proxy client: Client proxy
+                                    Recorder configuration: Configuration des recorder
+                                    Scheduler: Plannificateur
+                                    Solar Router / Diverter: Routeur solaire
+                                    Standalone: Routeur autonome
+                                    Temperature Limiter: Limiteur de température
+                                    Theorical: Théorique
+                                    With proxy: Router utilisant un proxy
+        - search
+        - minify:
+                  minify_html: true
+        - git-revision-date-localized:
+                  type: datetime
+        - glightbox
+        - include-markdown
