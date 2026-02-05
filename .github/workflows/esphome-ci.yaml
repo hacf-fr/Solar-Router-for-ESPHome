@@ -52,6 +52,8 @@ jobs:
 
       - name: 🏗️ MkDocs Build
         run: |
+          # Remove plugin not supported in CI which has no impact in documentation check
+          sed -i '/git-revision-date-localized:/,+1d' mkdocs.yml 
           # The --strict flag causes the build to fail if any warnings or broken links are detected
           mkdocs build --strict
 
