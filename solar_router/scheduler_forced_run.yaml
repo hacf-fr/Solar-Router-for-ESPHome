@@ -1,3 +1,7 @@
+esphome:
+  includes:
+    - solar_router/scheduler_forced_run.h
+
 substitutions:
   scheduler_unique_id: "Forced"
   custom_script: ${scheduler_unique_id}_fake_script
@@ -86,61 +90,41 @@ time:
   - platform: sntp
     id: ${scheduler_unique_id}_sntp
     on_time:
-      
       - seconds: 0
         minutes: /5
         then:
-        - if:
-            condition:
-              - switch.is_on: ${scheduler_unique_id}_scheduler_activate
-            then:
-              - if:
-                  condition:
-                    lambda: |-
-                      // We are between begin (included) and end (excluded) hour and minutes
-                      int beginTotalMinutes = id(${scheduler_unique_id}_scheduler_begin_hour).state * 60 + id(${scheduler_unique_id}_scheduler_begin_min).state;
-                      int endTotalMinutes = id(${scheduler_unique_id}_scheduler_end_hour).state * 60 + id(${scheduler_unique_id}_scheduler_end_min).state;
-                      int checkTotalMinutes = id(${scheduler_unique_id}_sntp).now().hour * 60 + id(${scheduler_unique_id}_sntp).now().minute;
-
-                      if (beginTotalMinutes <= endTotalMinutes) {
-                          return checkTotalMinutes >= beginTotalMinutes && checkTotalMinutes < endTotalMinutes;
-                      } else {
-                          return checkTotalMinutes >= beginTotalMinutes || checkTotalMinutes < endTotalMinutes;
-                      }
-                  then:
-                    # Disable Router then set router level to X percent
-                    - switch.turn_off: activate
-                    - number.set:
-                        id: router_level
-                        value: !lambda return id(${scheduler_unique_id}_scheduler_router_level).state;
-                    # if deactivation script option
-                    - script.execute: ${custom_script}
-                  else:
-                    - if:
-                        condition:
-                          and:
-                            - switch.is_off: activate
-                            # End Hour and minutes are reached
-                            - lambda: |-
-                                // End Hour and minutes are reached
-                                if (id(${scheduler_unique_id}_scheduler_end_hour).state == id(${scheduler_unique_id}_sntp).now().hour && id(${scheduler_unique_id}_scheduler_end_min).state == id(${scheduler_unique_id}_sntp).now().minute){
-                                  return true;
-                                }
-                                
-                                // Or we are between end hour and minutes and scheduler_checking_end_threshold
-                                // It's a failsafe to check that router have been activated even if we lost the moment of end hour and minutes
-                                int beginTotalMinutes = id(${scheduler_unique_id}_scheduler_end_hour).state * 60 + id(${scheduler_unique_id}_scheduler_end_min).state;
-                                int endTotalMinutes = beginTotalMinutes + id(${scheduler_unique_id}_scheduler_checking_end_threshold).state;
-                                int checkTotalMinutes = id(${scheduler_unique_id}_sntp).now().hour * 60 + id(${scheduler_unique_id}_sntp).now().minute;
-
-                                if (beginTotalMinutes <= endTotalMinutes) {
-                                    return checkTotalMinutes >= beginTotalMinutes && checkTotalMinutes <= endTotalMinutes;
-                                } else {
-                                    return checkTotalMinutes >= beginTotalMinutes || checkTotalMinutes <= endTotalMinutes;
-                                }
-                        then:
-                          # Set router level to 0 then Enable router
-                          - number.set:
-                              id: router_level
-                              value: 0
-                          - switch.turn_on: activate
+          - if:
+              condition:
+                - switch.is_on: ${scheduler_unique_id}_scheduler_activate
+              then:
+                - if:
+                    condition:
+                      lambda: |-
+                        return scheduler_forced_run::func1( ${scheduler_unique_id}_sntp,
+                                                            ${scheduler_unique_id}_scheduler_begin_hour,
+                                                            ${scheduler_unique_id}_scheduler_begin_min);
+                    then:
+                      # Disable Router then set router level to X percent
+                      - switch.turn_off: activate
+                      - number.set:
+                          id: router_level
+                          value: !lambda return id(${scheduler_unique_id}_scheduler_router_level).state;
+                      # if deactivation script option
+                      - script.execute: ${custom_script}
+                    else:
+                      - if:
+                          condition:
+                            and:
+                              - switch.is_off: activate
+                              # End Hour and minutes are reached
+                              - lambda: |-
+                                  return scheduler_forced_run::func2( ${scheduler_unique_id}_sntp,
+                                                                      ${scheduler_unique_id}_scheduler_begin_hour,
+                                                                      ${scheduler_unique_id}_scheduler_begin_min,
+                                                               ${scheduler_unique_id}_scheduler_checking_end_threshold);
+                          then:
+                            # Set router level to 0 then Enable router
+                            - number.set:
+                                id: router_level
+                                value: 0
+                            - switch.turn_on: activate

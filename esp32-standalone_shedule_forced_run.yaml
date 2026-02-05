@@ -2,7 +2,7 @@
 # ESPHome configuration - This part depends on your hardware target
 # ----------------------------------------------------------------------------------------------------
 esphome:
-  name: solarrouter-schedule-forced-run
+  name: solarrouter-r
   friendly_name: SolarRouter
   min_version: 2026.1.0
 
