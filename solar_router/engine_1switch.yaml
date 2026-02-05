@@ -6,7 +6,7 @@ packages:
 
 esphome:
   includes:
-    - solar_router/engine_1switch.h
+    - solar_router/lambda/engine_1switch.h
 
 switch:
   # Define is router is active or not

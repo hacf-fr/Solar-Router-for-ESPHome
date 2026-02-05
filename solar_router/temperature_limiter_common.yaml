@@ -9,7 +9,7 @@ esphome:
     then:
       - script.execute: safety_limit_check
   includes:
-    - solar_router/temperature_limiter_common.h
+    - solar_router/lambda/temperature_limiter_common.h
 
 globals:
   - id: used_for_cooling

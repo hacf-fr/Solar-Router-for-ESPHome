@@ -3,7 +3,7 @@
 esphome:
   min_version: 2025.5.0
   includes:
-    - solar_router/power_meter_fronius.h
+    - solar_router/lambda/power_meter_fronius.h
 
 # ----------------------------------------------------------------------------------------------------
 # Use http request component

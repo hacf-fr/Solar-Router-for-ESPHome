@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------
 esphome:
   includes:
-    - solar_router/energy_counter_theorical.h
+    - solar_router/lambda/energy_counter_theorical.h
 
 # Define the power of load plugged on the solar router
 number:
