@@ -1,0 +1,80 @@
+# ----------------------------------------------------------------------------------------------------
+# ESPHome configuration - This part depends on your hardware target
+# ----------------------------------------------------------------------------------------------------
+
+esphome:
+  name: solarrouter
+  friendly_name: SolarRouter
+  min_version: 2025.3.2
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+  baud_rate: 115200
+  level: INFO
+  logs:
+    component: ERROR
+    light: ERROR
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+# Enable over-the-air updates
+ota:
+  - platform: esphome
+    password: !secret solar_router_ota_password
+
+# Enable improv serial
+improv_serial:
+
+# WiFi connection
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # If you have a WiFi activity plannification, you may have to update the reboot timeout (Default: 15min)
+  reboot_timeout: 24h
+
+# Activate web interface
+web_server:
+  port: 80
+
+# Define watchdog time (it should be greater than timeout)
+http_request:
+  watchdog_timeout: 12s
+
+# ----------------------------------------------------------------------------------------------------
+# Customisation
+# ----------------------------------------------------------------------------------------------------
+
+# This part of the script is designed to be use for customisation. It shouldn't be necessary to
+# edit other part of the script to perform configuration.
+packages:
+  solar_router:
+    url: https://github.com/XavierBerger/Solar-Router-for-ESPHome/
+    ref: main
+    refresh: 1d
+    files:
+      - path: solar_router/common.yaml
+      - path: solar_router/power_meter_fronius.yaml
+        vars:
+          power_meter_ip_address: "192.168.1.21"
+      - path: solar_router/regulator_triac.yaml
+        vars:
+          regulator_gate_pin: GPIO22
+          regulator_zero_crossing_pin: GPIO23
+      - path: solar_router/engine_1dimmer.yaml
+        vars:
+          green_led_pin: GPIO19
+          yellow_led_pin: GPIO18
+      - path: solar_router/activate_switch.yaml
+        vars:
+          activate_switch_pin: GPIO7
+      - path: solar_router/activate_press_button.yaml
+        vars:
+          activate_switch_pin: GPIO8
