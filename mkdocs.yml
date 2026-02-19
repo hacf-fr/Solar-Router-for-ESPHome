@@ -16,6 +16,7 @@ nav:
               - Standalone: example_standalone.md
               - With proxy: example_proxy.md
               - JSY-MK-194T: jsy-mk-194t.md
+              - With Solar Optimizer integratio: exemple_with_SO_integration.md
       - Power Meter:
               - Overview: power_meter.md
               - Fronius: power_meter_fronius.md
