@@ -16,6 +16,7 @@ nav:
               - Standalone: example_standalone.md
               - With proxy: example_proxy.md
               - JSY-MK-194T: jsy-mk-194t.md
+              - With Solar Optimizer integration: exemple_with_SO_integration.md
       - Power Meter:
               - Overview: power_meter.md
               - Fronius: power_meter_fronius.md
@@ -116,6 +117,7 @@ plugins:
                             Temperature Limiter: Limiteur de température
                             Theorical: Théorique
                             With proxy: Router utilisant un proxy
+                            With Solar Optimizer integration: Avec l'utilisation de l'intégration Solar Optimizer
       - search
       - minify:
               minify_html: true
