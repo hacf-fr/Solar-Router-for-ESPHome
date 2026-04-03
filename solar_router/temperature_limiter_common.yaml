@@ -1,6 +1,6 @@
-# If temperature is higher than stop_temperature, 
+# If temperature is higher than stop_temperature,
 #    then safety_limit is set to True
-# It safety_limit is True and temperature is smaller the restart_temperature, 
+# It safety_limit is True and temperature is smaller the restart_temperature,
 #    then safety_limit is set to False
 # ... or the opposit if you want to use it for a cooling system
 esphome:
@@ -8,6 +8,8 @@ esphome:
     priority: -1000.0
     then:
       - script.execute: safety_limit_check
+  includes:
+    - solar_router/temperature_limiter_common.h
 
 globals:
   - id: used_for_cooling
@@ -32,7 +34,7 @@ number:
     name: "Restart temperature"
     max_value: 99999
     initial_value: 40
-    min_value: -273 
+    min_value: -273
     step: 1
     optimistic: True
     mode: box
@@ -43,8 +45,7 @@ number:
 binary_sensor:
   - platform: template
     name: "Safety limit reached"
-    lambda: |-
-      return id(safety_limit);
+    lambda: return id(safety_limit);
 
 switch:
   - platform: template
@@ -52,79 +53,25 @@ switch:
     optimistic: True
     on_turn_on:
       then:
-        lambda: |-
-          id(used_for_cooling) = true;
+        - globals.set:
+            id: used_for_cooling
+            value: "true"
     on_turn_off:
       then:
-        lambda: |-
-          id(used_for_cooling) = false;
+        - globals.set:
+            id: used_for_cooling
+            value: "false"
 
 script:
   - id: safety_limit_check
     mode: single
     then:
       - lambda: |-
-          if ( isnan( id(safety_temperature).state ) ){
-              // Can't read temperature. Activatinf safety limit.
-              id(safety_limit) = true;
-              id(red_led).turn_on();
-              return;
-          } 
-          if(id(safety_limit))
-          {
-              if (id(used_for_cooling))
-              {
-                  // Temperature is increasing until we can restart the cooling system
-                  if (id(safety_temperature).state >= id(restart_temperature).state)
-                  {
-                      // Limit is no more reached, regulation can restart
-                      id(safety_limit) = false;
-                  }
-              }
-              else
-              {
-                  // Temperature is decreasing until we can restart the heating system
-                  if (id(safety_temperature).state <= id(restart_temperature).state)
-                  {
-                      // Limit is no more reached, regulation can restart
-                      id(safety_limit) = false;
-                  }
-              }
-          }
-          else
-          {
-              if (id(used_for_cooling))
-              {
-                  // Temperature has enough decreased we stop the cooling system
-                  if (id(safety_temperature).state <= id(stop_temperature).state)
-                  {
-                      // Limit is reached, stop regulation
-                      id(safety_limit) = true;
-                  }
-              }
-              else
-              {
-                  // Temperature has enough increased we stop the heating system
-                  if (id(safety_temperature).state >= id(stop_temperature).state)
-                  {
-                      // Limit is reached, stop regulation
-                      id(safety_limit) = true;
-                  }
-              }
-          }
-          if ( id(safety_limit) )
-          {
-            id(red_led).turn_on();
-          }
-          else
-          {
-            id(red_led).turn_off();
-          }
+          temperature_limiter_common::safety_limit_check();
 
 output:
   - id: red_led
     platform: gpio
-    pin: 
+    pin:
       number: ${red_led_pin}
       inverted: ${red_led_inverted}
-
