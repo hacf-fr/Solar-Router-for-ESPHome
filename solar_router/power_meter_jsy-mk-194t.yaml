@@ -1,8 +1,9 @@
 <<: !include power_meter_common.yaml
-# ----------------------------------------------------------------------------------------------------
-# User interaction
-# ----------------------------------------------------------------------------------------------------
-    
+
+esphome:
+  includes:
+    - solar_router/jsy-mk-194t_common.h
+
 # Script updating the actual power exchange
 script:
   # Get power reports from JSY-MK-194T and update globals (real_power)
@@ -10,23 +11,8 @@ script:
   - id: power_meter_source
     mode: single
     then:
-      - lambda: |-          
-          float value = id(AP_Ch2).state;
-          float direction = id(PD_Ch2).state;
-
-          if (!isnan(value)) {
-            // Apply direction from meter
-            if (!isnan(direction) && direction == 1) {
-              value = -value;
-            }
-
-            // Apply user-defined polarity (CT orientation)
-            value *= ${power_sign};
-
-            id(real_power).publish_state(value);
-          } else {
-            id(real_power).publish_state(NAN);
-          }
+      - lambda: |-
+          jsy_mk_194t::read_real_power(${power_sign});
 
 time:
   - platform: sntp

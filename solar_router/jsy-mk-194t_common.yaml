@@ -1,7 +1,3 @@
-# ----------------------------------------------------------------------------------------------------
-# User interaction
-# ----------------------------------------------------------------------------------------------------
-
 substitutions:
   U_Ch1_internal: "true"
   I_Ch1_internal: "true"
@@ -39,8 +35,8 @@ modbus_controller:
     update_interval: 2s
     command_throttle: 100ms
 
-sensor:  
-# Voltage on Channel 1
+sensor:
+  # Voltage on Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: U_Ch1
@@ -58,7 +54,7 @@ sensor:
     response_size: 4
     internal: ${U_Ch1_internal}
 
-# Current on Channel 1
+  # Current on Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: I_Ch1
@@ -76,7 +72,7 @@ sensor:
     state_class: measurement
     internal: ${I_Ch1_internal}
 
-# Active Power of Channel 1
+  # Active Power of Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: AP_Ch1
@@ -94,7 +90,7 @@ sensor:
     state_class: measurement
     internal: ${AP_Ch1_internal}
 
-# Positive Active Energy of Channel 1
+  # Positive Active Energy of Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PAE_Ch1
@@ -112,7 +108,7 @@ sensor:
     state_class: total
     internal: ${PAE_Ch1_internal}
 
-# Power Factor on Channel 1
+  # Power Factor on Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PF_Ch1
@@ -129,7 +125,7 @@ sensor:
     response_size: 4
     internal: ${PF_Ch1_internal}
 
-# Negative Active Energy of Channel 1
+  # Negative Active Energy of Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: NAE_Ch1
@@ -141,13 +137,13 @@ sensor:
     value_type: U_DWORD
     accuracy_decimals: 1
     filters:
-      - multiply: 0.0001     
+      - multiply: 0.0001
     register_count: 1
-    response_size: 4 
+    response_size: 4
     state_class: total
     internal: ${NAE_Ch1_internal}
-    
-# Power Direction on Channel 1
+
+  # Power Direction on Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PD_Ch1
@@ -163,7 +159,7 @@ sensor:
     response_size: 4
     internal: ${PD_Ch1_internal}
 
-# Power Direction on Channel 2
+  # Power Direction on Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PD_Ch2
@@ -179,13 +175,13 @@ sensor:
     response_size: 4
     internal: ${PD_Ch2_internal}
 
-# Frequency
+  # Frequency
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: frequency
     name: "Frequency"
     address: 0x004F
-    unit_of_measurement: "Hz"    
+    unit_of_measurement: "Hz"
     device_class: frequency
     register_type: holding
     value_type: U_DWORD
@@ -196,24 +192,24 @@ sensor:
     response_size: 4
     internal: ${frequency_internal}
 
-# Voltage on Channel 2 => same as Voltage on Channel 1
-#  - platform: modbus_controller
-#    modbus_controller_id: jsymk
-#    id: U_Ch2
-#    name: "Voltage Ch2"
-#    address: 0x0050
-#    unit_of_measurement: "V"
-#    device_class: voltage
-#    register_type: holding
-#    value_type: U_DWORD
-#    accuracy_decimals: 1
-#    filters:
-#      - multiply: 0.0001
-#    register_count: 1
-#    response_size: 4
-#    internal: ${U_Ch2_internal}
-    
-# Current on Channel 2
+  # Voltage on Channel 2 => same as Voltage on Channel 1
+  #  - platform: modbus_controller
+  #    modbus_controller_id: jsymk
+  #    id: U_Ch2
+  #    name: "Voltage Ch2"
+  #    address: 0x0050
+  #    unit_of_measurement: "V"
+  #    device_class: voltage
+  #    register_type: holding
+  #    value_type: U_DWORD
+  #    accuracy_decimals: 1
+  #    filters:
+  #      - multiply: 0.0001
+  #    register_count: 1
+  #    response_size: 4
+  #    internal: ${U_Ch2_internal}
+
+  # Current on Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: I_Ch2
@@ -230,7 +226,7 @@ sensor:
     response_size: 4
     internal: ${I_Ch2_internal}
 
-# Active Power of Channel 2
+  # Active Power of Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: AP_Ch2
@@ -244,16 +240,16 @@ sensor:
     filters:
       - multiply: 0.0001
     register_count: 1
-    response_size: 4 
+    response_size: 4
     internal: ${AP_Ch2_internal}
-    
-# Positive Active Energy of Channel 2
+
+  # Positive Active Energy of Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PAE_Ch2
     name: "Positive Active Energy Ch2"
     address: 0x0053
-    unit_of_measurement: "kWh"    
+    unit_of_measurement: "kWh"
     device_class: energy
     register_type: holding
     value_type: U_DWORD
@@ -264,7 +260,7 @@ sensor:
     response_size: 4
     internal: ${PAE_Ch2_internal}
 
-# Power Factor on Channel 2 
+  # Power Factor on Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PF_Ch2
@@ -281,7 +277,7 @@ sensor:
     response_size: 4
     internal: ${PF_Ch2_internal}
 
-# Negative Active Energy of Channel 2
+  # Negative Active Energy of Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: NAE_Ch2
@@ -293,11 +289,10 @@ sensor:
     value_type: U_DWORD
     accuracy_decimals: 1
     filters:
-      - multiply: 0.0001     
+      - multiply: 0.0001
     register_count: 1
-    response_size: 4 
+    response_size: 4
     internal: ${NAE_Ch2_internal}
-
 
 time:
   - platform: homeassistant
