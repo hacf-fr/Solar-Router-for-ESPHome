@@ -10,11 +10,11 @@ blueprint:
         entity:
           domain: binary_sensor
     energy_diversion:
-      name: Energy Diversion (solar_router.regulator_opening)
+      name: Energy Diversion (solar_router.router_level)
       description: "Sensor for current energy diversion percentage"
       selector:
         entity:
-          domain: number
+          domain: sensor
     energy_sent_to_grid:
       name: Energy Sent to Grid (solar_router.real_power)
       description: "Sensor for energy being sent to the grid (Ex: use real_power of your solar router)"
