@@ -13,7 +13,7 @@ esphome:
 binary_sensor:
   - platform: gpio
     pin: 
-      number: ${activate_pin}
+      number: ${activate_switch_pin}
       mode: INPUT_PULLUP
     name: "Activate Switch"
     id: activate_switch

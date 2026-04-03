@@ -1,7 +1,7 @@
 binary_sensor:
   - platform: gpio
     pin: 
-      number: ${activate_pin}
+      number: ${activate_button_pin}
       mode: INPUT_PULLUP
     name: "Activate Button"
     on_press:
