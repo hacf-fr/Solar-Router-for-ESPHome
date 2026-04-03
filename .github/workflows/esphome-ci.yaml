@@ -29,8 +29,7 @@ jobs:
       - name: 🧪 Run Coverage Check
         env:
           TERM: xterm
-        run: |
-          ./tools/check_coverage.sh
+        run: ./tools/check_build_coverage.sh
 
   # Step 3 : Build & Validate Documentation
   docs:
@@ -38,6 +37,8 @@ jobs:
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v6
@@ -50,10 +51,11 @@ jobs:
           sed -i "/esphome/d" requirements.txt 
           pip install -r requirements.txt
 
+      - name: 📄 Check Documentation Coverage
+        run: ./tools/check_documentation_coverage.sh
+
       - name: 🏗️ MkDocs Build
         run: |
-          # Remove plugin not supported in CI which has no impact in documentation check
-          sed -i '/git-revision-date-localized:/,+1d' mkdocs.yml 
           # The --strict flag causes the build to fail if any warnings or broken links are detected
           mkdocs build --strict
 
