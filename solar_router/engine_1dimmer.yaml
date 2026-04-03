@@ -4,6 +4,10 @@
 packages:
   - !include engine_common.yaml
 
+esphome:
+  includes:
+    - solar_router/engine_1dimmer.h
+
 switch:
   # Define is router is active or not
   # When switch is ON, pooling timer will trigger every seconds
@@ -14,18 +18,26 @@ switch:
     id: activate
     on_turn_on:
       then:
-        - lambda: |-
-            id(power_meter_activated) = 1;
-            id(green_led).turn_on();
+        - globals.set:
+            id: power_meter_activated
+            value: "1"
+        - light.turn_on:
+            id: green_led
     on_turn_off:
       then:
-        - light.turn_off: green_led
-        - number.to_min: router_level
-        - lambda: |- 
-            id(consumption).publish_state(NAN);
-            id(power_meter_activated) = 0;
-            id(real_power).publish_state(NAN);
-            id(router_level).publish_state(0);
+        - light.turn_off:
+            id: green_led
+        - number.to_min:
+            id: router_level
+        - sensor.template.publish:
+            id: consumption
+            state: .nan
+        - globals.set:
+            id: power_meter_activated
+            value: "0"
+        - sensor.template.publish:
+            id: real_power
+            state: .nan
 
 number:
   # Router level from 0 to 100
@@ -80,7 +92,7 @@ number:
 
   # Define the reactivity of router level
   - platform: template
-    name: "Up Reactivity" 
+    name: "Up Reactivity"
     id: up_reactivity
     optimistic: True
     restore_value: True
@@ -133,24 +145,4 @@ script:
       # Define the reouter level based on power measured and grid exchange target
       # The value of regulator is a precentage and is then limited to the range 0 100
       - lambda: |-
-          if (isnan(id(real_power).state) or id(safety_limit)){
-            // If we can have information about grid exchange or if safety_limit is active, do not divert any energy
-            id(router_level).publish_state(0);
-            return;
-          }
-
-          // Calculate the power difference and adjust the regulator opening percentage
-          double real_power_state = id(real_power).state;
-          double target_grid_exchange_state = id(target_grid_exchange).state;
-          double reactivity_state = NAN;
-          if (real_power_state >= target_grid_exchange_state) {
-              reactivity_state = id(down_reactivity).state;
-          } else {
-              reactivity_state = id(up_reactivity).state;
-          }
-
-          double delta = -1*(real_power_state-target_grid_exchange_state)*reactivity_state/1000;
-          // Determine the new regulator status
-          double new_router_level = id(router_level).state + delta;
-          new_router_level = std::max(0.0, std::min(100.0, new_router_level));
-          id(router_level).publish_state(new_router_level);
+          engine_1dimmer::energy_regulation();
