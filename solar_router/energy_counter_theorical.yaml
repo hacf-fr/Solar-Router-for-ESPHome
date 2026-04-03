@@ -1,6 +1,9 @@
 # ----------------------------------------------------------------------------------------------------
 # Calculate daily energy diverted
 # ----------------------------------------------------------------------------------------------------
+esphome:
+  includes:
+    - solar_router/energy_counter_theorical.h
 
 # Define the power of load plugged on the solar router
 number:
@@ -13,33 +16,22 @@ number:
     unit_of_measurement: "W"
     optimistic: True
     restore_value: true
-    
+
 # Script updating the power consumed counter
 script:
   - id: energy_diverted_counter
     mode: single
     then:
       - lambda: |-
-          double diverted_energy = id(load_power).state*id(router_level).state / 100;
-          if (id(consumption).state >= diverted_energy or isnan(id(consumption).state)) 
-          {
-              // Power diverted is consumed (or we don't know the consumption)
-              id(power_divertion).publish_state(diverted_energy);
-          }
-          else
-          {
-              // Power diverted is not consumed
-              id(power_divertion).publish_state(0.0);
-          }
-
+          energy_counter_theorical::energy_diverted_counter();
 
 # Sensor showing the actual energy diverted consumption
 sensor:
   - id: energy_diverted
     platform: integration
-    name: 'Total energy diverted'
+    name: "Total energy diverted"
     sensor: power_divertion
-    unit_of_measurement: 'kWh'
+    unit_of_measurement: "kWh"
     state_class: total_increasing
     device_class: energy
     accuracy_decimals: 3
@@ -52,10 +44,10 @@ sensor:
   - platform: template
     name: Power divertion
     id: power_divertion
-    unit_of_measurement: 'W'
+    unit_of_measurement: "W"
     device_class: power
 
-# Enable time component to 
+# Enable time component to
 #  - Update energy diverted counter
 #  - Reset energy counter at midnight
 time:
