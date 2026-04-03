@@ -1,0 +1,136 @@
+blueprint:
+  name: "Solar Router EV Control"
+  description: "Controls a solar router based on energy diversion, eletric vehicule connection and grid export conditions"
+  domain: automation
+  input:
+    ev_connected:
+      name: EV Connected
+      description: "Sensor indicating if the electric vehicle is connected"
+      selector:
+        entity:
+          domain: binary_sensor
+    energy_diversion:
+      name: Energy Diversion (solar_router.regulator_opening)
+      description: "Sensor for current energy diversion percentage"
+      selector:
+        entity:
+          domain: number
+    energy_sent_to_grid:
+      name: Energy Sent to Grid (solar_router.real_power)
+      description: "Sensor for energy being sent to the grid (Ex: use real_power of your solar router)"
+      selector:
+        entity:
+          domain: sensor
+    solar_router:
+      name: Solar Router (solar_router.activate)
+      description: "Switch entity for the solar router"
+      selector:
+        entity:
+          domain: switch
+    max_diverted_energy:
+      name: Max Diverted Energy
+      description: "Maximum percentage of energy that should be diverted"
+      default: 100
+      selector:
+        number:
+          min: 0
+          max: 100
+          unit_of_measurement: "%"
+    excess_energy_threshold:
+      name: Excess Energy Threshold
+      description: "Threshold for excess energy sent to grid (could be negative)"
+      default: 500
+      selector:
+        number:
+          min: 0
+          max: 3000
+          unit_of_measurement: "W"
+    delay_before_deactivation:
+      name: Delay Before Deactivation
+      description: "Delay in seconds before deactivating the solar router"
+      default: 60
+      selector:
+        number:
+          min: 0
+          max: 300
+          unit_of_measurement: "seconds"
+    max_energy_sent:
+      name: Max Energy Sent
+      description: "Maximum energy that can be sent to the grid before reactivating the solar router"
+      default: 200
+      selector:
+        number:
+          min: 0
+          max: 3000
+          unit_of_measurement: "W"
+    delay_before_activation:
+      name: Delay Before Activation
+      description: "Delay in seconds before activating the solar router"
+      default: 60
+      selector:
+        number:
+          min: 0
+          max: 300
+          unit_of_measurement: "seconds"
+
+trigger:
+  - platform: event
+    event_type: automation_reloaded
+  - platform: state
+    entity_id: !input ev_connected
+  - platform: numeric_state
+    entity_id: !input energy_sent_to_grid
+    above: !input excess_energy_threshold
+    for:
+      seconds: !input delay_before_deactivation
+  - platform: numeric_state
+    entity_id: !input energy_sent_to_grid
+    above: !input max_energy_sent
+    for:
+      seconds: !input delay_before_activation
+
+action:
+  - choose:
+     # Condition 1: Deactivate solar router when EV need to be recharged
+      - conditions:
+          - condition: state
+            entity_id: !input ev_connected
+            state: "on"
+          - condition: state
+            entity_id: !input solar_router
+            state: "on"
+          - condition: numeric_state
+            entity_id: !input energy_diversion
+            above: !input max_diverted_energy
+          - condition: numeric_state
+            entity_id: !input energy_sent_to_grid
+            above: !input excess_energy_threshold
+        sequence:
+          - service: switch.turn_off
+            target:
+              entity_id: !input solar_router
+      # Condition 2: Reactivate solar router when EV battery is full
+      - conditions:
+          - condition: state
+            entity_id: !input ev_connected
+            state: "on"
+          - condition: state
+            entity_id: !input solar_router
+            state: "off"
+          - condition: numeric_state
+            entity_id: !input energy_sent_to_grid
+            above: !input max_energy_sent
+        sequence:
+          - service: switch.turn_on
+            target:
+              entity_id: !input solar_router
+      # Condition 3: Activate solar router when EV disconnected
+      - conditions:
+          - condition: state
+            entity_id: !input ev_connected
+            state: "off"
+        sequence:
+          - service: switch.turn_on
+            target:
+              entity_id: !input solar_router
+      
