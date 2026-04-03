@@ -29,7 +29,8 @@ script:
     then:
       - if:
           condition:
-            lambda: "return network::is_connected();"
+            lambda: |-
+              return network::is_connected();
           then:
             - http_request.get:
                 url: http://${power_meter_ip_address}/solar_api/v1/GetMeterRealtimeData.cgi
@@ -66,6 +67,7 @@ time:
         then:
           - if:
               condition:
-                - lambda: return id(power_meter_activated) != 0;
+                - lambda: |-
+                    return id(power_meter_activated) != 0;
               then:
                 - script.execute: power_meter_source

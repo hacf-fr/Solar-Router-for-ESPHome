@@ -47,7 +47,8 @@ time:
                 - light.turn_off: yellow_led
                 - if:
                     condition:
-                      lambda: return id(real_power).state == NAN;
+                      lambda: |-
+                        return id(real_power).state == NAN;
                     then:
                       # When NAN is returns, it means that an error occurs. Yellow LED blink fast
                       - light.turn_on:
@@ -61,7 +62,8 @@ time:
           - light.turn_off: yellow_led
           - if:
               condition:
-                lambda: return network::is_connected();
+                lambda: |-
+                  return network::is_connected();
               then:
                 - light.turn_on: yellow_led
               else:

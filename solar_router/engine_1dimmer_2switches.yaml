@@ -53,7 +53,7 @@ switch:
     on_turn_off:
       then:
         - light.turn_off: green_led
-        - lambda: |- 
+        - lambda: |-
             id(consumption).publish_state(NAN);
             id(energy_divertion1).turn_off();
             id(energy_divertion2).turn_off();
@@ -73,7 +73,8 @@ switch:
     on_turn_on:
       then:
         - script.execute: relay1_regulation_control
-        - lambda: id(regulator_opening).publish_state(0);
+        - lambda: |-
+            id(regulator_opening).publish_state(0);
     on_turn_off:
       then:
         - script.execute: relay1_regulation_control
@@ -86,7 +87,8 @@ switch:
     on_turn_on:
       then:
         - script.execute: relay2_regulation_control
-        - lambda: id(regulator_opening).publish_state(0);
+        - lambda: |-
+            id(regulator_opening).publish_state(0);
     on_turn_off:
       then:
         - script.execute: relay2_regulation_control
@@ -180,7 +182,7 @@ number:
 
   # Define the reactivity of router level
   - platform: template
-    name: "Up Reactivity" 
+    name: "Up Reactivity"
     id: up_reactivity
     optimistic: True
     restore_value: True

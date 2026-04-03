@@ -25,10 +25,9 @@ switch:
               - switch.is_off: activate
             then:
               # Set router level to 0 then Enable router
-              - number.set:
-                  id: router_level
-                  value: 0
-              - switch.turn_on: activate
+              - lambda: |-
+                  id(router_level).publish_state(0);
+                  id(activate).turn_on();
 
 number:
   # Scheduler Router level from 0 to 100
@@ -124,7 +123,6 @@ time:
                                                                ${scheduler_unique_id}_scheduler_checking_end_threshold);
                           then:
                             # Set router level to 0 then Enable router
-                            - number.set:
-                                id: router_level
-                                value: 0
-                            - switch.turn_on: activate
+                            - lambda: |-
+                                id(router_level).publish_state(0);
+                                id(activate).turn_on();

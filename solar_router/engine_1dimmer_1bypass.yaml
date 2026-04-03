@@ -116,7 +116,8 @@ number:
                     - light.turn_on: green_led
         - if:
             condition:
-              - lambda: return id(power_meter_activated) == 0;
+              - lambda: |-
+                  return id(power_meter_activated) == 0;
             then:
               - script.execute: energy_regulation
 
@@ -194,6 +195,7 @@ script:
           condition:
             switch.is_on: energy_divertion
           then:
-            lambda: id(regulator_opening).publish_state(0.0);
+            lambda: |-
+              id(regulator_opening).publish_state(0.0);
       - script.execute: relay_regulation_control
       - script.execute: regulation_control

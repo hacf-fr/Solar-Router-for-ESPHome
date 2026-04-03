@@ -45,7 +45,8 @@ number:
 binary_sensor:
   - platform: template
     name: "Safety limit reached"
-    lambda: return id(safety_limit);
+    lambda: |-
+      return id(safety_limit);
 
 switch:
   - platform: template
@@ -53,14 +54,13 @@ switch:
     optimistic: True
     on_turn_on:
       then:
-        - globals.set:
-            id: used_for_cooling
-            value: "true"
+        - lambda: |-
+            id(used_for_cooling) = true;
+
     on_turn_off:
       then:
-        - globals.set:
-            id: used_for_cooling
-            value: "false"
+        - lambda: |-
+            id(used_for_cooling) = false;
 
 script:
   - id: safety_limit_check

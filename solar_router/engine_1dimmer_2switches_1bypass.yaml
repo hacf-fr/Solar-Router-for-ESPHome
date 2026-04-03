@@ -61,8 +61,8 @@ switch:
             id(relay3_tempo_counter).publish_state(id(full_power_duration).state);
     on_turn_off:
       then:
-        - light.turn_off: green_led
         - lambda: |-
+            id(green_led).turn_off();
             id(consumption).publish_state(NAN);
             id(energy_divertion1).turn_off();
             id(energy_divertion2).turn_off();
@@ -84,7 +84,8 @@ switch:
     on_turn_on:
       then:
         - script.execute: relay1_regulation_control
-        - lambda: id(regulator_opening).publish_state(0);
+        - lambda: |-
+            id(regulator_opening).publish_state(0);
     on_turn_off:
       then:
         - script.execute: relay1_regulation_control
@@ -97,7 +98,8 @@ switch:
     on_turn_on:
       then:
         - script.execute: relay2_regulation_control
-        - lambda: id(regulator_opening).publish_state(0);
+        - lambda: |-
+            id(regulator_opening).publish_state(0);
     on_turn_off:
       then:
         - script.execute: relay2_regulation_control
@@ -113,7 +115,8 @@ switch:
     on_turn_on:
       then:
         - script.execute: relay3_regulation_control
-        - lambda: id(regulator_opening).publish_state(0);
+        - lambda: |-
+            id(regulator_opening).publish_state(0);
     on_turn_off:
       then:
         - script.execute: relay3_regulation_control

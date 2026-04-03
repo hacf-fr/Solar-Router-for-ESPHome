@@ -1,6 +1,4 @@
-#pragma once
 
-#include "esphome.h"
 
 namespace proxy_client {
 
@@ -9,20 +7,21 @@ void power_meter_source_real_power_on_response(int status_code,
   if (status_code != 200) {
     ESP_LOGW("custom", "HTTP Request failed with status: %d", status_code);
     id(real_power).publish_state(NAN);
-  } else {
-    bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
-      if (!root["value"].is<JsonObject>()) {
-        ESP_LOGW("custom", "Invalid JSON structure");
-        return false;
-      }
-      id(real_power).publish_state(root["value"].as<float>());
-      return true;
-    });
+    return;
+  }
 
-    if (!parse_success) {
-      ESP_LOGW("custom", "JSON Parsing failed");
-      id(real_power).publish_state(NAN);
+  bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
+    if (!root["value"].is<JsonObject>()) {
+      ESP_LOGW("custom", "Invalid JSON structure");
+      return false;
     }
+    id(real_power).publish_state(root["value"].as<float>());
+    return true;
+  });
+
+  if (!parse_success) {
+    ESP_LOGW("custom", "JSON Parsing failed");
+    id(real_power).publish_state(NAN);
   }
 }
 void power_meter_source_real_power_on_error() {

@@ -21,6 +21,7 @@ time:
         then:
           - if:
               condition:
-                lambda: return id(power_meter_activated) != 0;
+                lambda: |-
+                  return id(power_meter_activated) != 0;
               then:
                 - script.execute: power_meter_source
