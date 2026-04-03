@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------------------------------
 esphome:
   includes:
-    - solar_router/jsy-mk-194t_common.h
+    - solar_router/lambda/jsy-mk-194t_common.h
 
 sensor:
   # Sensor showing the total daily energy diverted consumption

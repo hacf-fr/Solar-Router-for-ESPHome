@@ -3,7 +3,7 @@
 esphome:
   min_version: 2024.11.1
   includes:
-    - solar_router/power_meter_proxy_client.h
+    - solar_router/lambda/power_meter_proxy_client.h
 
 # ----------------------------------------------------------------------------------------------------
 # Use http request component

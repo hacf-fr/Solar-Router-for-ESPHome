@@ -2,7 +2,7 @@
 
 esphome:
   includes:
-    - solar_router/jsy-mk-194t_common.h
+    - solar_router/lambda/jsy-mk-194t_common.h
 
 # Script updating the actual power exchange
 script:

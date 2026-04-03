@@ -1,6 +1,6 @@
 esphome:
   includes:
-    - solar_router/scheduler_forced_run.h
+    - solar_router/lambda/scheduler_forced_run.h
 
 substitutions:
   scheduler_unique_id: "Forced"
