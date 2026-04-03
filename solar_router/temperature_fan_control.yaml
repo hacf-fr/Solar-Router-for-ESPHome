@@ -1,0 +1,65 @@
+substitutions:
+  fan_control_inverted: "False"
+
+number:
+  - platform: template
+    id: fan_stop_temperature
+    name: "Temperature to stop fan"
+    max_value: 99999
+    initial_value: 40
+    min_value: -273
+    step: 1
+    optimistic: True
+    mode: box
+    unit_of_measurement: "°C"
+    restore_value: true
+
+  - platform: template
+    id: fan_start_temperature
+    name: "Temperature to start fan"
+    max_value: 99999
+    initial_value: 50
+    min_value: -273
+    step: 1
+    optimistic: True
+    mode: box
+    unit_of_measurement: "°C"
+    restore_value: true
+
+time:
+  - platform: sntp
+    on_time:
+      # Trigger action every second
+      - seconds: /1
+        then:
+          - if:
+              condition:
+                switch.is_on: activate
+              then:
+                - script.execute: fan_control_check
+
+script:
+  - id: fan_control_check
+    mode: single
+    then:
+      - lambda: |-
+          if ( isnan( id(safety_temperature).state ) ){
+              // Can't read temperature.
+              return;
+          } 
+          if (id(safety_temperature).state >= id(fan_start_temperature).state)
+          {
+              id(fan_control).turn_on();
+              return;
+          }
+          if (id(safety_temperature).state <= id(fan_stop_temperature).state)
+          {
+            id(fan_control).turn_off();
+          }
+
+output:
+  - id: fan_control
+    platform: gpio
+    pin:
+      number: ${fan_control_pin}
+      inverted: ${fan_control_inverted}

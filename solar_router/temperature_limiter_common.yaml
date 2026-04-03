@@ -1,6 +1,6 @@
-# If temperature is higher than stop_temperature, 
+# If temperature is higher than stop_temperature,
 #    then safety_limit is set to True
-# It safety_limit is True and temperature is smaller the restart_temperature, 
+# It safety_limit is True and temperature is smaller the restart_temperature,
 #    then safety_limit is set to False
 # ... or the opposit if you want to use it for a cooling system
 esphome:
@@ -32,7 +32,7 @@ number:
     name: "Restart temperature"
     max_value: 99999
     initial_value: 40
-    min_value: -273 
+    min_value: -273
     step: 1
     optimistic: True
     mode: box
@@ -65,7 +65,7 @@ script:
     then:
       - lambda: |-
           if ( isnan( id(safety_temperature).state ) ){
-              // Can't read temperature. Activatinf safety limit.
+              // Can't read temperature. Activating safety limit.
               id(safety_limit) = true;
               id(red_led).turn_on();
               return;
@@ -124,7 +124,6 @@ script:
 output:
   - id: red_led
     platform: gpio
-    pin: 
+    pin:
       number: ${red_led_pin}
       inverted: ${red_led_inverted}
-
