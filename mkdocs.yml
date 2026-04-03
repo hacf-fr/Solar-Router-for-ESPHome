@@ -42,6 +42,7 @@ nav:
               - Overview: temperature_limiter.md
               - Home Assistant: temperature_limiter_home_assistant.md
               - DS18B20: temperature_limiter_DS18B20.md
+              - Fan controler: temperature_fan_control.md
       - Scheduler:
               - Overview: scheduler.md
               - Forced Run: scheduler_forced_run.md
@@ -56,29 +57,29 @@ nav:
               - About the project: about.md
 
 theme:
-      name: material
-      features:
-            - tabs
-            - content.code.copy
-      font:
-            text: Ubuntu
-            code: Ubuntu Mono
+        name: material
+        features:
+                - tabs
+                - content.code.copy
+        font:
+                text: Ubuntu
+                code: Ubuntu Mono
 
 markdown_extensions:
-      - markdown.extensions.admonition
-      - markdown.extensions.toc:
-              permalink: true
-      - pymdownx.details
-      - pymdownx.snippets:
-              check_paths: true
-      - pymdownx.highlight:
-              anchor_linenums: true
-              line_spans: __span
-              pygments_lang_class: true
-      - pymdownx.inlinehilite
-      - pymdownx.superfences
-      - attr_list
-      - md_in_html
+        - markdown.extensions.admonition
+        - markdown.extensions.toc:
+                  permalink: true
+        - pymdownx.details
+        - pymdownx.snippets:
+                  check_paths: true
+        - pymdownx.highlight:
+                  anchor_linenums: true
+                  line_spans: __span
+                  pygments_lang_class: true
+        - pymdownx.inlinehilite
+        - pymdownx.superfences
+        - attr_list
+        - md_in_html
 
 plugins:
       - i18n:
