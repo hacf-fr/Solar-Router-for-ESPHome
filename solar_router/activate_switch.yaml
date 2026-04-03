@@ -1,0 +1,26 @@
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - if:
+          condition:
+            binary_sensor.is_on: activate_switch
+          then:
+            - switch.turn_on: activate
+          else:
+            - switch.turn_off: activate
+
+binary_sensor:
+  - platform: gpio
+    pin: 
+      number: ${activate_pin}
+      mode: INPUT_PULLUP
+    name: "Activate Switch"
+    id: activate_switch
+    on_state:
+      then:
+        - switch.turn_on: activate
+    on_state_not:
+      then:
+        - switch.turn_off: activate
+
