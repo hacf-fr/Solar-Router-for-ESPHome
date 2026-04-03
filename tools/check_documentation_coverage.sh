@@ -7,6 +7,12 @@ MISSING_DOCS=0
 for yaml_file in solar_router/*.yaml; do
     # Extract base name without extension
     base_name=$(basename "$yaml_file" .yaml)
+    
+    # Skip files ending with _common.yaml
+    if [[ "$base_name" == *common ]]; then
+        continue
+    fi
+    
     # Check if corresponding .md file exists in docs/en/
     doc_file="docs/en/${base_name}.md"
     if [ ! -f "$doc_file" ]; then
