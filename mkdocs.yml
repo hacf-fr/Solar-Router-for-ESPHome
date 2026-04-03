@@ -19,6 +19,8 @@ nav:
               - With Solar Optimizer integration: exemple_with_SO_integration.md
       - Power Meter:
               - Overview: power_meter.md
+              - Enphase Envoy: power_meter_enphase_envoy.md
+              - Enphase IQ Gateway: power_meter_enphase_iq_gateway.md
               - Fronius: power_meter_fronius.md
               - Home Assistant: power_meter_home_assistant.md
               - JSY-MK-194T: power_meter_jsy-mk-194t.md
