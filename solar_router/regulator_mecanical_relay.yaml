@@ -5,20 +5,17 @@
 substitutions:
   relay_unique_id: "" # Allow to have multiple relays for engine_1dimmer_nswitches
 
+esphome:
+  includes:
+    - solar_router/lambda/regulator_mecanical_relay.h
+
 script:
   # Apply regulation on relay
   - id: relay${relay_unique_id}_regulation_control
     mode: single
     then:
       lambda: |-
-        if (id(energy_divertion${relay_unique_id}).state)
-        {
-          id(relay${relay_unique_id}_output).turn_on();
-        }
-        else
-        {
-          id(relay${relay_unique_id}_output).turn_off();
-        }
+        regulator_mecanical_relay::regulation_control(id(energy_divertion${relay_unique_id}), id(relay${relay_unique_id}_output));
 
 # ----------------------------------------------------------------------------------------------------
 # relay control
@@ -28,7 +25,6 @@ script:
 output:
   - platform: gpio
     id: relay${relay_unique_id}_output
-    pin: 
+    pin:
       number: ${relay_regulator_gate_pin}
       inverted: true
-

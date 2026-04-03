@@ -186,7 +186,7 @@ script:
   - id: energy_regulation
     mode: single
     then:
-      # Define the reouter level based on power measured and grid exchange target
+      # Define the router level based on power measured and grid exchange target
       # The value of regulator is a precentage and is then limited to the range 0 100
       - lambda: |-
           engine_1dimmer_1bypass::energy_regulation();
