@@ -1,0 +1,150 @@
+#edf tempo 22h - 00h initial_value and scheduler checking treshold initial_value: 5
+substitutions:
+  scheduler_unique_id: "Forced"
+  custom_script: ${scheduler_unique_id}_fake_script
+
+script:
+  # A fake empty script to run if user don't provide a custom one
+  - id: ${scheduler_unique_id}_fake_script
+    then:
+
+switch:
+  # Define is scheduler is active or not
+  - platform: template
+    name: "Activate ${scheduler_unique_id} Scheduler"
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_ON
+    id: "${scheduler_unique_id}_scheduler_activate"
+    on_turn_off:
+      then:
+        - if:
+            condition:
+              - switch.is_off: activate
+            then:
+              # Set router level to 0 then Enable router
+              - number.set:
+                  id: router_level
+                  value: 0
+              - switch.turn_on: activate
+
+number:
+  # Scheduler Router level from 0 to 100
+  # When solar routing is disabled at scheduled time: Acts as a manual control to set the router level
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler Router Level"
+    id: "${scheduler_unique_id}_scheduler_router_level"
+    min_value: 0
+    max_value: 100
+    initial_value: 100
+    step: 1
+    unit_of_measurement: "%"
+    optimistic: True
+    mode: slider
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler Checking End Threshold"
+    id: "${scheduler_unique_id}_scheduler_checking_end_threshold"
+    optimistic: True
+    min_value: 0
+    max_value: 720 #12 hours max
+    step: 5
+    mode: box
+    initial_value: 5
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler Begin Minute"
+    id: "${scheduler_unique_id}_scheduler_begin_min"
+    optimistic: True
+    min_value: 0
+    max_value: 55
+    step: 5
+    mode: box
+    initial_value: 0
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler End Minute"
+    id: "${scheduler_unique_id}_scheduler_end_min"
+    optimistic: True
+    min_value: 0
+    max_value: 55
+    step: 5
+    mode: box
+    initial_value: 0
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler Begin Hour"
+    id: "${scheduler_unique_id}_scheduler_begin_hour"
+    optimistic: True
+    min_value: 0
+    max_value: 23
+    step: 1
+    mode: box
+    initial_value: 22
+  - platform: template
+    name: "${scheduler_unique_id} Scheduler End Hour"
+    id: "${scheduler_unique_id}_scheduler_end_hour"
+    optimistic: True
+    min_value: 0
+    max_value: 23
+    step: 1
+    mode: box
+    initial_value: 6
+
+time:
+  - platform: sntp
+    id: ${scheduler_unique_id}_sntp
+    on_time:
+      
+      - seconds: 0
+        minutes: /5
+        then:
+        - if:
+            condition:
+              - switch.is_on: ${scheduler_unique_id}_scheduler_activate
+            then:
+              - if:
+                  condition:
+                    lambda: |-
+                      // We are between begin (included) and end (excluded) hour and minutes
+                      int beginTotalMinutes = id(${scheduler_unique_id}_scheduler_begin_hour).state * 60 + id(${scheduler_unique_id}_scheduler_begin_min).state;
+                      int endTotalMinutes = id(${scheduler_unique_id}_scheduler_end_hour).state * 60 + id(${scheduler_unique_id}_scheduler_end_min).state;
+                      int checkTotalMinutes = id(${scheduler_unique_id}_sntp).now().hour * 60 + id(${scheduler_unique_id}_sntp).now().minute;
+
+                      if (beginTotalMinutes <= endTotalMinutes) {
+                          return checkTotalMinutes >= beginTotalMinutes && checkTotalMinutes < endTotalMinutes;
+                      } else {
+                          return checkTotalMinutes >= beginTotalMinutes || checkTotalMinutes < endTotalMinutes;
+                      }
+                  then:
+                    # Disable Router then set router level to X percent
+                    - switch.turn_off: activate
+                    - number.set:
+                        id: router_level
+                        value: !lambda return id(${scheduler_unique_id}_scheduler_router_level).state;
+                    # if deactivation script option
+                    - script.execute: ${custom_script}
+                  else:
+                    - if:
+                        condition:
+                          and:
+                            - switch.is_off: activate
+                            # End Hour and minutes are reached
+                            - lambda: |-
+                                // End Hour and minutes are reached
+                                if (id(${scheduler_unique_id}_scheduler_end_hour).state == id(${scheduler_unique_id}_sntp).now().hour && id(${scheduler_unique_id}_scheduler_end_min).state == id(${scheduler_unique_id}_sntp).now().minute){
+                                  return true;
+                                }
+                                
+                                // Or we are between end hour and minutes and scheduler_checking_end_threshold
+                                // It's a failsafe to check that router have been activated even if we lost the moment of end hour and minutes
+                                int beginTotalMinutes = id(${scheduler_unique_id}_scheduler_end_hour).state * 60 + id(${scheduler_unique_id}_scheduler_end_min).state;
+                                int endTotalMinutes = beginTotalMinutes + id(${scheduler_unique_id}_scheduler_checking_end_threshold).state;
+                                int checkTotalMinutes = id(${scheduler_unique_id}_sntp).now().hour * 60 + id(${scheduler_unique_id}_sntp).now().minute;
+
+                                if (beginTotalMinutes <= endTotalMinutes) {
+                                    return checkTotalMinutes >= beginTotalMinutes && checkTotalMinutes <= endTotalMinutes;
+                                } else {
+                                    return checkTotalMinutes >= beginTotalMinutes || checkTotalMinutes <= endTotalMinutes;
+                                }
+                        then:
+                          # Set router level to 0 then Enable router
+                          - number.set:
+                              id: router_level
+                              value: 0
+                          - switch.turn_on: activate

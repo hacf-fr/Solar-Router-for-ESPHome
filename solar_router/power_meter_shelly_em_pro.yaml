@@ -1,0 +1,68 @@
+<<: !include power_meter_common.yaml
+
+esphome:
+  min_version: 2025.5.0
+
+http_request:
+  id: http_request_data
+  useragent: esphome/device
+  timeout: 10s
+  verify_ssl: false
+
+script:
+  - id: power_meter_source
+    mode: single
+    then:
+      - if:
+          condition:
+            lambda: return network::is_connected();
+          then:
+            - http_request.get:
+                url: http://${power_meter_ip_address}/rpc/Shelly.GetStatus
+                request_headers:
+                  Content-Type: application/json
+                  Authorization: ${power_meter_auth_header}
+                capture_response: true
+                max_response_buffer_size: 4096
+                on_response:
+                  then:
+                    - lambda: |-
+                        if (response->status_code != 200) {
+                          ESP_LOGW("shelly", "HTTP error %d", response->status_code);
+                          id(real_power).publish_state(NAN);
+                          return;
+                        }
+
+                        bool ok = json::parse_json(body, [](JsonObject root) -> bool {
+                          char key[8];
+                          snprintf(key, sizeof(key), "em1:%d", ${emeter_index});
+
+                          if (!root[key]["act_power"].is<float>()) {
+                            ESP_LOGW("shelly", "act_power missing for %s", key);
+                            return false;
+                          }
+
+                          float power = root[key]["act_power"].as<float>();
+                          id(real_power).publish_state(power);
+                          return true;
+                        });
+
+                        if (!ok) {
+                          id(real_power).publish_state(NAN);
+                        }
+                on_error:
+                  then:
+                    - lambda: |-
+                        ESP_LOGW("shelly", "HTTP request failed");
+                        id(real_power).publish_state(NAN);
+
+time:
+  - platform: sntp
+    on_time:
+      - seconds: /1
+        then:
+          - if:
+              condition:
+                lambda: return id(power_meter_activated) != 0;
+              then:
+                - script.execute: power_meter_source
