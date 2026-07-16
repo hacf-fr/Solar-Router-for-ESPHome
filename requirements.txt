@@ -1,4 +1,4 @@
-esphome==2026.6.5
+esphome==2026.7.0
 mkdocs-git-revision-date-localized-plugin==1.5.3
 mkdocs-glightbox==0.5.2
 mkdocs-include-markdown-plugin==7.3.0
