@@ -1,0 +1,170 @@
+<<: !include power_meter_common.yaml
+
+esphome:
+  min_version: 2025.5.0
+
+# ----------------------------------------------------------------------------------------------------
+# Shelly EM3 Pro / Pro 3EM power meter (Gen2/Gen3 "RPC" API)
+# ----------------------------------------------------------------------------------------------------
+# Polls the Shelly three-phase energy meter over HTTP (`EM.GetStatus`) and uses
+# the *arithmetic sum* of the three phase active powers as the grid-exchange
+# signal:
+#
+#   S_grid = a_act_power + b_act_power + c_act_power  ==  total_act_power
+#
+# This matches the way a three-phase contract is billed (net metering):
+# the three phases are added up and only the net value is billed, so an export
+# of -1200 W on phase C fully offsets a (+500 W) + (+800 W) import on A+B.
+#
+#   + sign : power is taken from the grid
+#   - sign : power is pushed back to the grid
+#
+# With routing on the 3-phase sum, the router diverts energy only when the
+# *whole installation* is in surplus, never importing "from the front door" to
+# run the load. Phase-balance/per-phase safety is naturally satisfied because
+# simultaneous phase imbalances cannot make the sum go negative.
+#
+# Package variables (vars):
+#   power_meter_ip_address   (required)  IP / hostname of the Shelly EM3 Pro.
+#   power_meter_emeter_id    (optional)  EM component id, default "0".
+#   power_meter_auth_header  (optional)  HTTP Authorization header (Basic auth).
+#   show_phase_power         (optional)  expose per-phase W sensors, default "False".
+
+substitutions:
+  # Same defaults as power_meter_common.yaml - re-declared here because a
+  # substitution block overriding the merged one replaces it entirely.
+  power_meter_activated_at_start: "0"
+  power_sign: "1"
+  # The Shelly EM3 only exposes a NET power (total_act_power): the per-phase
+  # "consumption" template below is never written in this package, so it stayed
+  # stuck at "unknown" in HA. Hide it instead of shipping dead weight.
+  consumption_sensor_internal: "true"
+  # This package specifics
+  power_meter_emeter_id: "0"
+  power_meter_auth_header: ""
+  show_phase_power: "False"
+
+http_request:
+  id: em3_http_request
+  useragent: esphome/device
+  timeout: 5s
+  verify_ssl: False
+
+script:
+  # Poll the Em3 meter and publish the grid-exchange power (total_act_power)
+  - id: power_meter_source
+    mode: single
+    then:
+      - if:
+          condition:
+            lambda: 'return network::is_connected();'
+          then:
+            - http_request.get:
+                url: 'http://${power_meter_ip_address}/rpc/EM.GetStatus?id=${power_meter_emeter_id}'
+                request_headers:
+                  Content-Type: application/json
+                  Authorization: ${power_meter_auth_header}
+                capture_response: true
+                max_response_buffer_size: 8192
+                on_response:
+                  then:
+                    - logger.log:
+                        format: 'EM3 response status: %d, duration: %u ms'
+                        args:
+                          - response->status_code
+                          - response->duration_ms
+                    - lambda: |-
+                        if (response->status_code != 200) {
+                            ESP_LOGW("em3", "EM3 request failed with status: %d", response->status_code);
+                            id(real_power).publish_state(NAN);
+                        } else {
+                          bool parse_success = json::parse_json(body, [](JsonObject root) -> bool {
+                              if (!root["total_act_power"].is<double>()) {
+                                  ESP_LOGW("em3", "EM3 response missing 'total_act_power'");
+                                  return false;
+                              }
+                              id(real_power).publish_state(root["total_act_power"].as<float>() * ${power_sign});
+
+                              if (root["a_act_power"].is<double>()) {
+                                  id(em3_phase_a_power).publish_state(root["a_act_power"].as<float>());
+                              }
+                              if (root["b_act_power"].is<double>()) {
+                                  id(em3_phase_b_power).publish_state(root["b_act_power"].as<float>());
+                              }
+                              if (root["c_act_power"].is<double>()) {
+                                  id(em3_phase_c_power).publish_state(root["c_act_power"].as<float>());
+                              }
+                              return true;
+                          });
+
+                          if (!parse_success) {
+                              id(real_power).publish_state(NAN);
+                          }
+                        }
+                on_error:
+                  then:
+                    - logger.log:
+                        format: 'EM3 request failed or timeout'
+                        level: WARN
+                    - lambda: |-
+                        id(real_power).publish_state(NAN);
+
+# Sense the per-phase active powers for debugging / tuning (hidden by default)
+sensor:
+  # Re-declared from power_meter_common.yaml: the '<<' merge only keeps the
+  # FIRST definition of a key, and this file defines its own 'sensor:' section.
+  # The engine depends on these two template sensors.
+  - id: real_power
+    platform: template
+    name: "Real Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
+
+  - id: consumption
+    platform: template
+    name: "Consumption"
+    device_class: "power"
+    unit_of_measurement: "W"
+    update_interval: 1s
+    internal: ${consumption_sensor_internal}
+
+  - platform: template
+    id: em3_phase_a_power
+    name: "EM3 Phase A Active Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    internal: ${show_phase_power}
+    update_interval: never
+  - platform: template
+    id: em3_phase_b_power
+    name: "EM3 Phase B Active Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    internal: ${show_phase_power}
+    update_interval: never
+  - platform: template
+    id: em3_phase_c_power
+    name: "EM3 Phase C Active Power"
+    device_class: "power"
+    unit_of_measurement: "W"
+    internal: ${show_phase_power}
+    update_interval: never
+
+time:
+  # Poll cadence note:
+  # Polling every second (/1) opens/closes an esp_http_client connection every
+  # second; over hours this can provoke a stale-transport use-after-free inside
+  # ESP-IDF's tcp_transport (LoadProhibited in base_poll_read / transport_ssl.c,
+  # "CRASH DETECTED ON PREVIOUS BOOT"). We therefore poll every 2 seconds (/2):
+  # ~2x less connection churn, which sacrifices ~1s of reaction time. Revisit
+  # if a future ESPHome release fixes the http_request/IDF transport reuse race.
+  - platform: sntp
+    on_time:
+      - seconds: /2
+        then:
+          - if:
+              condition:
+                - lambda: return id(power_meter_activated) != 0;
+              then:
+                - script.execute: power_meter_source

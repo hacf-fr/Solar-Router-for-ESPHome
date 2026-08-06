@@ -24,6 +24,7 @@ nav:
               - JSY-MK-194T: power_meter_jsy-mk-194t.md
               - Proxy client: power_meter_proxy_client.md
               - Shelly EM: power_meter_shelly_em.md
+              - Shelly EM3 Pro / Pro 3EM: power_meter_shelly_em3.md
       - Regulator:
               - Triac: regulator_triac.md
               - Solid State Relay: regulator_solid_state_relay.md

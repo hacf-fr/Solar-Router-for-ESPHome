@@ -27,6 +27,8 @@ A **proxy** just need 1 **power meter** package
     Get power data from Home Assistant sensor
 * [Shelly EM](power_meter_shelly_em.md)  
     Get power data from a shelly EM
+* [Shelly EM3 Pro / Pro 3EM](power_meter_shelly_em3.md)  
+    Get 3-phase power data from a Shelly EM3 Pro / Pro 3EM
 * [Proxy client](power_meter_proxy_client.md)  
     Get power data from outside from solar router
 
