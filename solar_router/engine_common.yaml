@@ -24,16 +24,16 @@ sensor:
               script.execute: energy_regulation
 
 substitutions:
-  # By default led are pin control is not inverted
+  # By default LEDs are pin-controlled and not inverted
   green_led_inverted: "False"
   yellow_led_inverted: "False"
   # By default regulators are hidden
   hide_regulators: "True"
-  # By default leds are hidden
+  # By default LEDs are hidden
   hide_leds: "True"
 
 # Component managing time.
-# If activate switch is ON, yellow led update is performed every secondes
+# If the activate switch is ON, yellow LED update is performed every second
 time:
   - platform: sntp
     on_time:
@@ -47,9 +47,9 @@ time:
                 - light.turn_off: yellow_led
                 - if:
                     condition:
-                      lambda: return id(real_power).state == NAN;
+                      lambda: return isnan(id(real_power).state);
                     then:
-                      # When NAN is returns, it means that an error occurs. Yellow LED blink fast
+                      # When real_power is NaN, it means an error occurred. Yellow LED blinks fast
                       - light.turn_on:
                           id: yellow_led
                           effect: fast

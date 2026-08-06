@@ -5,8 +5,8 @@ packages:
   - !include engine_common.yaml
 
 switch:
-  # Define is router is active or not
-  # When switch is ON, pooling timer will trigger every seconds
+  # Defines if the router is active or not
+  # When switch is ON, polling timer will trigger every second
   - platform: template
     name: "Activate Solar Routing"
     optimistic: true
@@ -21,7 +21,7 @@ switch:
       then:
         - light.turn_off: green_led
         - number.to_min: router_level
-        - lambda: |- 
+        - lambda: |-
             id(consumption).publish_state(NAN);
             id(power_meter_activated) = 0;
             id(real_power).publish_state(NAN);
@@ -130,11 +130,11 @@ script:
   - id: energy_regulation
     mode: single
     then:
-      # Define the reouter level based on power measured and grid exchange target
-      # The value of regulator is a precentage and is then limited to the range 0 100
+      # Define the router level based on power measured and grid exchange target
+      # The value of regulator is a percentage and is then limited to the range 0 100
       - lambda: |-
           if (isnan(id(real_power).state) or id(safety_limit)){
-            // If we can have information about grid exchange or if safety_limit is active, do not divert any energy
+            // If grid-exchange info is unavailable (NaN) or the safety limit is active, do not divert any energy
             id(router_level).publish_state(0);
             return;
           }
