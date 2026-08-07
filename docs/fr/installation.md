@@ -27,6 +27,8 @@ Un **proxy** n'a besoin que d'un package **power meter**
     Pour obtenir les données de puissance du capteur Home Assistant
 * [Shelly EM](power_meter_shelly_em.md)  
     Pour obtenir les données de puissance d'un Shelly EM
+* [Shelly EM3 Pro / Pro 3EM](power_meter_shelly_em3.md)  
+    Pour obtenir les données de puissance triphasées d'un Shelly EM3 Pro / Pro 3EM
 * [Client Proxy](power_meter_proxy_client.md)  
     Pour obtenir les données de puissance de l'extérieur du routeur solaire
 
