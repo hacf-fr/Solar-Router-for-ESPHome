@@ -72,11 +72,16 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v7
 
-      - name: 🔄 Update ref to current branch
+      - name: 🔄 Point packages at the PR head repo & ref
+        env:
+          HEAD_REPO_URL: ${{ github.event.pull_request.head.repo.clone_url || format('https://github.com/{0}.git', github.repository) }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
-          BRANCH_NAME=${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}
-          echo "Replace 'ref: main' by 'ref: $BRANCH_NAME' in ${{ matrix.file }}"
-          sed -i "s@ref: main@ref: ${BRANCH_NAME}@g" "${{ matrix.file }}"
+          echo "Rewriting package source in ${{ matrix.file }} → $HEAD_REPO_URL @ $HEAD_REF"
+          sed -i \
+            -e "s@url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/\?@url: ${HEAD_REPO_URL}@g" \
+            -e "s@ref: main@ref: ${HEAD_REF}@g" \
+            "${{ matrix.file }}"
 
       - name: 🤫 Create dummy secrets.yaml
         run: |
