@@ -1,0 +1,85 @@
+# ----------------------------------------------------------------------------------------------------
+# Power Meter - Enphase Envoy (Firmware < 7.x, no authentication required)
+#
+# This power meter reads the grid import/export power from an Enphase Envoy gateway
+# using the local HTTP API. It is compatible with older Envoy and Envoy-S devices
+# that do not require token-based authentication.
+#
+# Required variable:
+#   power_meter_ip_address: IP address or hostname of the Envoy (e.g. "192.168.1.50"
+#                           or "envoy.local")
+#
+# Usage example in your main yaml:
+#   packages:
+#     solar_router:
+#       url: https://github.com/hacf-fr/Solar-Router-for-ESPHome
+#       refresh: 1d
+#       files:
+#         - path: solar_router/common.yaml
+#         - path: solar_router/power_meter_enphase_envoy.yaml
+#           vars:
+#             power_meter_ip_address: "192.168.1.50"
+#
+# API endpoint used: GET http://<envoy>/production.json
+# The "net-consumption" measurement (consumption[1].wNow) represents the power
+# exchanged with the grid:
+#   - Positive value → energy is drawn FROM the grid
+#   - Negative value → energy is PUSHED TO the grid (solar surplus)
+# ----------------------------------------------------------------------------------------------------
+<<: !include power_meter_common.yaml
+
+# ----------------------------------------------------------------------------------------------------
+# Use http request component
+# ----------------------------------------------------------------------------------------------------
+http_request:
+  id: http_request_data
+  useragent: esphome/device
+  timeout: 10s
+  verify_ssl: false
+
+# ----------------------------------------------------------------------------------------------------
+# Define scripts for power collection
+# ----------------------------------------------------------------------------------------------------
+script:
+  # Enphase Envoy script reads the grid power from the local production.json endpoint.
+  # The "net-consumption" entry (index 1 of the consumption array) reports the net
+  # power exchanged with the grid. A positive value means power is consumed from the
+  # grid; a negative value means excess solar power is being exported to the grid.
+  - id: power_meter_source
+    mode: single
+    then:
+      - if:
+          condition:
+            wifi.connected:
+          then:
+            - http_request.get:
+                url: http://${power_meter_ip_address}/production.json
+                capture_response: true
+                max_response_buffer_size: 4096
+                on_response:
+                  then:
+                    - lambda: |-
+                        json::parse_json(body, [](JsonObject root) -> bool {
+                          // consumption[1] is the "net-consumption" meter:
+                          // positive  → drawing from grid
+                          // negative  → exporting to grid (solar surplus)
+                          JsonArray consumption = root["consumption"];
+                          if (consumption.size() >= 2) {
+                            id(real_power).publish_state(consumption[1]["wNow"].as<float>());
+                          }
+                          return true;
+                        });
+
+# ----------------------------------------------------------------------------------------------------
+# Trigger power meter reading every second
+# ----------------------------------------------------------------------------------------------------
+time:
+  - platform: sntp
+    on_time:
+      - seconds: /1
+        then:
+          - if:
+              condition:
+                - lambda: return id(power_meter_activated) != 0;
+              then:
+                - script.execute: power_meter_source

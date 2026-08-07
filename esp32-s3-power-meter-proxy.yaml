@@ -1,13 +1,14 @@
 # ----------------------------------------------------------------------------------------------------
 # ESPHome configuration - This part depends on your hardware target
 # ----------------------------------------------------------------------------------------------------
+
 esphome:
-  name: solarrouter-schedule-forced-run
-  friendly_name: SolarRouter
-  min_version: 2026.1.0
+  name: esp32-s3
+  friendly_name: ESP32-S3
+  min_version: 2025.3.2
 
 esp32:
-  board: esp32dev
+  board: esp32-s3-devkitc-1
   framework:
     type: esp-idf
 
@@ -17,20 +18,16 @@ logger:
   level: INFO
   logs:
     component: ERROR
-    light: ERROR
 
 # Enable Home Assistant API
 api:
   encryption:
-    key: !secret api_encryption_key
+    key: !secret esp32_s3_api_encryption_key
 
 # Enable over-the-air updates
 ota:
   - platform: esphome
-    password: !secret solar_router_ota_password
-
-# Enable improv serial
-improv_serial:
+    password: !secret esp32_s3_ota_password
 
 # WiFi connection
 wifi:
@@ -43,34 +40,18 @@ wifi:
 web_server:
   port: 80
 
-# Define watchdog time (it should be greater than timeout)
-http_request:
-  watchdog_timeout: 12s
-
 # ----------------------------------------------------------------------------------------------------
 # Customisation
 # ----------------------------------------------------------------------------------------------------
 packages:
   solar_router:
     url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
-    ref: main
+    ref: feature/enphase_envoy
     refresh: 1d
     files:
       - path: solar_router/common.yaml
-      - path: solar_router/power_meter_enphase_envoy.yaml
+      - path: solar_router/power_meter_enphase_iq_gateway.yaml
         vars:
-          power_meter_ip_address: "192.168.1.21"
-      - path: solar_router/regulator_triac.yaml
-        vars:
-          regulator_gate_pin: GPIO22
-          regulator_zero_crossing_pin: GPIO23
-      - path: solar_router/engine_1dimmer.yaml
-        vars:
-          green_led_pin: GPIO19
-          yellow_led_pin: GPIO18
-      - path: solar_router/scheduler_forced_run.yaml
-      #   vars:
-      #     scheduler_unique_id: "day"
-      # - path: solar_router/scheduler_forced_run.yaml
-      #   vars:
-      #     scheduler_unique_id: "night"
+          power_meter_activated_at_start: "1"
+          power_meter_ip_address: "192.168.1.50"
+          enphase_token: "eyJhbGciOi..."
