@@ -1,20 +1,29 @@
 blueprint:
   name: "Solar Router EV Control"
   description: >
-    Gives an electric vehicle charging priority over the Solar Router.
+    Gives an electric vehicle charging priority over the Solar Router's
+    diversion load (water heater, etc.) when enough solar surplus is
+    available to charge the EV.
 
-    When the EV is plugged in and drawing power (so surplus stops flowing
-    to the grid despite the router being saturated), this automation turns
-    OFF the Solar Router so the EV takes the available surplus. Once the
-    EV is full and surplus resumes flowing back to the grid, the router
-    is turned ON again. When the EV is unplugged the router is turned ON
+    An EV charger typically requires at least ~1.4 kW to start drawing
+    power. If the sum of the power being diverted by the Solar Router
+    plus the power currently exported to the grid is greater than this
+    minimum, then enough surplus exists to run the EV charger — some of
+    which the router is capturing instead of leaving for the EV. In
+    that case this automation turns OFF the Solar Router so the full
+    surplus is redirected to the EV charger.
+
+    Once the EV is full (surplus starts flowing back to the grid because
+    the EV has stopped drawing), the Solar Router is turned back ON to
+    resume diversion. When the EV is unplugged, the router is turned ON
     unconditionally.
 
     Sign convention: this blueprint assumes the Solar Router firmware
     default (`power_sign: "1"`), where `solar_router.real_power` is
-    positive when energy is imported from the grid and negative when
-    exported. Export thresholds are therefore configured as negative
-    values (e.g. -500 W means "exporting at least 500 W").
+    positive when imported from the grid and negative when exported.
+    The available-surplus figure used internally is computed as
+    `diverted_power - real_power`, so it grows both with power the
+    router is diverting and with power flowing to the grid.
   domain: automation
   input:
     ev_connected:
@@ -23,14 +32,18 @@ blueprint:
       selector:
         entity:
           domain: binary_sensor
-    energy_diversion:
-      name: Energy Diversion (solar_router.router_level)
-      description: "Current router diversion level, 0-100 %."
+    diverted_power:
+      name: Diverted Power (solar_router.power_divertion)
+      description: >
+        Sensor reporting the instantaneous power (W) diverted by the
+        Solar Router to its load. Typically
+        `sensor.<device>_power_divertion`, exposed when one of the
+        `energy_counter_*.yaml` packages is included in the router
+        firmware configuration.
       selector:
         entity:
-          domain:
-            - sensor
-            - number
+          domain: sensor
+          device_class: power
     grid_power:
       name: Grid Power (solar_router.real_power)
       description: >
@@ -39,35 +52,28 @@ blueprint:
       selector:
         entity:
           domain: sensor
+          device_class: power
     solar_router:
       name: Solar Router (solar_router.activate)
       description: "Switch entity that enables/disables the Solar Router."
       selector:
         entity:
           domain: switch
-    max_diverted_energy:
-      name: Max Diverted Energy
+    ev_charging_threshold:
+      name: EV charging power threshold
       description: >
-        Router diversion threshold (%). When the router is saturated above
-        this level and surplus is still flowing to the grid, the EV is
-        assumed to want the surplus and the router is deactivated.
-      default: 99
+        Minimum total surplus (diverted + exported, in watts) required
+        to consider that the EV can be charged. When this threshold is
+        crossed the Solar Router is turned OFF so the surplus is
+        redirected to the EV. Set this to the EV charger's minimum
+        charging power; 1400 W is typical (single-phase EV charger
+        minimum ~1.4 kW).
+      default: 1400
       selector:
         number:
           min: 0
-          max: 100
-          unit_of_measurement: "%"
-    export_threshold:
-      name: Export Threshold (deactivate)
-      description: >
-        Export power (negative watts) below which the router should be
-        deactivated when the EV is connected. Example: -500 means
-        "exporting more than 500 W".
-      default: -500
-      selector:
-        number:
-          min: -3000
-          max: 0
+          max: 10000
+          step: 50
           unit_of_measurement: "W"
     delay_before_deactivation:
       name: Delay Before Deactivation
@@ -78,18 +84,20 @@ blueprint:
           min: 0
           max: 300
           unit_of_measurement: "seconds"
-    reactivation_export_threshold:
-      name: Reactivation Export Threshold
+    ev_full_threshold:
+      name: EV full detection threshold
       description: >
-        Export power (negative watts) below which the router should be
-        reactivated when it is off and the EV is still connected (EV is
-        assumed to be full because surplus is flowing to the grid again).
-        Example: -200 means "exporting more than 200 W".
-      default: -200
+        Surplus (in watts) that indicates the EV has stopped drawing
+        (battery full). When the router is OFF and the total surplus
+        stays above this threshold, the router is reactivated to
+        resume diversion. Should be smaller than the EV charging
+        threshold.
+      default: 200
       selector:
         number:
-          min: -3000
-          max: 0
+          min: 0
+          max: 10000
+          step: 50
           unit_of_measurement: "W"
     delay_before_activation:
       name: Delay Before Activation
@@ -103,6 +111,16 @@ blueprint:
 
 mode: single
 
+trigger_variables:
+  diverted_entity: !input diverted_power
+  grid_entity: !input grid_power
+
+variables:
+  diverted_entity: !input diverted_power
+  grid_entity: !input grid_power
+  ev_charging_threshold: !input ev_charging_threshold
+  ev_full_threshold: !input ev_full_threshold
+
 trigger:
   - platform: event
     event_type: automation_reloaded
@@ -112,20 +130,28 @@ trigger:
   - platform: state
     entity_id: !input ev_connected
     to: "off"
+  # Available surplus climbs above the EV charging threshold -> candidate to deactivate the router.
   - platform: numeric_state
     entity_id: !input grid_power
-    below: !input export_threshold
+    value_template: >
+      {{ (states(diverted_entity) | float(0)) - (states(grid_entity) | float(0)) }}
+    above: !input ev_charging_threshold
     for:
       seconds: !input delay_before_deactivation
+  # Available surplus climbs above the EV-full threshold while router is off -> candidate to reactivate.
   - platform: numeric_state
     entity_id: !input grid_power
-    below: !input reactivation_export_threshold
+    value_template: >
+      {{ (states(diverted_entity) | float(0)) - (states(grid_entity) | float(0)) }}
+    above: !input ev_full_threshold
     for:
       seconds: !input delay_before_activation
 
 action:
   - choose:
-      # Condition 1: EV is connected and drawing power - deactivate router so EV gets the surplus
+      # Condition 1: EV plugged in and the total surplus (diverted +
+      # exported) is greater than the EV charging threshold -> turn the
+      # router off so the surplus can feed the EV.
       - conditions:
           - condition: state
             entity_id: !input ev_connected
@@ -133,17 +159,18 @@ action:
           - condition: state
             entity_id: !input solar_router
             state: "on"
-          - condition: numeric_state
-            entity_id: !input energy_diversion
-            above: !input max_diverted_energy
-          - condition: numeric_state
-            entity_id: !input grid_power
-            below: !input export_threshold
+          - condition: template
+            value_template: >
+              {{ (states(diverted_entity) | float(0))
+                 - (states(grid_entity) | float(0))
+                 > (ev_charging_threshold | float(0)) }}
         sequence:
           - action: switch.turn_off
             target:
               entity_id: !input solar_router
-      # Condition 2: EV is full (surplus flowing to grid again) - reactivate router
+      # Condition 2: Router off, EV still plugged in, but surplus is
+      # again flowing back to the grid (EV has stopped drawing, battery
+      # full) -> reactivate the router to resume diversion.
       - conditions:
           - condition: state
             entity_id: !input ev_connected
@@ -151,14 +178,16 @@ action:
           - condition: state
             entity_id: !input solar_router
             state: "off"
-          - condition: numeric_state
-            entity_id: !input grid_power
-            below: !input reactivation_export_threshold
+          - condition: template
+            value_template: >
+              {{ (states(diverted_entity) | float(0))
+                 - (states(grid_entity) | float(0))
+                 > (ev_full_threshold | float(0)) }}
         sequence:
           - action: switch.turn_on
             target:
               entity_id: !input solar_router
-      # Condition 3: EV disconnected - router should run
+      # Condition 3: EV unplugged -> router should run normally.
       - conditions:
           - condition: state
             entity_id: !input ev_connected
