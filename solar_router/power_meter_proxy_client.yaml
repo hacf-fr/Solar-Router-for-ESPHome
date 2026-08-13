@@ -1,7 +1,8 @@
-<<: !include power_meter_common.yaml
+packages:
+  - !include power_meter_common.yaml
 
 esphome:
-  min_version: 2024.11.1
+  min_version: 2025.5.0
 
 # ----------------------------------------------------------------------------------------------------
 # Use http request component
@@ -90,10 +91,8 @@ script:
 time:
   - platform: sntp
     on_time:
+      # Poll unconditionally so real_power/consumption stay fresh in HA
+      # even when the router's `activate` switch is off.
       - seconds: /1
         then:
-          - if:
-              condition:
-                - lambda: return id(power_meter_activated) != 0;
-              then:
-                - script.execute: power_meter_source
+          - script.execute: power_meter_source

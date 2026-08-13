@@ -1,4 +1,5 @@
-<<: !include power_meter_common.yaml
+packages:
+  - !include power_meter_common.yaml
 
 esphome:
   min_version: 2025.5.0
@@ -31,13 +32,9 @@ esphome:
 #   show_phase_power         (optional)  expose per-phase W sensors, default "False".
 
 substitutions:
-  # Same defaults as power_meter_common.yaml - re-declared here because a
-  # substitution block overriding the merged one replaces it entirely.
-  power_meter_activated_at_start: "0"
-  power_sign: "1"
-  # The Shelly EM3 only exposes a NET power (total_act_power): the per-phase
-  # "consumption" template below is never written in this package, so it stayed
-  # stuck at "unknown" in HA. Hide it instead of shipping dead weight.
+  # The Shelly EM3 only exposes a net power (total_act_power), so the per-phase
+  # "consumption" template inherited from power_meter_common.yaml is never
+  # written from this package. Hide it instead of shipping a dead entity.
   consumption_sensor_internal: "true"
   # This package specifics
   power_meter_emeter_id: "0"
@@ -51,7 +48,7 @@ http_request:
   verify_ssl: False
 
 script:
-  # Poll the Em3 meter and publish the grid-exchange power (total_act_power)
+  # Poll the EM3 meter and publish the grid-exchange power (total_act_power)
   - id: power_meter_source
     mode: single
     then:
@@ -109,26 +106,10 @@ script:
                     - lambda: |-
                         id(real_power).publish_state(NAN);
 
-# Sense the per-phase active powers for debugging / tuning (hidden by default)
+# Per-phase active powers for debugging / tuning (hidden by default).
+# real_power / consumption template sensors come from power_meter_common.yaml
+# via the `packages:` include; no need (and no room) to redeclare them here.
 sensor:
-  # Re-declared from power_meter_common.yaml: the '<<' merge only keeps the
-  # FIRST definition of a key, and this file defines its own 'sensor:' section.
-  # The engine depends on these two template sensors.
-  - id: real_power
-    platform: template
-    name: "Real Power"
-    device_class: "power"
-    unit_of_measurement: "W"
-    update_interval: 1s
-
-  - id: consumption
-    platform: template
-    name: "Consumption"
-    device_class: "power"
-    unit_of_measurement: "W"
-    update_interval: 1s
-    internal: ${consumption_sensor_internal}
-
   - platform: template
     id: em3_phase_a_power
     name: "EM3 Phase A Active Power"
@@ -161,10 +142,8 @@ time:
   # if a future ESPHome release fixes the http_request/IDF transport reuse race.
   - platform: sntp
     on_time:
+      # Poll unconditionally so real_power stays fresh in HA even when
+      # the router's `activate` switch is off.
       - seconds: /2
         then:
-          - if:
-              condition:
-                - lambda: return id(power_meter_activated) != 0;
-              then:
-                - script.execute: power_meter_source
+          - script.execute: power_meter_source
