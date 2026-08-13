@@ -61,6 +61,12 @@ number:
     optimistic: True
     on_value:
       then:
+        # Keep regulator_opening in sync with router_level so the shared
+        # regulator_opening_sensor in engine_common.yaml tracks this
+        # variant too (same pattern as engine_1dimmer.yaml).
+        - number.set:
+            id: regulator_opening
+            value: !lambda return id(router_level).state;
         - if:
             condition:
               number.in_range:
@@ -85,7 +91,22 @@ number:
                     - switch.is_on: activate
                   then:
                     - light.turn_on: green_led
-  
+
+  # Regulator opening percentage. On this variant the router is either
+  # fully open (100 %) or fully closed (0 %), so `mode: box` reflects the
+  # discrete nature — a slider with step 100 would only be reachable at
+  # its endpoints.
+  - platform: template
+    name: "Regulator Opening"
+    id: regulator_opening
+    min_value: 0
+    max_value: 100
+    step: 100
+    unit_of_measurement: "%"
+    optimistic: True
+    mode: box
+    internal: true
+
   # Define the power level to start divertion
   - platform: template
     name: "Start power level"

@@ -23,6 +23,17 @@ sensor:
             then:
               script.execute: energy_regulation
 
+  # Mirror the current regulator opening (%) as a template sensor so it
+  # is visible in Home Assistant graphs. Every engine variant defines a
+  # `regulator_opening` template number; this sensor tracks its state.
+  - platform: template
+    name: "Regulator Opening Sensor"
+    id: regulator_opening_sensor
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    update_interval: 5s
+    lambda: return id(regulator_opening).state;
+
 substitutions:
   # By default LEDs are pin-controlled and not inverted
   green_led_inverted: "False"
