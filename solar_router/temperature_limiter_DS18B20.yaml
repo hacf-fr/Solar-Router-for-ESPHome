@@ -1,9 +1,13 @@
+esphome:
+  min_version: 2025.5.0
+
 substitutions:
   DS18B20_address: "0"
   temperature_update_interval: 5s
   red_led_inverted: "False"
 
-<<: !include temperature_limiter_common.yaml
+packages:
+  - !include temperature_limiter_common.yaml
 
 one_wire:
   - platform: gpio

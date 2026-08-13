@@ -1,10 +1,14 @@
 # ----------------------------------------------------------------------------------------------------
-# Define sensor for temperaturewer collection
+# Define sensor for temperature collection
 # ----------------------------------------------------------------------------------------------------
+esphome:
+  min_version: 2025.5.0
+
 substitutions:
   red_led_inverted: "False"
 
-<<: !include temperature_limiter_common.yaml
+packages:
+  - !include temperature_limiter_common.yaml
 
 sensor:
   # Sensor showing the temprature to monitor
