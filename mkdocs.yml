@@ -43,6 +43,8 @@ nav:
               - Overview: temperature_limiter.md
               - Home Assistant: temperature_limiter_home_assistant.md
               - DS18B20: temperature_limiter_DS18B20.md
+      - Dimmer board safety:
+              - RobotDyn 40 A with current sensor: dimmer_safety.md
       - Scheduler:
               - Overview: scheduler.md
               - Forced Run: scheduler_forced_run.md
@@ -116,6 +118,7 @@ plugins:
                             Solar Router / Diverter: Routeur solaire
                             Standalone: Routeur autonome
                             Temperature Limiter: Limiteur de température
+                            Dimmer board safety: Sécurité carte gradateur
                             Theorical: Théorique
                             With proxy: Router utilisant un proxy
                             With Solar Optimizer integration: Avec l'utilisation de l'intégration Solar Optimizer

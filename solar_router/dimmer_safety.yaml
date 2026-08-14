@@ -1,0 +1,194 @@
+# ----------------------------------------------------------------------------------------------------
+# Board safety package for the RobotDyn AC Dimmer 40A "with current sensor" (premium variant,
+# heatsink NTC + 5V fan + built-in CT current sensor).
+#
+# Provides:
+#   - Local heatsink temperature limiter (works without WiFi / Home Assistant):
+#       heatsink >= stop temperature   -> safety_limit = True  (engine drops to 0 %)
+#       heatsink <= restart temperature-> safety_limit = False
+#       Sensor failure (NaN)           -> safety_limit = True  (fail-safe)
+#   - Overcurrent cutout: load current >= threshold -> safety_limit = True
+#       (cleared once current falls back under the restart threshold)
+#   - Health alarms (no power cut, for information):
+#       "Triac Stuck ON"       : current flowing while the regulator is closed
+#       "Boiler Not Powered"   : regulator open but no current (dead triac / gate)
+#       "Current Sensor Failure": CT output not readable
+#
+# NOTE: this package owns the shared `safety_limit` global (same as the temperature
+# limiter packages). Include ONLY ONE safety limiter package in a configuration.
+# ----------------------------------------------------------------------------------------------------
+substitutions:
+  # Analog inputs (ESP32 ADC1, input-only pins 32-39)
+  dimmer_temp_pin: "GPIO34"
+  dimmer_current_pin: "GPIO35"
+  red_led_pin: "GPIO21"
+  red_led_inverted: "False"
+  # Temperature limiter thresholds (°C)
+  heatsink_stop_temperature: "80"
+  heatsink_restart_temperature: "60"
+  # Current thresholds (A RMS)
+  overcurrent_current: "12.0"
+  overcurrent_restart_current: "8.0"
+  # Health alarms
+  stuck_current_threshold: "1.0"
+  stuck_opening_threshold: "1.0"
+  no_load_current_threshold: "0.5"
+  no_load_opening_threshold: "50.0"
+  # Current sensor calibration (A per volt on the CUR pin), tune on the bench
+  current_calibration_factor: "1.0"
+  # Heatsink NTC calibration - adjust to match the board's divider, see bench procedure
+  ntc_reference_voltage: "3.3"
+  ntc_reference_resistance: "10000Ω"
+  ntc_reference_temperature: "25°C"
+  ntc_b_coefficient: "3350"
+  ntc_series_resistor: "10000Ω"
+  ntc_configuration: "DOWNSTREAM"
+
+esphome:
+  on_boot:
+    priority: -1000.0
+    then:
+      - script.execute: dimmer_safety_check
+
+globals:
+  - id: heatsink_overheat
+    type: bool
+    initial_value: "false"
+  - id: load_overcurrent
+    type: bool
+    initial_value: "false"
+
+sensor:
+  # Raw heatsink NTC voltage
+  - platform: adc
+    id: heatsink_voltage
+    pin: ${dimmer_temp_pin}
+    attenuation: 12db
+    update_interval: 1s
+    internal: "True"
+
+  # NTC resistance computed from the board divider
+  - platform: resistance
+    id: heatsink_resistance
+    sensor: heatsink_voltage
+    reference_voltage: ${ntc_reference_voltage}
+    configuration: ${ntc_configuration}
+    resistor: ${ntc_series_resistor}
+    internal: "True"
+
+  # Heatsink temperature
+  - platform: ntc
+    id: heatsink_temperature
+    name: "Dimmer Heatsink Temperature"
+    device_class: temperature
+    unit_of_measurement: "°C"
+    sensor: heatsink_resistance
+    calibration:
+      b_constant: ${ntc_b_coefficient}
+      reference_resistance: ${ntc_reference_resistance}
+      reference_temperature: ${ntc_reference_temperature}
+    filters:
+      - median:
+          window_size: 5
+    on_value:
+      - script.execute: dimmer_safety_check
+
+  # Raw CT output voltage
+  - platform: adc
+    id: load_current_voltage
+    pin: ${dimmer_current_pin}
+    attenuation: 12db
+    update_interval: 1s
+    internal: "True"
+
+  # Load current (RMS) flowing through the dimmer.
+  # Note: ESPHome's ct_clamp publishes the AC RMS voltage of the source as "A"
+  # (1 V/A); the board trimmer sets the CT gain and `current_calibration_factor`
+  # rescales the result (tune on the bench).
+  - platform: ct_clamp
+    id: load_current
+    name: "Dimmer Load Current"
+    device_class: current
+    unit_of_measurement: "A"
+    sensor: load_current_voltage
+    filters:
+      - multiply: ${current_calibration_factor}
+    sample_duration: 200ms
+    update_interval: 1s
+    on_value:
+      - script.execute: dimmer_safety_check
+
+binary_sensor:
+  # Any board safety cutout active (heatsink overheat or overcurrent)
+  - platform: template
+    name: "Dimmer Safety Active"
+    device_class: problem
+    lambda: |-
+      return id(heatsink_overheat) || id(load_overcurrent);
+
+  # Current is flowing although the regulator is closed: triac shorted
+  - platform: template
+    name: "Triac Stuck ON"
+    device_class: problem
+    lambda: |-
+      return !isnan(id(load_current).state) && !isnan(id(regulator_opening).state)
+             && id(regulator_opening).state < ${stuck_opening_threshold}
+             && id(load_current).state > ${stuck_current_threshold};
+
+  # Regulator is open but no current flows: dead triac or gate failure
+  - platform: template
+    name: "Boiler Not Powered"
+    device_class: problem
+    lambda: |-
+      return !isnan(id(load_current).state) && !isnan(id(regulator_opening).state)
+             && id(regulator_opening).state > ${no_load_opening_threshold}
+             && id(load_current).state < ${no_load_current_threshold};
+
+  # CT output not readable
+  - platform: template
+    name: "Current Sensor Failure"
+    device_class: problem
+    lambda: |-
+      return isnan(id(load_current).state);
+
+script:
+  # Heatsink overheat + overcurrent state machines, update shared safety_limit
+  - id: dimmer_safety_check
+    mode: single
+    then:
+      - lambda: |-
+          // Heatsink temperature limiter (fail-safe on sensor loss)
+          if (isnan(id(heatsink_temperature).state)) {
+            id(heatsink_overheat) = true;
+          } else if (id(heatsink_overheat)) {
+            if (id(heatsink_temperature).state <= ${heatsink_restart_temperature}) {
+              id(heatsink_overheat) = false;
+            }
+          } else {
+            if (id(heatsink_temperature).state >= ${heatsink_stop_temperature}) {
+              id(heatsink_overheat) = true;
+            }
+          }
+          // Overcurrent cutout (NaN current never trips, only alarms)
+          if (id(load_overcurrent)) {
+            if (id(load_current).state <= ${overcurrent_restart_current}) {
+              id(load_overcurrent) = false;
+            }
+          } else {
+            if (id(load_current).state >= ${overcurrent_current}) {
+              id(load_overcurrent) = true;
+            }
+          }
+          id(safety_limit) = id(heatsink_overheat) || id(load_overcurrent);
+          if (id(safety_limit)) {
+            id(red_led).turn_on();
+          } else {
+            id(red_led).turn_off();
+          }
+
+output:
+  - id: red_led
+    platform: gpio
+    pin:
+      number: ${red_led_pin}
+      inverted: ${red_led_inverted}

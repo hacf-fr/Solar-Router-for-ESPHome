@@ -1,0 +1,75 @@
+# ----------------------------------------------------------------------------------------------------
+# ESPHome configuration - This part depends on your hardware target
+# ----------------------------------------------------------------------------------------------------
+# Example: ESP32-based solar router with the RobotDyn AC Dimmer 40 A "with current sensor"
+# (heatsink NTC + built-in CT) and the local board safety package.
+# ----------------------------------------------------------------------------------------------------
+
+esphome:
+  name: dimmer-safety
+  friendly_name: Dimmer Safety
+  min_version: 2025.5.0
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+  baud_rate: 115200
+  level: INFO
+  logs:
+    component: ERROR
+    light: ERROR
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+# Enable over-the-air updates
+ota:
+  - platform: esphome
+    password: !secret solar_router_ota_password
+
+# WiFi connection
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  reboot_timeout: 24h
+
+# Activate web interface
+web_server:
+  port: 80
+
+# Define watchdog time (it should be greater than timeout)
+http_request:
+  watchdog_timeout: 12s
+
+# ----------------------------------------------------------------------------------------------------
+# Customisation
+# ----------------------------------------------------------------------------------------------------
+packages:
+  solar_router:
+    url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
+    ref: main
+    refresh: 1d
+    files:
+      - path: solar_router/common.yaml
+      - path: solar_router/power_meter_home_assistant.yaml
+        vars:
+          power_meter_activated_at_start: "1"
+      - path: solar_router/regulator_triac.yaml
+        vars:
+          regulator_gate_pin: GPIO17
+          regulator_zero_crossing_pin: GPIO23
+      - path: solar_router/engine_1dimmer.yaml
+        vars:
+          green_led_pin: GPIO18
+          yellow_led_pin: GPIO19
+      - path: solar_router/dimmer_safety.yaml
+        vars:
+          dimmer_temp_pin: GPIO34
+          dimmer_current_pin: GPIO35
+          red_led_pin: GPIO21
