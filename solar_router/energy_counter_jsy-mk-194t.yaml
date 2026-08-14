@@ -2,12 +2,13 @@
 # Calculate daily energy diverted with JSY-MK-194T
 # ----------------------------------------------------------------------------------------------------
 
-sensor:  
+sensor:
   # Sensor showing the total daily energy diverted consumption
   - id: energy_diverted
     platform: total_daily_energy
     name: 'Total daily energy diverted'
     power_id: power_divertion
+    time_id: homeassistant_time_for_solar_router
     unit_of_measurement: 'kWh'
     state_class: total_increasing
     device_class: energy
@@ -48,10 +49,8 @@ script:
 # Enable time component to 
 #  - Update energy diverted counter
 #  - Reset energy at midnight
-time:
-  - platform: sntp
-    on_time:
-      # Executed every second → energy diverted
-      - seconds: /1
-        then:
-          - script.execute: energy_diverted_counter
+interval:
+  # Executed every second → energy diverted
+  - interval: 1s
+    then:
+      - script.execute: energy_diverted_counter
