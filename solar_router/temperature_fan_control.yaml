@@ -1,0 +1,90 @@
+substitutions:
+  fan_control_inverted: "False"
+
+number:
+  - platform: template
+    id: fan_stop_temperature
+    name: "Temperature to stop fan"
+    max_value: 99999
+    initial_value: 40
+    min_value: -273
+    step: 1
+    optimistic: True
+    mode: box
+    unit_of_measurement: "°C"
+    restore_value: true
+    # Enforce fan_start_temperature > fan_stop_temperature.
+    # If the user pushes stop to a value that would break the invariant,
+    # start is bumped just above it.
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: |-
+                return !isnan(id(fan_start_temperature).state)
+                       && x >= id(fan_start_temperature).state;
+            then:
+              - number.set:
+                  id: fan_start_temperature
+                  value: !lambda 'return x + 1;'
+
+  - platform: template
+    id: fan_start_temperature
+    name: "Temperature to start fan"
+    max_value: 99999
+    initial_value: 50
+    min_value: -273
+    step: 1
+    optimistic: True
+    mode: box
+    unit_of_measurement: "°C"
+    restore_value: true
+    # Symmetric guard: if start is pulled below stop, stop is lowered.
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: |-
+                return !isnan(id(fan_stop_temperature).state)
+                       && x <= id(fan_stop_temperature).state;
+            then:
+              - number.set:
+                  id: fan_stop_temperature
+                  value: !lambda 'return x - 1;'
+
+interval:
+  # Trigger action every second
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            switch.is_on: activate
+          then:
+            - script.execute: fan_control_check
+
+script:
+  - id: fan_control_check
+    mode: single
+    then:
+      - lambda: |-
+          if ( isnan( id(safety_temperature).state ) ){
+              // Can't read temperature. Turn fan on as a failsafe.
+              id(fan_control).turn_on();
+              return;
+          }
+          if (id(safety_temperature).state >= id(fan_start_temperature).state)
+          {
+              id(fan_control).turn_on();
+              return;
+          }
+          if (id(safety_temperature).state <= id(fan_stop_temperature).state)
+          {
+            id(fan_control).turn_off();
+          }
+
+output:
+  - id: fan_control
+    platform: gpio
+    pin:
+      number: ${fan_control_pin}
+      inverted: ${fan_control_inverted}
