@@ -83,5 +83,6 @@ packages:
           DS18B20_pin: GPIO02
           temperature_update_interval: 1s
           red_led_pin: GPIO5
-      # Fan control
-      # fan_control_pin: GPIO4
+      - path: solar_router/temperature_fan_control.yaml
+        vars:
+          fan_control_pin: GPIO4

@@ -43,6 +43,7 @@ nav:
               - Overview: temperature_limiter.md
               - Home Assistant: temperature_limiter_home_assistant.md
               - DS18B20: temperature_limiter_DS18B20.md
+              - Fan controller: temperature_fan_control.md
       - Scheduler:
               - Overview: scheduler.md
               - Forced Run: scheduler_forced_run.md
@@ -102,6 +103,7 @@ plugins:
                             Contributing: Contribution
                             Disclamer: Avertissement
                             Energy Counter: Compteur d'énergie
+                            Fan controller: Contrôle du ventilateur
                             Usage Examples: Exemples d'utilisation
                             Hardware: Materiel
                             Home: Accueil
