@@ -1,6 +1,6 @@
 # Blueprint Home Assistant — Priorité au VE
 
-## 1 – À quoi ça sert
+## À quoi ça sert
 
 Lorsqu'un véhicule électrique est branché sur un chargeur intelligent
 (MyEnergi Zappi, OpenEVSE, Wallbox Quasar, …) capable de suivre le
@@ -11,18 +11,19 @@ blueprint arbitre entre les deux :
 - Lorsqu'un surplus *suffisant* est disponible *assez longtemps*, il
   éteint le Solar Router pour que le surplus soit relâché vers le
   réseau, où le chargeur du VE le capte.
-- Lorsque le VE est débranché, qu'un nuage se met à tirer du courant
-  du réseau, ou que le VE cesse effectivement de prendre le surplus
-  (voiture pleine, en pause, fin de tapering), il rallume le Solar
-  Router pour que le chauffe-eau récupère ce qui reste.
+- Lorsque le VE est débranché, qu'un nuage coupe la production PV et
+  que la maison se met à importer, ou que le VE cesse effectivement de
+  prendre le surplus (voiture pleine, en pause, fin de tapering), il
+  rallume le Solar Router pour que le chauffe-eau récupère ce qui
+  reste.
 
 Le firmware du routeur ne communique **pas** avec le chargeur — le
 blueprint se contente de manipuler l'interrupteur `Activate Solar
 Routing`. Tout le reste reste à la charge du chargeur.
 
-## 2 – Signaux
+## Signaux
 
-### 2a – Bascule (routeur ON → OFF)
+### Bascule (routeur ON → OFF)
 
 ```
 surplus = max(0, -grid_power) + max(0, diverted_power)
@@ -39,7 +40,7 @@ reste vrai en continu pendant `surplus_duration_trigger` secondes, à
 condition que le VE soit branché et (si un capteur SoC est fourni)
 encore sous la cible.
 
-### 2b – Restauration (routeur OFF → ON)
+### Restauration (routeur OFF → ON)
 
 Une fois le routeur éteint et le VE en charge sur le solaire, la
 formule de surplus s'effondre à ~0 : `diverted_power = 0` (routeur
@@ -65,9 +66,9 @@ disputer avec le VE cette énergie de fin de charge. Le blueprint
 attend `-grid_power > release_export_threshold` — c'est-à-dire que la
 voiture a réellement cessé de consommer — pour restaurer le routeur.
 La cible SoC continue de verrouiller les nouvelles bascules
-(voir [3 – Comportement](#3--comportement)).
+(voir [Comportement](#comportement)).
 
-## 3 – Comportement
+## Comportement
 
 ```text
 BASCULE (routeur ON → OFF), quand ceci reste vrai pendant surplus_duration_trigger s :
@@ -89,7 +90,7 @@ fait pas bouger le routeur. Franchir `ev_soc_target` gèle la bascule
 seuil d'export s'en charge une fois que la voiture cesse réellement de
 consommer.
 
-## 4 – Entrées
+## Entrées
 
 | Entrée | Rôle | Défaut |
 | --- | --- | ---: |
@@ -104,7 +105,7 @@ consommer.
 | `release_export_threshold` | Seuil d'export pour la détection "VE plein", en W | 200 |
 | `surplus_duration_trigger` | Anti-rebond appliqué aux 3 triggers de niveau, en s | 60 |
 
-## 5 – Prérequis firmware : `Real Power` vivant même routeur éteint
+## Prérequis firmware : `Real Power` vivant même routeur éteint
 
 Avant cette version, éteindre `Activate Solar Routing` stoppait aussi
 le sondage du compteur et forçait `Real Power` à `NaN`. Le blueprint
@@ -115,10 +116,19 @@ le sondage des compteurs natifs en continu et n'écrit plus `NaN` à
 l'arrêt. Aucune action n'est requise côté utilisateur si le firmware
 assorti est flashé.
 
-## 6 – Une journée dans la vie
+## Une journée dans la vie
 
 Seuil de bascule 1400 W, seuils nuage & release 200 W chacun,
 anti-rebond 60 s.
+
+![Priorité VE — journée type](images/priority_to_ev_day_fr.png)
+
+*Bandeau du haut : événements numérotés (voir légende sous la figure).
+Panneau du milieu : production PV (jaune), talon + chauffe-eau + VE
+empilés ; le trait bleu est la consommation totale. Panneau du bas :
+échange réseau signé (import au-dessus de zéro, export en dessous) et
+la courbe de surplus vue par le blueprint (pointillé) tracée côté
+export.*
 
 | Heure | Situation | grid_power | diverted | Routeur | Action |
 | :--- | :--- | ---: | ---: | :--- | :--- |
@@ -132,7 +142,7 @@ anti-rebond 60 s.
 | 15:30 | VE s'arrête réellement, export stable > 60 s | **−1500** | 0 | **ON** | export release — retour au routeur |
 | 20:00 | VE débranché | −200 | 100 | ON | — |
 
-## 7 – Détection de VE branché (exemple MyEnergi Zappi)
+## Détection de VE branché (exemple MyEnergi Zappi)
 
 Si votre chargeur n'expose qu'un statut texte, encapsulez-le dans un
 capteur binaire template :
@@ -147,7 +157,7 @@ template:
              in ['EV Connected', 'Waiting for EV', 'Charging', 'Boosting', 'Complete'] }}
 ```
 
-## 8 – Installation
+## Installation
 
 Importer le blueprint dans Home Assistant :
 
@@ -158,7 +168,7 @@ Importer le blueprint dans Home Assistant :
 Créer ensuite une automatisation depuis le blueprint importé et
 remplir les entrées.
 
-## 9 – Cas limites
+## Cas limites
 
 - **Nuage bref (< `surplus_duration_trigger` s)** — le routeur reste
   éteint ; l'anti-rebond absorbe.

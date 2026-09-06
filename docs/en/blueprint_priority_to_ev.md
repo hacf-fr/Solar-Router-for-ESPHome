@@ -1,6 +1,6 @@
 # Home Assistant blueprint — Priority to EV
 
-## 1 – What it does
+## What it does
 
 When an EV is plugged into a smart charger (MyEnergi Zappi, OpenEVSE,
 Wallbox Quasar, …) that already does its own surplus-following logic,
@@ -10,18 +10,18 @@ Router's water heater. This blueprint arbitrates between the two:
 - When the surplus is *large enough for long enough*, it turns the
   Solar Router **off** so the surplus is released to the grid, where
   the EV charger picks it up.
-- When the EV is unplugged, a cloud starts pulling from the grid, or
-  the EV stops taking the surplus (car full, paused, or tapering
-  finished), it turns the Solar Router back **on** so the water heater
-  catches whatever remains.
+- When the EV is unplugged, a cloud cuts PV production and the house
+  starts importing from the grid, or the EV stops taking the surplus
+  (car full, paused, or tapering finished), it turns the Solar Router
+  back **on** so the water heater catches whatever remains.
 
 The router firmware itself does **not** talk to the EV charger — the
 blueprint only toggles the router's `Activate Solar Routing` switch.
 Everything else stays in the charger's own hands.
 
-## 2 – Signals
+## Signals
 
-### 2a – Handoff (router ON → OFF)
+### Handoff (router ON → OFF)
 
 ```
 surplus = max(0, -grid_power) + max(0, diverted_power)
@@ -37,7 +37,7 @@ The router is turned OFF when `surplus > EV_Charging_Minimum_Surplus`
 holds continuously for `surplus_duration_trigger` seconds, provided
 the EV is plugged in and (if a SoC sensor is set) still below target.
 
-### 2b – Restore (router OFF → ON)
+### Restore (router OFF → ON)
 
 Once the router is OFF and the EV is drawing on solar, the surplus
 formula collapses to ~0: `diverted_power = 0` because the router is
@@ -61,9 +61,9 @@ turning the router back ON at that instant would fight the EV for the
 tail-end energy. The blueprint waits for `-grid_power >
 release_export_threshold` — i.e. the car has actually stopped drawing
 — to restore the router. The SoC target still gates new handoffs
-(see [3 – Behavior](#3--behavior)).
+(see [Behavior](#behavior)).
 
-## 3 – Behavior
+## Behavior
 
 ```text
 HANDOFF (router ON → OFF), when this stays true for surplus_duration_trigger s:
@@ -84,7 +84,7 @@ Crossing `ev_soc_target` freezes the handoff (no fresh router-OFF) but
 does not by itself restore the router — the export threshold handles
 that once the car actually stops drawing.
 
-## 4 – Inputs
+## Inputs
 
 | Input | Purpose | Default |
 | --- | --- | ---: |
@@ -99,7 +99,7 @@ that once the car actually stops drawing.
 | `release_export_threshold` | Export threshold for "EV done" detection in W | 200 |
 | `surplus_duration_trigger` | Debounce for all three level triggers in s | 60 |
 
-## 5 – Requirement: keep `Real Power` alive while the router is OFF
+## Requirement: keep `Real Power` alive while the router is OFF
 
 Before this version, turning the `Activate Solar Routing` switch OFF
 also stopped the meter polling and forced `Real Power` to `NaN`. The
@@ -110,10 +110,18 @@ keeps the native power meters polling continuously and no longer
 publishes `NaN` on shutdown. No user action is required if you flash
 the matching firmware version.
 
-## 6 – A day in the life
+## A day in the life
 
 Handoff threshold 1400 W, cloud & release thresholds 200 W each,
 debounce 60 s.
+
+![EV priority — typical day](images/priority_to_ev_day_en.png)
+
+*Top strip: numbered events (see caption below the figure). Middle
+panel: PV production (yellow), household baseline + water heater + EV
+stacked; the blue outline is the total consumption. Bottom panel:
+signed grid exchange (import above zero, export below) and the
+dashed blueprint surplus curve plotted on the export side.*
 
 | Time | Situation | grid_power | diverted | Router | Action |
 | :--- | :--- | ---: | ---: | :--- | :--- |
@@ -127,7 +135,7 @@ debounce 60 s.
 | 15:30 | EV self-stops on full, export stable > 60 s | **−1500** | 0 | **ON** | export release — router restored |
 | 20:00 | EV unplugged | −200 | 100 | ON | — |
 
-## 7 – Wiring an EV plug sensor (MyEnergi Zappi example)
+## Wiring an EV plug sensor (MyEnergi Zappi example)
 
 If your charger only exposes a text status, wrap it in a template
 binary sensor:
@@ -142,7 +150,7 @@ template:
              in ['EV Connected', 'Waiting for EV', 'Charging', 'Boosting', 'Complete'] }}
 ```
 
-## 8 – Installation
+## Installation
 
 Import the blueprint into Home Assistant:
 
@@ -153,7 +161,7 @@ Import the blueprint into Home Assistant:
 Create an automation from the imported blueprint and fill in the
 inputs.
 
-## 9 – Edge cases
+## Edge cases
 
 - **Brief cloud (< `surplus_duration_trigger` s)** — the router stays
   off; the debounce absorbs it.
