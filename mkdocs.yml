@@ -50,6 +50,8 @@ nav:
       - Home Assistant:
               - Recorder configuration: recorder_configuration.md
               - Debug sensors: debug_sensors.md
+              - Blueprint Priority to EV: blueprint_priority_to_ev.md
+              - Blueprint use cases: blueprint_use_cases.md
       - About:
               - ChangeLog: changelog.md
               - License: license.md
@@ -100,6 +102,8 @@ plugins:
                       nav_translations:
                             About: A propos
                             Alternatives: Alternatives
+                            Blueprint Priority to EV: Blueprint Priorité au VE
+                            Blueprint use cases: Cas d'utilisation du blueprint
                             Contributing: Contribution
                             Disclamer: Avertissement
                             Energy Counter: Compteur d'énergie
