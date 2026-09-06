@@ -1,0 +1,238 @@
+blueprint:
+  name: "Solar Router — Priority to EV"
+  description: |-
+    Give an EV charger priority over the Solar Router.
+
+    When the EV is plugged in and enough solar surplus is available for long
+    enough, this automation turns the Solar Router **off** so the surplus is
+    released to the grid, where the EV's own smart-charging logic (Zappi,
+    OpenEVSE, Wallbox Quasar…) picks it up. When the car is full, unplugged,
+    or a passing cloud drops the surplus below the threshold, the Solar
+    Router is turned back **on** so it can use whatever surplus remains.
+
+    Surplus = max(0, −grid_power) + max(0, diverted_power)
+
+    Requires the router firmware modification that keeps `Real Power`
+    updating while `Activate Solar Routing` is OFF (shipped with the
+    same version of Solar-Router-for-ESPHome as this blueprint).
+
+  domain: automation
+
+  homeassistant:
+    min_version: 2024.8.0
+
+  source_url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/blob/main/blueprints/priority_to_ev.yaml
+
+  input:
+    entities:
+      name: Entities
+      icon: mdi:ev-station
+      collapsed: false
+      input:
+        ev_connected:
+          name: EV connected (plug status)
+          description: Binary sensor that is ON when the EV is plugged in.
+          selector:
+            entity:
+              domain: binary_sensor
+        ev_soc:
+          name: EV state of charge (optional)
+          description: >-
+            Sensor exposing the car's state of charge in %. Leave empty
+            if you have no such sensor — the SoC-based cut-off is then skipped
+            and the EV is expected to stop drawing on its own when full.
+          default: ""
+          selector:
+            entity:
+              domain: sensor
+              device_class: battery
+        grid_power:
+          name: Grid power (signed, W)
+          description: >-
+            Signed grid exchange power. Positive = importing from the grid,
+            negative = exporting. Point this at the router's Real Power sensor
+            (`sensor.*_real_power`).
+          selector:
+            entity:
+              domain: sensor
+              device_class: power
+        diverted_power:
+          name: Diverted power (W)
+          description: The Solar Router's Power divertion sensor (`sensor.*_power_divertion`).
+          selector:
+            entity:
+              domain: sensor
+              device_class: power
+        solar_router:
+          name: Solar Router activation switch
+          description: The `Activate Solar Routing` switch this automation will toggle.
+          selector:
+            entity:
+              domain: switch
+
+    thresholds:
+      name: Thresholds
+      icon: mdi:tune
+      collapsed: false
+      input:
+        ev_charging_minimum_surplus:
+          name: EV Charging Minimum Surplus (W)
+          description: >-
+            Minimum surplus (in watts) needed to hand priority to the EV. Also
+            the level below which the router is restored when a cloud shows up.
+            The EV charger's own minimum is typically 1.4 kW single-phase.
+          default: 1400
+          selector:
+            number:
+              min: 0
+              max: 20000
+              step: 50
+              unit_of_measurement: W
+              mode: box
+        surplus_duration_trigger:
+          name: Surplus duration trigger (s)
+          description: >-
+            How long the surplus must stay above (or below) the threshold before
+            the automation reacts. Prevents flapping around a cloudy edge.
+          default: 60
+          selector:
+            number:
+              min: 0
+              max: 600
+              step: 1
+              unit_of_measurement: s
+              mode: box
+        ev_soc_target:
+          name: EV state-of-charge target (%)
+          description: >-
+            Above this SoC, the car is considered "full" and priority is
+            released to the router. Ignored if no SoC sensor is set. Default
+            80 % is friendly to battery longevity; set to 100 % for a full charge.
+          default: 80
+          selector:
+            number:
+              min: 0
+              max: 100
+              step: 1
+              unit_of_measurement: "%"
+              mode: box
+
+mode: single
+max_exceeded: silent
+
+trigger_variables:
+  grid_entity: !input grid_power
+  diverted_entity: !input diverted_power
+  ev_soc_entity: !input ev_soc
+  ev_soc_target_value: !input ev_soc_target
+
+variables:
+  grid_entity: !input grid_power
+  diverted_entity: !input diverted_power
+  ev_soc_entity: !input ev_soc
+  ev_connected_entity: !input ev_connected
+  solar_router_entity: !input solar_router
+  ev_soc_target_value: !input ev_soc_target
+  minimum_surplus_value: !input ev_charging_minimum_surplus
+
+trigger:
+  # Surplus climbs above the threshold and stays there for the debounce duration
+  - platform: numeric_state
+    entity_id:
+      - !input grid_power
+      - !input diverted_power
+    value_template: >-
+      {% set g = states(grid_entity) | float(0) %}
+      {% set d = states(diverted_entity) | float(0) %}
+      {{ [0, -g] | max + [0, d] | max }}
+    above: !input ev_charging_minimum_surplus
+    for:
+      seconds: !input surplus_duration_trigger
+    id: surplus_above
+
+  # Surplus drops below the threshold and stays there for the debounce duration (cloud)
+  - platform: numeric_state
+    entity_id:
+      - !input grid_power
+      - !input diverted_power
+    value_template: >-
+      {% set g = states(grid_entity) | float(0) %}
+      {% set d = states(diverted_entity) | float(0) %}
+      {{ [0, -g] | max + [0, d] | max }}
+    below: !input ev_charging_minimum_surplus
+    for:
+      seconds: !input surplus_duration_trigger
+    id: surplus_below
+
+  # EV unplugged: release priority immediately
+  - platform: state
+    entity_id: !input ev_connected
+    to: "off"
+    id: ev_unplugged
+
+  # EV freshly plugged: re-evaluate (debounced surplus_above will finish the job if warranted)
+  - platform: state
+    entity_id: !input ev_connected
+    to: "on"
+    id: ev_plugged
+
+  # SoC target reached: release priority (only fires when an SoC sensor is provided)
+  - platform: template
+    value_template: >-
+      {% if ev_soc_entity in (none, '', 'none') %}
+        false
+      {% else %}
+        {{ has_value(ev_soc_entity)
+           and (states(ev_soc_entity) | float(0)) >= (ev_soc_target_value | float(80)) }}
+      {% endif %}
+    id: soc_target_reached
+
+  # Re-evaluate on automation reload / HA restart
+  - platform: event
+    event_type: automation_reloaded
+    id: reload
+
+  - platform: homeassistant
+    event: start
+    id: ha_start
+
+action:
+  - variables:
+      current_surplus: >-
+        {% set g = states(grid_entity) | float(0) %}
+        {% set d = states(diverted_entity) | float(0) %}
+        {{ [0, -g] | max + [0, d] | max }}
+      soc_below_target: >-
+        {% if ev_soc_entity in (none, '', 'none') %}
+          true
+        {% else %}
+          {{ has_value(ev_soc_entity)
+             and (states(ev_soc_entity) | float(0)) < (ev_soc_target_value | float(80)) }}
+        {% endif %}
+      ev_is_connected: "{{ is_state(ev_connected_entity, 'on') }}"
+      router_is_on: "{{ is_state(solar_router_entity, 'on') }}"
+      surplus_ok: "{{ current_surplus > (minimum_surplus_value | float(1400)) }}"
+
+  - choose:
+      # Hand priority to the EV: turn the router OFF
+      - conditions:
+          - "{{ ev_is_connected }}"
+          - "{{ soc_below_target }}"
+          - "{{ surplus_ok }}"
+          - "{{ router_is_on }}"
+        sequence:
+          - service: switch.turn_off
+            target:
+              entity_id: !input solar_router
+
+      # Restore the router: EV gone, or car full, or cloud arrived
+      - conditions:
+          - "{{ not router_is_on }}"
+          - >-
+            {{ (not ev_is_connected)
+               or (not soc_below_target)
+               or (not surplus_ok) }}
+        sequence:
+          - service: switch.turn_on
+            target:
+              entity_id: !input solar_router
