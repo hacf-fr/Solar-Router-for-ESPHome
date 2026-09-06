@@ -47,6 +47,9 @@ nav:
       - Scheduler:
               - Overview: scheduler.md
               - Forced Run: scheduler_forced_run.md
+      - External control:
+              - Push button: activate_button.md
+              - ON/OFF switch: activate_switch.md
       - Home Assistant:
               - Recorder configuration: recorder_configuration.md
               - Debug sensors: debug_sensors.md
@@ -103,16 +106,19 @@ plugins:
                             Contributing: Contribution
                             Disclamer: Avertissement
                             Energy Counter: Compteur d'énergie
+                            External control: Commande externe
                             Fan controller: Contrôle du ventilateur
                             Usage Examples: Exemples d'utilisation
                             Hardware: Materiel
                             Home: Accueil
                             License: Licence
                             Mecanical relay: Relais mécanique
+                            ON/OFF switch: Interrupteur
                             ON/OFF regulation: Regulation tout ou rien
                             Overview: Aperçu
                             Progressive regulation: Régulation progressive
                             Proxy client: Client proxy
+                            Push button: Bouton poussoir
                             Recorder configuration: Configuration des recorder
                             Scheduler: Plannificateur
                             Solar Router / Diverter: Routeur solaire
