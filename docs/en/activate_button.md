@@ -21,14 +21,7 @@ The button changes nothing at start-up: `activate` keeps the state restored from
 
 The button is a simple normally-open dry contact between the GPIO and the ground. No external resistor is needed: the internal pull-up of the ESP32 is enabled by the package.
 
-```
-      ESP32                           push button
-   ┌─────────┐
-   │  GPIO33 ○────────────────o‾  ‾o────────┐
-   │         │                              │
-   │     GND ○──────────────────────────────┘
-   └─────────┘
-```
+![](../images/activate_button.drawio.png)
 
 With this wiring, the contact is **closed** while the button is pressed, which is the default polarity of the package (`activate_button_inverted: "True"`). If you use a normally-closed button, set `activate_button_inverted` to `"False"`.
 
@@ -52,7 +45,7 @@ packages:
 ### Variables
 
 | Variable                   | Required | Default  | Description                                                                                                     |
-| -------------------------- | -------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| -------------------------- | -------- | -------- | --------------------------------------------------------------------------------------------------------------- |
 | `activate_button_pin`      | yes      | —        | GPIO pin the button is connected to. The internal pull-up is enabled.                                           |
 | `activate_button_inverted` | no       | `"True"` | Set to `"False"` if the contact is **open** while the button is pressed (normally-closed button).               |
 | `activate_button_debounce` | no       | `50ms`   | Debounce time of the mechanical contact. Increase it if a single press toggles the router several times.        |

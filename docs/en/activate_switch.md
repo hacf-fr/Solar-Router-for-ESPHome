@@ -30,14 +30,7 @@ This package is not standalone. It relies on a symbol provided by another packag
 
 The switch is a simple dry contact between the GPIO and the ground. No external resistor is needed: the internal pull-up of the ESP32 is enabled by the package.
 
-```
-      ESP32                           two-position switch
-   ┌─────────┐
-   │  GPIO32 ○────────────────o    o────────┐
-   │         │                              │
-   │     GND ○──────────────────────────────┘
-   └─────────┘
-```
+![](../images/activate_switch.drawio.png)
 
 With this wiring, the contact is **closed** when routing must be enabled, which is the default polarity of the package (`activate_switch_inverted: "True"`). If your switch is wired the other way around (contact closed means routing disabled), set `activate_switch_inverted` to `"False"`.
 
@@ -64,11 +57,11 @@ packages:
 
 ### Variables
 
-| Variable                   | Required | Default  | Description                                                                                                                        |
-| -------------------------- | -------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `activate_switch_pin`      | yes      | —        | GPIO pin the switch is connected to. The internal pull-up is enabled.                                                              |
-| `activate_switch_inverted` | no       | `"True"` | Set to `"False"` if a **closed** contact means routing disabled.                                                                   |
-| `activate_switch_debounce` | no       | `50ms`   | Debounce time of the mechanical contact.                                                                                            |
-| `activate_switch_strict`   | no       | `"true"` | Set to `"false"` so the position is only applied when the switch is operated, letting Home Assistant, a push button or the scheduler drive `activate` in between. |
-| `hide_activate_switch`     | no       | `"True"` | Set to `"False"` to expose the raw state of the contact in Home Assistant, which is handy to check your wiring.                     |
-| `hide_activate_switch_position` | no  | `"False"`| Set to `"True"` to hide the *Activate Switch Position* text sensor.                                                                 |
+| Variable                        | Required | Default   | Description                                                                                                                                                       |
+| ------------------------------- | -------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `activate_switch_pin`           | yes      | —         | GPIO pin the switch is connected to. The internal pull-up is enabled.                                                                                             |
+| `activate_switch_inverted`      | no       | `"True"`  | Set to `"False"` if a **closed** contact means routing disabled.                                                                                                  |
+| `activate_switch_debounce`      | no       | `50ms`    | Debounce time of the mechanical contact.                                                                                                                          |
+| `activate_switch_strict`        | no       | `"true"`  | Set to `"false"` so the position is only applied when the switch is operated, letting Home Assistant, a push button or the scheduler drive `activate` in between. |
+| `hide_activate_switch`          | no       | `"True"`  | Set to `"False"` to expose the raw state of the contact in Home Assistant, which is handy to check your wiring.                                                   |
+| `hide_activate_switch_position` | no       | `"False"` | Set to `"True"` to hide the *Activate Switch Position* text sensor.                                                                                               |

@@ -30,14 +30,8 @@ Ce package n'est pas autonome. Il repose sur un identifiant fourni par un autre 
 
 L'interrupteur est un simple contact sec entre la broche GPIO et la masse. Aucune résistance externe n'est nécessaire : la résistance de tirage interne de l'ESP32 est activée par le package.
 
-```
-      ESP32                        interrupteur 2 positions
-   ┌─────────┐
-   │  GPIO32 ○────────────────o    o────────┐
-   │         │                              │
-   │     GND ○──────────────────────────────┘
-   └─────────┘
-```
+![](../images/activate_switch.drawio.png)
+
 
 Avec ce câblage, le contact est **fermé** lorsque le routage doit être activé, ce qui correspond à la polarité par défaut du package (`activate_switch_inverted: "True"`). Si votre interrupteur est câblé dans l'autre sens (contact fermé = routage désactivé), positionnez `activate_switch_inverted` à `"False"`.
 
@@ -59,16 +53,16 @@ packages:
     files:
       - path: solar_router/activate_switch.yaml
         vars:
-          activate_switch_pin: GPIO32
+          activate_switch_pin: GPIO33
 ```
 
 ### Variables
 
-| Variable                   | Obligatoire | Défaut   | Description                                                                                                                                            |
-| -------------------------- | ----------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `activate_switch_pin`      | oui         | —        | Broche GPIO sur laquelle l'interrupteur est raccordé. La résistance de tirage interne est activée.                                                     |
-| `activate_switch_inverted` | non         | `"True"` | À mettre à `"False"` si un contact **fermé** signifie routage désactivé.                                                                                |
-| `activate_switch_debounce` | non         | `50ms`   | Temps d'anti-rebond du contact mécanique.                                                                                                               |
-| `activate_switch_strict`   | non         | `"true"` | À mettre à `"false"` pour n'appliquer la position que lors des manœuvres, et laisser Home Assistant, un bouton poussoir ou le planificateur piloter `activate` entre-temps. |
-| `hide_activate_switch`     | non         | `"True"` | À mettre à `"False"` pour exposer l'état brut du contact dans Home Assistant, ce qui est pratique pour vérifier votre câblage.                          |
-| `hide_activate_switch_position` | non    | `"False"`| À mettre à `"True"` pour masquer le capteur texte *Activate Switch Position*.                                                                            |
+| Variable                        | Obligatoire | Défaut    | Description                                                                                                                                                                 |
+| ------------------------------- | ----------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `activate_switch_pin`           | oui         | —         | Broche GPIO sur laquelle l'interrupteur est raccordé. La résistance de tirage interne est activée.                                                                          |
+| `activate_switch_inverted`      | non         | `"True"`  | À mettre à `"False"` si un contact **fermé** signifie routage désactivé.                                                                                                    |
+| `activate_switch_debounce`      | non         | `50ms`    | Temps d'anti-rebond du contact mécanique.                                                                                                                                   |
+| `activate_switch_strict`        | non         | `"true"`  | À mettre à `"false"` pour n'appliquer la position que lors des manœuvres, et laisser Home Assistant, un bouton poussoir ou le planificateur piloter `activate` entre-temps. |
+| `hide_activate_switch`          | non         | `"True"`  | À mettre à `"False"` pour exposer l'état brut du contact dans Home Assistant, ce qui est pratique pour vérifier votre câblage.                                              |
+| `hide_activate_switch_position` | non         | `"False"` | À mettre à `"True"` pour masquer le capteur texte *Activate Switch Position*.                                                                                               |

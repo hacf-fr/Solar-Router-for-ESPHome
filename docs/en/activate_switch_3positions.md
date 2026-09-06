@@ -40,16 +40,7 @@ It is **exclusive** with [activate_switch](activate_switch.md): both declare the
 
 Use a standard ON-OFF-ON toggle switch (or a 3-position rotary switch with a common terminal). The common terminal goes to the ground, the two outer terminals to the GPIO. No external resistor is needed: the internal pull-ups of the ESP32 are enabled by the package.
 
-```
-      ESP32                        ON-OFF-ON switch
-   ┌─────────┐
-   │  GPIO32 ○────────────────o          up     → routing disabled
-   │         │                 ╲
-   │     GND ○──────────────────●        centre → solar routing
-   │         │                 ╱
-   │  GPIO33 ○────────────────o          down   → forced 100 %
-   └─────────┘
-```
+![](../images/activate_switch_3positions.drawio.png)
 
 With this wiring a contact is **closed** when the lever selects it, which is the default polarity of the package. If a contact is wired the other way around, set `activate_switch_off_inverted` or `activate_switch_force_inverted` to `"False"`.
 
@@ -81,14 +72,14 @@ packages:
 
 ### Variables
 
-| Variable                         | Required | Default  | Description                                                                                                                             |
-| -------------------------------- | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `activate_switch_off_pin`        | yes      | —        | GPIO pin closed by the "routing disabled" position. The internal pull-up is enabled.                                                    |
-| `activate_switch_force_pin`      | yes      | —        | GPIO pin closed by the "forced run" position. The internal pull-up is enabled.                                                          |
-| `activate_switch_off_inverted`   | no       | `"True"` | Set to `"False"` if the "routing disabled" contact is **open** when the lever selects it.                                                |
-| `activate_switch_force_inverted` | no       | `"True"` | Set to `"False"` if the "forced run" contact is **open** when the lever selects it.                                                      |
-| `activate_switch_debounce`       | no       | `50ms`   | Debounce time of the mechanical contacts.                                                                                                |
-| `activate_switch_forced_level`   | no       | `"100"`  | Router level, in percent, applied in the forced position.                                                                                |
-| `activate_switch_strict`         | no       | `"true"` | Set to `"false"` so the position is only applied when the switch is operated, letting Home Assistant or the scheduler drive the router in between. |
-| `hide_activate_switch`           | no       | `"True"` | Set to `"False"` to expose the raw state of the two contacts in Home Assistant, which is handy to check your wiring.                     |
-| `hide_activate_switch_position`  | no       | `"False"`| Set to `"True"` to hide the *Activate Switch Position* text sensor.                                                                      |
+| Variable                         | Required | Default   | Description                                                                                                                                        |
+| -------------------------------- | -------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `activate_switch_off_pin`        | yes      | —         | GPIO pin closed by the "routing disabled" position. The internal pull-up is enabled.                                                               |
+| `activate_switch_force_pin`      | yes      | —         | GPIO pin closed by the "forced run" position. The internal pull-up is enabled.                                                                     |
+| `activate_switch_off_inverted`   | no       | `"True"`  | Set to `"False"` if the "routing disabled" contact is **open** when the lever selects it.                                                          |
+| `activate_switch_force_inverted` | no       | `"True"`  | Set to `"False"` if the "forced run" contact is **open** when the lever selects it.                                                                |
+| `activate_switch_debounce`       | no       | `50ms`    | Debounce time of the mechanical contacts.                                                                                                          |
+| `activate_switch_forced_level`   | no       | `"100"`   | Router level, in percent, applied in the forced position.                                                                                          |
+| `activate_switch_strict`         | no       | `"true"`  | Set to `"false"` so the position is only applied when the switch is operated, letting Home Assistant or the scheduler drive the router in between. |
+| `hide_activate_switch`           | no       | `"True"`  | Set to `"False"` to expose the raw state of the two contacts in Home Assistant, which is handy to check your wiring.                               |
+| `hide_activate_switch_position`  | no       | `"False"` | Set to `"True"` to hide the *Activate Switch Position* text sensor.                                                                                |

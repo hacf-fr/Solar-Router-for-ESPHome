@@ -21,14 +21,7 @@ Le bouton ne change rien au démarrage : `activate` conserve l'état restauré d
 
 Le bouton est un simple contact sec normalement ouvert entre la broche GPIO et la masse. Aucune résistance externe n'est nécessaire : la résistance de tirage interne de l'ESP32 est activée par le package.
 
-```
-      ESP32                           bouton poussoir
-   ┌─────────┐
-   │  GPIO33 ○────────────────o‾  ‾o────────┐
-   │         │                              │
-   │     GND ○──────────────────────────────┘
-   └─────────┘
-```
+![](../images/activate_button.drawio.png)
 
 Avec ce câblage, le contact est **fermé** tant que le bouton est appuyé, ce qui correspond à la polarité par défaut du package (`activate_button_inverted: "True"`). Si vous utilisez un bouton normalement fermé, positionnez `activate_button_inverted` à `"False"`.
 
@@ -51,9 +44,9 @@ packages:
 
 ### Variables
 
-| Variable                   | Obligatoire | Défaut   | Description                                                                                                          |
-| -------------------------- | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `activate_button_pin`      | oui         | —        | Broche GPIO sur laquelle le bouton est raccordé. La résistance de tirage interne est activée.                        |
-| `activate_button_inverted` | non         | `"True"` | À mettre à `"False"` si le contact est **ouvert** lorsque le bouton est appuyé (bouton normalement fermé).            |
-| `activate_button_debounce` | non         | `50ms`   | Temps d'anti-rebond du contact mécanique. À augmenter si un seul appui bascule le routeur plusieurs fois.             |
+| Variable                   | Obligatoire | Défaut   | Description                                                                                                                    |
+| -------------------------- | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `activate_button_pin`      | oui         | —        | Broche GPIO sur laquelle le bouton est raccordé. La résistance de tirage interne est activée.                                  |
+| `activate_button_inverted` | non         | `"True"` | À mettre à `"False"` si le contact est **ouvert** lorsque le bouton est appuyé (bouton normalement fermé).                     |
+| `activate_button_debounce` | non         | `50ms`   | Temps d'anti-rebond du contact mécanique. À augmenter si un seul appui bascule le routeur plusieurs fois.                      |
 | `hide_activate_button`     | non         | `"True"` | À mettre à `"False"` pour exposer l'état brut du contact dans Home Assistant, ce qui est pratique pour vérifier votre câblage. |

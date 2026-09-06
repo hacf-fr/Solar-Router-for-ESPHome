@@ -2,11 +2,11 @@
 
 Ce package ajoute au routeur solaire un **interrupteur physique à trois positions**, câblé sur deux broches GPIO de l'ESP32. Sa position pilote le routage solaire, sans avoir besoin de réseau, de Home Assistant ni d'un navigateur.
 
-| Position du levier | Contact fermé               | État du routeur                                |
-| ------------------ | --------------------------- | ---------------------------------------------- |
-| haut               | `activate_switch_off_pin`   | routage solaire **désactivé**, niveau à 0      |
-| centre             | aucun                       | routage solaire **activé**                     |
-| bas                | `activate_switch_force_pin` | routeur **forcé à 100 %**                      |
+| Position du levier | Contact fermé               | État du routeur                           |
+| ------------------ | --------------------------- | ----------------------------------------- |
+| haut               | `activate_switch_off_pin`   | routage solaire **désactivé**, niveau à 0 |
+| centre             | aucun                       | routage solaire **activé**                |
+| bas                | `activate_switch_force_pin` | routeur **forcé à 100 %**                 |
 
 Les deux premières positions se comportent exactement comme [activate_switch](activate_switch.md). La troisième force la charge à pleine puissance de la même manière que `scheduler_forced_run.yaml` : `activate` est coupé pour que la régulation solaire cesse d'ajuster le niveau, puis `router_level` est fixé à 100 %.
 
@@ -40,16 +40,7 @@ Il est **exclusif** de [activate_switch](activate_switch.md) : les deux déclare
 
 Utilisez un interrupteur à levier ON-OFF-ON classique (ou un commutateur rotatif 3 positions avec borne commune). La borne commune va à la masse, les deux bornes extrêmes aux broches GPIO. Aucune résistance externe n'est nécessaire : les résistances de tirage internes de l'ESP32 sont activées par le package.
 
-```
-      ESP32                        interrupteur ON-OFF-ON
-   ┌─────────┐
-   │  GPIO32 ○────────────────o          haut   → routage désactivé
-   │         │                 ╲
-   │     GND ○──────────────────●        centre → routage solaire
-   │         │                 ╱
-   │  GPIO33 ○────────────────o          bas    → forçage 100 %
-   └─────────┘
-```
+![](../images/activate_switch_3positions.drawio.png)
 
 Avec ce câblage, un contact est **fermé** lorsque le levier le sélectionne, ce qui correspond à la polarité par défaut du package. Si un contact est câblé dans l'autre sens, positionnez `activate_switch_off_inverted` ou `activate_switch_force_inverted` à `"False"`.
 
@@ -81,14 +72,14 @@ packages:
 
 ### Variables
 
-| Variable                         | Obligatoire | Défaut    | Description                                                                                                                                     |
-| -------------------------------- | ----------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `activate_switch_off_pin`        | oui         | —         | Broche GPIO fermée par la position « routage désactivé ». La résistance de tirage interne est activée.                                          |
-| `activate_switch_force_pin`      | oui         | —         | Broche GPIO fermée par la position « forçage ». La résistance de tirage interne est activée.                                                    |
-| `activate_switch_off_inverted`   | non         | `"True"`  | À mettre à `"False"` si le contact « routage désactivé » est **ouvert** lorsque le levier le sélectionne.                                        |
-| `activate_switch_force_inverted` | non         | `"True"`  | À mettre à `"False"` si le contact « forçage » est **ouvert** lorsque le levier le sélectionne.                                                  |
-| `activate_switch_debounce`       | non         | `50ms`    | Temps d'anti-rebond des contacts mécaniques.                                                                                                     |
-| `activate_switch_forced_level`   | non         | `"100"`   | Niveau du routeur, en pourcentage, appliqué dans la position de forçage.                                                                         |
+| Variable                         | Obligatoire | Défaut    | Description                                                                                                                                             |
+| -------------------------------- | ----------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `activate_switch_off_pin`        | oui         | —         | Broche GPIO fermée par la position « routage désactivé ». La résistance de tirage interne est activée.                                                  |
+| `activate_switch_force_pin`      | oui         | —         | Broche GPIO fermée par la position « forçage ». La résistance de tirage interne est activée.                                                            |
+| `activate_switch_off_inverted`   | non         | `"True"`  | À mettre à `"False"` si le contact « routage désactivé » est **ouvert** lorsque le levier le sélectionne.                                               |
+| `activate_switch_force_inverted` | non         | `"True"`  | À mettre à `"False"` si le contact « forçage » est **ouvert** lorsque le levier le sélectionne.                                                         |
+| `activate_switch_debounce`       | non         | `50ms`    | Temps d'anti-rebond des contacts mécaniques.                                                                                                            |
+| `activate_switch_forced_level`   | non         | `"100"`   | Niveau du routeur, en pourcentage, appliqué dans la position de forçage.                                                                                |
 | `activate_switch_strict`         | non         | `"true"`  | À mettre à `"false"` pour n'appliquer la position que lors des manœuvres, et laisser Home Assistant ou le planificateur piloter le routeur entre-temps. |
-| `hide_activate_switch`           | non         | `"True"`  | À mettre à `"False"` pour exposer l'état brut des deux contacts dans Home Assistant, ce qui est pratique pour vérifier votre câblage.            |
-| `hide_activate_switch_position`  | non         | `"False"` | À mettre à `"True"` pour masquer le capteur texte *Activate Switch Position*.                                                                    |
+| `hide_activate_switch`           | non         | `"True"`  | À mettre à `"False"` pour exposer l'état brut des deux contacts dans Home Assistant, ce qui est pratique pour vérifier votre câblage.                   |
+| `hide_activate_switch_position`  | non         | `"False"` | À mettre à `"True"` pour masquer le capteur texte *Activate Switch Position*.                                                                           |
