@@ -1,0 +1,56 @@
+# ----------------------------------------------------------------------------------------------------
+# Physical ON/OFF switch driving solar routing activation
+# ----------------------------------------------------------------------------------------------------
+# The position of the physical switch is mirrored on the "activate" switch provided by the engine.
+# The physical switch always wins: any other source (Home Assistant, web server, scheduler) is
+# realigned on its position.
+
+substitutions:
+  # By default the contact shorts the pin to GND when it is in the "routing enabled" position
+  activate_switch_inverted: "True"
+  # By default the physical switch is not exposed in Home Assistant
+  hide_activate_switch: "True"
+  # Debounce time of the mechanical contact
+  activate_switch_debounce: 50ms
+  # When true, "activate" is continuously realigned on the position of the physical switch.
+  # Set it to "false" to only apply the position when the switch is operated, and let Home
+  # Assistant, the push button or the scheduler drive "activate" in between.
+  activate_switch_strict: "true"
+
+binary_sensor:
+  - platform: gpio
+    id: activate_switch
+    name: "Activate Switch"
+    internal: ${hide_activate_switch}
+    pin:
+      number: ${activate_switch_pin}
+      mode: INPUT_PULLUP
+      inverted: ${activate_switch_inverted}
+    filters:
+      - delayed_on_off: ${activate_switch_debounce}
+    on_press:
+      then:
+        - switch.turn_on: activate
+    on_release:
+      then:
+        - switch.turn_off: activate
+
+interval:
+  # Realign "activate" on the position of the physical switch.
+  # This also covers the boot sequence, where "activate" is restored from flash before the
+  # position of the physical switch is known.
+  # Asking for a state which is already the current one is a no-op: Switch::publish_state()
+  # deduplicates, so on_turn_on / on_turn_off of the engine are not triggered again.
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            lambda: return ${activate_switch_strict};
+          then:
+            - if:
+                condition:
+                  binary_sensor.is_on: activate_switch
+                then:
+                  - switch.turn_on: activate
+                else:
+                  - switch.turn_off: activate
