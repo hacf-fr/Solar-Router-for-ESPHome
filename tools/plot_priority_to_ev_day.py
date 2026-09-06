@@ -117,8 +117,9 @@ for i in range(len(hours)):
             handoff_timer = 0
     else:
         # We're in "router OFF" state; check Restore
-        # Immediate: unplug, SoC target
-        if not ev_plugged or current_soc >= SOC_TARGET:
+        # Immediate: unplug only. SoC target no longer restores by itself —
+        # the release trigger picks up the actual export when the EV stops.
+        if not ev_plugged:
             in_priority = False
             cloud_timer = release_timer = 0
         else:
@@ -147,7 +148,7 @@ for t, s in transitions:
 # SoC-target time
 soc_hit_i = np.argmax(soc >= SOC_TARGET) if np.any(soc >= SOC_TARGET) else None
 if soc_hit_i:
-    print(f"SoC target reached at {int(hours[soc_hit_i])}:{int((hours[soc_hit_i]%1)*60):02d}, final SoC = {soc[-1]:.1f}%")
+    print(f"SoC target crossed at {int(hours[soc_hit_i])}:{int((hours[soc_hit_i]%1)*60):02d}, final SoC = {soc[-1]:.1f}%")
 
 # ============================================================
 # Plot

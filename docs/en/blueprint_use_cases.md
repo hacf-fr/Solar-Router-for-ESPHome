@@ -24,7 +24,8 @@ Conventions:
 | 4  | OFF           | yes (charging)  | 45 %  | ≈ 0              | 0            | none — grid stable in ±200     | **keep OFF**  | steady state — v1 flip-flop bug fixed         |
 | 5  | OFF           | yes (charging)  | 45 %  | **+400**         | 0            | Cloud (grid > 200 for 60 s)    | **turn ON**   | cloud arrived — restore router                |
 | 6  | OFF           | yes (charging)  | 45 %  | +100 briefly     | 0            | none — below cloud threshold   | keep OFF      | benign fluctuation                            |
-| 7  | OFF           | yes             | 80 %  | ≈ 0              | 0            | SoC target reached             | **turn ON**   | car full (SoC guard)                          |
+| 7  | OFF           | yes (tapering)  | 80 %  | ≈ 0              | 0            | none — handoff frozen, not restored | keep OFF | SoC crossed target but EV still drawing — wait for real export |
+| 7b | OFF           | yes (finished)  | 82 %  | **−1500**        | 0            | Release (−grid > 200 for 60 s) | **turn ON**   | tapering done — grid export detected          |
 | 8  | OFF           | yes (SoC unknown)| —    | **−1500**        | 0            | Release (−grid > 200 for 60 s) | **turn ON**   | EV done / paused — grid export detected       |
 | 9  | OFF           | just unplugged  | 60 %  | −1500            | 0            | ev_unplugged (state)           | **turn ON**   | EV gone                                       |
 | 10 | ON            | yes             | 100 % | −3000            | 2500         | none — SoC ≥ target            | keep ON       | never hand surplus to full EV                 |
@@ -43,9 +44,16 @@ Conventions:
 - **Row 5 vs row 6**: any import that stays above
   `cloud_import_threshold` for the full debounce is treated as a
   cloud. Brief dips below the threshold reset the debounce timer.
-- **Row 8** is the new capability of v2: even without a SoC sensor,
-  the blueprint detects that the EV has stopped drawing (the surplus
-  starts flowing to the grid) and restores the router.
+- **Rows 7 and 7b**: crossing `ev_soc_target` freezes new handoffs but
+  does **not** restore the router by itself. The car typically keeps
+  charging past that value at reduced power ("tapering") — turning
+  the router on immediately would fight the EV for that tail-end
+  energy. Instead, the blueprint waits for `-grid_power >
+  release_export_threshold` (Release trigger) to confirm the car has
+  actually stopped drawing, then restores the router.
+- **Row 8** exercises the same Release path when no SoC sensor is
+  configured: the blueprint detects that the EV has stopped drawing
+  (the surplus starts flowing to the grid) and restores the router.
 - **Row 10**: `soc_below_target` is a mandatory condition of Handoff,
   so an already-full car never gets priority.
 - **Row 13**: an HA restart re-runs the action once. The restore
@@ -54,8 +62,8 @@ Conventions:
   reason, so nothing happens.
 - **Row 14**: every level-based trigger begins with `has_value(...)`.
   If `grid_power` or `diverted_power` is `unavailable`, none of the
-  three level triggers can fire. Only the state-based triggers
-  (`ev_unplugged`) and the SoC template can still act.
+  level triggers can fire. Only the state-based trigger
+  (`ev_unplugged`) can still act.
 - **Row 15**: plugging the EV in while surplus is already high does
   not turn the router off *instantly*. The Handoff template goes
   from false (ev not connected) to true, and the `for:` timer waits
@@ -63,11 +71,13 @@ Conventions:
 
 ## SoC input left empty
 
-Without a SoC sensor, rows 7 and 10 become undetectable via the SoC
-guard — but row 8 (Release trigger) picks up the slack. When the EV
-stops drawing on its own, the surplus starts flowing to the grid; as
-soon as export exceeds `release_export_threshold` for the debounce
-window, the router is restored. The blueprint still works correctly
-without an SoC sensor; only the handoff guard against a full car is
-lost (a car brought in already full will briefly get priority before
-the Release trigger fires 60 s later).
+Without a SoC sensor, row 10 (handoff guard on a full car) is no
+longer effective — but the restore side is unaffected: row 8
+(Release trigger) already handled everything even when SoC was
+known. When the EV stops drawing on its own, the surplus starts
+flowing to the grid; as soon as export exceeds
+`release_export_threshold` for the debounce window, the router is
+restored. The blueprint still works correctly without an SoC sensor;
+only the handoff guard against a full car is lost (a car brought in
+already full will briefly get priority before the Release trigger
+fires 60 s later).

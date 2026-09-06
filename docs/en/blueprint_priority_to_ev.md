@@ -10,9 +10,10 @@ Router's water heater. This blueprint arbitrates between the two:
 - When the surplus is *large enough for long enough*, it turns the
   Solar Router **off** so the surplus is released to the grid, where
   the EV charger picks it up.
-- When the EV is full, unplugged, a cloud starts pulling from the
-  grid, or the EV stops taking the surplus, it turns the Solar Router
-  back **on** so the water heater catches whatever remains.
+- When the EV is unplugged, a cloud starts pulling from the grid, or
+  the EV stops taking the surplus (car full, paused, or tapering
+  finished), it turns the Solar Router back **on** so the water heater
+  catches whatever remains.
 
 The router firmware itself does **not** talk to the EV charger — the
 blueprint only toggles the router's `Activate Solar Routing` switch.
@@ -50,10 +51,17 @@ charging. Instead, it watches `grid_power` directly:
   exporting → the EV isn't taking the surplus → **EV done, paused or
   capped**.
 
-Plus two immediate signals that don't need debouncing:
+Plus one immediate signal that doesn't need debouncing:
 
 - EV unplugged (`ev_connected` transitions to `off`)
-- EV SoC reaches `EV_SoC_Target` (only when a SoC sensor is set)
+
+The SoC target is deliberately **not** an immediate restore signal.
+Most cars keep charging past a user-set target at reduced power, and
+turning the router back ON at that instant would fight the EV for the
+tail-end energy. The blueprint waits for `-grid_power >
+release_export_threshold` — i.e. the car has actually stopped drawing
+— to restore the router. The SoC target still gates new handoffs
+(see [3 – Behavior](#3--behavior)).
 
 ## 3 – Behavior
 
@@ -66,13 +74,15 @@ HANDOFF (router ON → OFF), when this stays true for surplus_duration_trigger s
 
 RESTORE (router OFF → ON), on any of:
   ev_connected transitions to off                                        [immediate]
-  ev_soc >= ev_soc_target                                                [immediate]
   grid_power > cloud_import_threshold        for surplus_duration_trigger s   [cloud]
   -grid_power > release_export_threshold     for surplus_duration_trigger s   [EV done]
 ```
 
-The three level-based triggers use HA template triggers with `for:`,
-so a brief spike either way is absorbed and never toggles the router.
+The two level-based triggers use HA template triggers with `for:`, so
+a brief spike either way is absorbed and never toggles the router.
+Crossing `ev_soc_target` freezes the handoff (no fresh router-OFF) but
+does not by itself restore the router — the export threshold handles
+that once the car actually stops drawing.
 
 ## 4 – Inputs
 
@@ -80,7 +90,7 @@ so a brief spike either way is absorbed and never toggles the router.
 | --- | --- | ---: |
 | `ev_connected` | Binary sensor, ON when the EV is plugged in | required |
 | `ev_soc` | *(optional)* SoC sensor, % | empty |
-| `ev_soc_target` | Cut-off SoC in % | **80** |
+| `ev_soc_target` | Above this SoC no new handoff — restore still waits for real export | **80** |
 | `grid_power` | Signed grid power in W (+ import, − export) | required |
 | `diverted_power` | Solar Router's `Power divertion` sensor | required |
 | `solar_router` | The `Activate Solar Routing` switch to toggle | required |
@@ -113,8 +123,8 @@ debounce 60 s.
 | 09:02 | EV drawing, PV matched | ≈ 0 | 0 | OFF | — (grid stable, no restore) |
 | 10:30 | Big cloud, EV keeps drawing from grid | **+800** | 0 | **ON** | cloud detected — router restored |
 | 11:00 | Sun back, surplus > 1400 for 60 s | −2500 | (rising) | **OFF** | EV again |
-| 15:00 | SoC hits target (80 %) | ≈ 0 | 0 | **ON** | car full — released |
-| 15:30 | Or: no SoC sensor, EV self-stops on full | **−1500** | 0 | **ON** | export release — router restored |
+| 15:00 | SoC hits target (80 %), car keeps tapering | ≈ 0 | 0 | OFF | — (handoff frozen, but EV still draws) |
+| 15:30 | EV self-stops on full, export stable > 60 s | **−1500** | 0 | **ON** | export release — router restored |
 | 20:00 | EV unplugged | −200 | 100 | ON | — |
 
 ## 7 – Wiring an EV plug sensor (MyEnergi Zappi example)
@@ -149,8 +159,8 @@ inputs.
   off; the debounce absorbs it.
 - **HA restart mid-charge** — the automation re-evaluates on
   `homeassistant.start`, but the restore branch only fires if a real
-  restore reason holds (unplug / SoC target / cloud / EV done). A
-  restart during a stable handoff is a no-op.
+  restore reason holds (unplug / cloud / EV done). A restart during a
+  stable handoff is a no-op.
 - **Sensor `unavailable`** — every level trigger uses `has_value()`
   guards; if `grid_power` or `diverted_power` drops out, no restore
   is triggered.

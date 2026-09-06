@@ -24,7 +24,8 @@ Conventions :
 | 4  | OFF           | oui (en charge)  | 45 %  | ≈ 0              | 0            | aucun — grid stable dans ±200  | **reste OFF** | régime établi — bug v1 corrigé                    |
 | 5  | OFF           | oui (en charge)  | 45 %  | **+400**         | 0            | Nuage (grid > 200 pendant 60 s)| **allume**    | nuage arrivé — retour au routeur                  |
 | 6  | OFF           | oui (en charge)  | 45 %  | +100 bref        | 0            | aucun — sous le seuil nuage    | reste OFF     | fluctuation bénigne                               |
-| 7  | OFF           | oui              | 80 %  | ≈ 0              | 0            | SoC atteint la cible           | **allume**    | voiture pleine (garde SoC)                        |
+| 7  | OFF           | oui (tapering)   | 80 %  | ≈ 0              | 0            | aucun — bascule gelée, pas de restauration | reste OFF | SoC franchi mais VE consomme encore — attendre un vrai export |
+| 7b | OFF           | oui (arrêté)     | 82 %  | **−1500**        | 0            | Release (−grid > 200 pendant 60 s)| **allume** | tapering terminé — export détecté                 |
 | 8  | OFF           | oui (SoC inconnu)| —     | **−1500**        | 0            | Release (−grid > 200 pendant 60 s)| **allume** | VE plein / pausé — export détecté                 |
 | 9  | OFF           | débranché à l'instant | 60 % | −1500       | 0            | ev_unplugged (état)            | **allume**    | VE parti                                          |
 | 10 | ON            | oui              | 100 % | −3000            | 2500         | aucun — SoC ≥ cible            | reste ON      | jamais de surplus vers un VE plein                |
@@ -44,9 +45,17 @@ Conventions :
   `cloud_import_threshold` pendant tout l'anti-rebond est traité
   comme un nuage. Les baisses brèves en dessous du seuil
   réinitialisent le timer.
-- **Ligne 8** est la nouvelle capacité de la v2 : même sans capteur
-  SoC, le blueprint détecte que le VE a cessé de tirer (le surplus
-  part vers le réseau) et rallume le routeur.
+- **Lignes 7 et 7b** : franchir `ev_soc_target` gèle les nouvelles
+  bascules mais **ne rallume pas** le routeur en soi. La voiture
+  continue typiquement à charger au-delà de cette valeur en puissance
+  réduite (« tapering ») — rallumer le routeur immédiatement se
+  disputerait avec le VE cette énergie de fin de charge. À la place,
+  le blueprint attend `-grid_power > release_export_threshold`
+  (trigger Release) pour confirmer que la voiture s'est réellement
+  arrêtée, puis restaure le routeur.
+- **Ligne 8** exerce le même chemin Release quand aucun capteur SoC
+  n'est configuré : le blueprint détecte que le VE a cessé de tirer
+  (le surplus part vers le réseau) et rallume le routeur.
 - **Ligne 10** : `soc_below_target` est une condition obligatoire du
   Handoff, une voiture déjà pleine n'obtient jamais la priorité.
 - **Ligne 13** : un redémarrage HA ré-exécute l'action une fois. La
@@ -55,8 +64,8 @@ Conventions :
   n'est pas une raison, donc rien ne se passe.
 - **Ligne 14** : chaque trigger de niveau commence par
   `has_value(...)`. Si `grid_power` ou `diverted_power` est
-  `unavailable`, aucun des trois ne peut se déclencher. Seuls les
-  triggers d'état (`ev_unplugged`) et le template SoC restent actifs.
+  `unavailable`, aucun des triggers de niveau ne peut se déclencher.
+  Seul le trigger d'état (`ev_unplugged`) reste actif.
 - **Ligne 15** : brancher le VE alors que le surplus est déjà haut
   n'éteint pas le routeur *immédiatement*. Le template Handoff passe
   de faux (VE non branché) à vrai, et le timer `for:` attend 60 s
@@ -64,11 +73,13 @@ Conventions :
 
 ## Entrée SoC laissée vide
 
-Sans capteur SoC, les lignes 7 et 10 deviennent indétectables via la
-garde SoC — mais la ligne 8 (trigger Release) prend le relais. Quand
-le VE arrête de tirer tout seul, le surplus part au réseau ; dès que
-l'export dépasse `release_export_threshold` pendant l'anti-rebond, le
-routeur est restauré. Le blueprint fonctionne correctement sans
-capteur SoC ; on perd uniquement la garde Handoff contre une voiture
-déjà pleine (une voiture amenée déjà pleine aura brièvement la
-priorité avant que le trigger Release ne se déclenche 60 s plus tard).
+Sans capteur SoC, la ligne 10 (garde anti-bascule sur voiture pleine)
+n'est plus effective — mais le côté restauration n'est pas affecté :
+la ligne 8 (trigger Release) gérait déjà tout, même quand le SoC
+était connu. Quand le VE arrête de tirer tout seul, le surplus part
+au réseau ; dès que l'export dépasse `release_export_threshold`
+pendant l'anti-rebond, le routeur est restauré. Le blueprint
+fonctionne correctement sans capteur SoC ; on perd uniquement la
+garde Handoff contre une voiture déjà pleine (une voiture amenée déjà
+pleine aura brièvement la priorité avant que le trigger Release ne se
+déclenche 60 s plus tard).

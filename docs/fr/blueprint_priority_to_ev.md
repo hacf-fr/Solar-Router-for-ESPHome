@@ -11,10 +11,10 @@ blueprint arbitre entre les deux :
 - Lorsqu'un surplus *suffisant* est disponible *assez longtemps*, il
   éteint le Solar Router pour que le surplus soit relâché vers le
   réseau, où le chargeur du VE le capte.
-- Lorsque la voiture est pleine, débranchée, qu'un nuage se met à
-  tirer du courant du réseau, ou que le VE cesse de prendre le
-  surplus, il rallume le Solar Router pour que le chauffe-eau
-  récupère ce qui reste.
+- Lorsque le VE est débranché, qu'un nuage se met à tirer du courant
+  du réseau, ou que le VE cesse effectivement de prendre le surplus
+  (voiture pleine, en pause, fin de tapering), il rallume le Solar
+  Router pour que le chauffe-eau récupère ce qui reste.
 
 Le firmware du routeur ne communique **pas** avec le chargeur — le
 blueprint se contente de manipuler l'interrupteur `Activate Solar
@@ -53,11 +53,19 @@ Il regarde donc `grid_power` directement :
   exporte → le VE ne prend pas le surplus → **VE plein, en pause ou
   bridé**.
 
-Plus deux signaux immédiats sans anti-rebond :
+Plus un signal immédiat sans anti-rebond :
 
 - VE débranché (`ev_connected` → `off`)
-- SoC atteint `EV_SoC_Target` (uniquement si un capteur SoC est
-  configuré)
+
+La cible de SoC n'est délibérément **pas** un signal de restauration
+immédiat. La plupart des voitures continuent à charger au-delà d'une
+cible fixée par l'utilisateur en réduisant progressivement la
+puissance, et rallumer le routeur à cet instant reviendrait à se
+disputer avec le VE cette énergie de fin de charge. Le blueprint
+attend `-grid_power > release_export_threshold` — c'est-à-dire que la
+voiture a réellement cessé de consommer — pour restaurer le routeur.
+La cible SoC continue de verrouiller les nouvelles bascules
+(voir [3 – Comportement](#3--comportement)).
 
 ## 3 – Comportement
 
@@ -70,14 +78,16 @@ BASCULE (routeur ON → OFF), quand ceci reste vrai pendant surplus_duration_tri
 
 RESTAURATION (routeur OFF → ON), sur l'un des cas suivants :
   ev_connected passe à off                                              [immédiat]
-  ev_soc >= ev_soc_target                                               [immédiat]
   grid_power > cloud_import_threshold      pendant surplus_duration_trigger s   [nuage]
   -grid_power > release_export_threshold   pendant surplus_duration_trigger s   [VE plein]
 ```
 
-Les trois triggers de niveau utilisent des template triggers HA avec
+Les deux triggers de niveau utilisent des template triggers HA avec
 `for:`, donc une pointe brève d'un côté ou l'autre est absorbée et ne
-fait pas bouger le routeur.
+fait pas bouger le routeur. Franchir `ev_soc_target` gèle la bascule
+(plus de nouveau routeur-OFF) mais ne rallume pas le routeur — le
+seuil d'export s'en charge une fois que la voiture cesse réellement de
+consommer.
 
 ## 4 – Entrées
 
@@ -85,7 +95,7 @@ fait pas bouger le routeur.
 | --- | --- | ---: |
 | `ev_connected` | Capteur binaire, ON quand le VE est branché | obligatoire |
 | `ev_soc` | *(optionnel)* capteur d'état de charge, en % | vide |
-| `ev_soc_target` | SoC cible en % | **80** |
+| `ev_soc_target` | Au-delà de ce SoC : plus de nouvelle bascule — la restauration attend l'export réel | **80** |
 | `grid_power` | Puissance réseau signée en W (+ import, − export) | obligatoire |
 | `diverted_power` | Capteur `Power divertion` du Solar Router | obligatoire |
 | `solar_router` | Interrupteur `Activate Solar Routing` à piloter | obligatoire |
@@ -118,8 +128,8 @@ anti-rebond 60 s.
 | 09:02 | VE charge, PV équilibré | ≈ 0 | 0 | OFF | — (grid stable) |
 | 10:30 | Gros nuage, VE continue à tirer du réseau | **+800** | 0 | **ON** | nuage détecté — retour au routeur |
 | 11:00 | Soleil de retour, surplus > 1400 pendant 60 s | −2500 | (monte) | **OFF** | VE à nouveau |
-| 15:00 | SoC atteint la cible (80 %) | ≈ 0 | 0 | **ON** | voiture pleine — relâche |
-| 15:30 | Ou : pas de capteur SoC, VE s'arrête tout seul | **−1500** | 0 | **ON** | export release — retour au routeur |
+| 15:00 | SoC atteint la cible (80 %), voiture continue en tapering | ≈ 0 | 0 | OFF | — (bascule gelée, mais le VE consomme encore) |
+| 15:30 | VE s'arrête réellement, export stable > 60 s | **−1500** | 0 | **ON** | export release — retour au routeur |
 | 20:00 | VE débranché | −200 | 100 | ON | — |
 
 ## 7 – Détection de VE branché (exemple MyEnergi Zappi)
@@ -154,8 +164,8 @@ remplir les entrées.
   éteint ; l'anti-rebond absorbe.
 - **Redémarrage HA en pleine charge** — l'automation se réévalue sur
   `homeassistant.start`, mais la branche de restauration n'agit que
-  si une vraie raison tient (débranchement / SoC / nuage / VE plein).
-  Un redémarrage en pleine priorité VE stable est un no-op.
+  si une vraie raison tient (débranchement / nuage / VE plein). Un
+  redémarrage en pleine priorité VE stable est un no-op.
 - **Capteur `unavailable`** — chaque trigger de niveau vérifie
   `has_value()` ; si `grid_power` ou `diverted_power` tombe, aucune
   restauration n'est déclenchée.
