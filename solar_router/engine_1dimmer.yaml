@@ -22,9 +22,7 @@ switch:
         - light.turn_off: green_led
         - number.to_min: router_level
         - lambda: |-
-            id(consumption).publish_state(NAN);
             id(power_meter_activated) = 0;
-            id(real_power).publish_state(NAN);
             id(router_level).publish_state(0);
 
 number:
