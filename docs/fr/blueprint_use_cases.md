@@ -1,59 +1,74 @@
 # Cas d'utilisation du blueprint — Priorité au VE
 
-Table de vérité illustrant la logique de priorisation implémentée par
+Table de vérité illustrant la logique d'arbitrage implémentée par
 [`blueprints/priority_to_ev.yaml`](blueprint_priority_to_ev.md).
 
 Conventions :
 
-- **Surplus** = `max(0, −grid_power) + max(0, diverted_power)`, en W.
+- `surplus = max(0, -grid_power) + max(0, diverted_power)` (en W).
 - Valeurs par défaut : `EV_Charging_Minimum_Surplus = 1400 W`,
-  `surplus_duration_trigger = 60 s`, `EV_SoC_Target = 80 %`.
-- « Stable ≥ N s ? » — le surplus est-il resté du même côté du seuil
-  depuis au moins `surplus_duration_trigger` secondes ?
-- Les déclencheurs `numeric_state` de HA utilisent des inégalités
-  **strictes** (`above:` = `>`, `below:` = `<`). Au seuil exact, rien
-  ne se déclenche.
+  `cloud_import_threshold = 200 W`,
+  `release_export_threshold = 200 W`,
+  `surplus_duration_trigger = 60 s`,
+  `EV_SoC_Target = 80 %`.
+- **Tous les triggers de niveau** (Handoff / Nuage / Release)
+  utilisent des template triggers HA avec `for:` — ils se déclenchent
+  quand la condition passe de faux à vrai et reste vraie pendant
+  `surplus_duration_trigger` secondes.
 
-| # | VE branché  | SoC   | Surplus (W)      | Routeur avant | Stable ≥ N s ? | Action        | Raison |
-|:--|:------------|:------|:-----------------|:--------------|:---------------|:--------------|:-------|
-| 1 | Non         | —     | +2000            | On            | —              | reste On      | VE absent — le routeur garde le surplus |
-| 2 | Non         | —     | −500 (import)    | On            | —              | reste On      | fonctionnement normal, pas de surplus |
-| 3 | Oui         | 40 %  | 500 (< 1400)     | On            | oui            | reste On      | surplus insuffisant pour le VE |
-| 4 | Oui         | 40 %  | 2000 (> 1400)    | On            | **non** (30 s) | reste On      | anti-rebond en cours |
-| 5 | Oui         | 40 %  | 2000 (> 1400)    | On            | oui            | **éteint**    | priorité au VE |
-| 6 | Oui (charge) | 45 % | 200 (< 1400)    | Off           | oui            | **allume**    | nuage — retour routeur |
-| 7 | Oui (charge) | 45 % | 200 (< 1400)    | Off           | **non** (10 s) | reste Off     | nuage bref — on temporise |
-| 8 | Oui (charge) | 80 % | 3000            | Off           | —              | **allume**    | SoC cible atteint (relâche) |
-| 9 | Oui         | 90 %  | 3000             | On            | —              | reste On      | SoC déjà ≥ cible — jamais de surplus vers VE plein |
-| 10 | Débranché à l'instant | 60 % | 3000 | Off           | —              | **allume**    | VE parti — routeur reprend |
-| 11 | Oui         | 40 %  | exactement 1400  | On            | oui            | reste On      | `above:` strict — pas de trigger |
-| 12 | Oui (charge) | 40 % | exactement 1400 | Off           | oui            | reste Off     | `below:` strict — pas de retour |
-| 13 | Oui         | 40 %  | oscille autour de 1400 | On      | jamais stable  | reste On      | l'anti-rebond bloque le flap |
-| 14 | Oui         | 40 %  | 2000 déjà stable | Off (obsolète après reboot HA) | `homeassistant.started` déclenche | **éteint** | resynchronisation après redémarrage |
+| #  | Routeur avant | VE branché       | SoC   | grid_power (W)   | diverted (W) | Trigger déclenché              | Action        | Raison                                            |
+|:---|:--------------|:-----------------|:------|-----------------:|-------------:|:-------------------------------|:--------------|:--------------------------------------------------|
+| 1  | ON            | non              | —     | −2000            | 1800         | aucun — Handoff bloqué (pas de VE) | reste ON  | VE absent — le routeur garde le surplus           |
+| 2  | ON            | oui              | 40 %  | −1800            | 200          | Handoff (surplus 2000 > 1400)  | **éteint**    | priorité au VE                                    |
+| 3  | ON            | oui              | 40 %  | −500             | 100          | aucun — surplus 600 < 1400     | reste ON      | surplus insuffisant                               |
+| 4  | OFF           | oui (en charge)  | 45 %  | ≈ 0              | 0            | aucun — grid stable dans ±200  | **reste OFF** | régime établi — bug v1 corrigé                    |
+| 5  | OFF           | oui (en charge)  | 45 %  | **+400**         | 0            | Nuage (grid > 200 pendant 60 s)| **allume**    | nuage arrivé — retour au routeur                  |
+| 6  | OFF           | oui (en charge)  | 45 %  | +100 bref        | 0            | aucun — sous le seuil nuage    | reste OFF     | fluctuation bénigne                               |
+| 7  | OFF           | oui              | 80 %  | ≈ 0              | 0            | SoC atteint la cible           | **allume**    | voiture pleine (garde SoC)                        |
+| 8  | OFF           | oui (SoC inconnu)| —     | **−1500**        | 0            | Release (−grid > 200 pendant 60 s)| **allume** | VE plein / pausé — export détecté                 |
+| 9  | OFF           | débranché à l'instant | 60 % | −1500       | 0            | ev_unplugged (état)            | **allume**    | VE parti                                          |
+| 10 | ON            | oui              | 100 % | −3000            | 2500         | aucun — SoC ≥ cible            | reste ON      | jamais de surplus vers un VE plein                |
+| 11 | ON            | oui              | 40 %  | +100 (transitoire)| 500         | aucun — Handoff bloqué         | reste ON      | surplus 500 < 1400                                |
+| 12 | OFF           | oui              | 40 %  | oscille ±100     | 0            | aucun — jamais stable hors de ±200 | reste OFF | l'anti-rebond absorbe le jitter                   |
+| 13 | OFF (post-reboot)| oui           | 45 %  | ≈ 0              | 0            | `homeassistant.start` rejoue l'action ; aucune raison de restaurer | **no-op** | bug redémarrage v1 corrigé |
+| 14 | quelconque    | oui              | any   | `unavailable`    | any          | aucun — `has_value` bloque     | reste tel quel| capteur tombé n'est pas un signal                 |
+| 15 | ON            | oui (branchement à l'instant) | 40 % | −1600 (stable depuis des heures) | 400 | Handoff après 60 s | **éteint** | le branchement respecte l'anti-rebond — bug v1 corrigé |
 
 ## Notes
 
-- Ligne 3 vs 4/5 : seul l'anti-rebond (`surplus_duration_trigger`)
-  change. Tout ce qui est plus court est traité comme du bruit.
-- Lignes 6 et 8 : les deux rallument le routeur, mais pour des raisons
-  différentes (nuage vs voiture pleine). L'action est identique
-  (`switch.turn_on`).
-- Ligne 9 : `ev_soc_target` est vérifié avant le seuil de surplus. Une
-  fois la voiture pleine, aucun surplus ne lui redonnera la priorité.
-- Lignes 11–12 : illustrent le coin des inégalités strictes. Ceux qui
-  veulent une hystérésis explicite autour du seuil peuvent définir
-  deux seuils ou laisser `surplus_duration_trigger` à une valeur
-  raisonnable.
-- Ligne 14 : `automation_reloaded` et `homeassistant.started`
-  ré-exécutent l'action une fois, pour que l'état s'aligne sur la
-  réalité après un reboot.
+- **Ligne 4** est le test de non-régression : routeur OFF et VE en
+  charge normale, `grid_power ≈ 0` et `diverted = 0`, la vérification
+  naïve "surplus < seuil" se déclencherait (bug v1) et arracherait la
+  priorité. Le signal côté réseau ne fait rien, correctement.
+- **Ligne 5 vs 6** : tout import qui reste au-dessus de
+  `cloud_import_threshold` pendant tout l'anti-rebond est traité
+  comme un nuage. Les baisses brèves en dessous du seuil
+  réinitialisent le timer.
+- **Ligne 8** est la nouvelle capacité de la v2 : même sans capteur
+  SoC, le blueprint détecte que le VE a cessé de tirer (le surplus
+  part vers le réseau) et rallume le routeur.
+- **Ligne 10** : `soc_below_target` est une condition obligatoire du
+  Handoff, une voiture déjà pleine n'obtient jamais la priorité.
+- **Ligne 13** : un redémarrage HA ré-exécute l'action une fois. La
+  branche de restauration requiert une raison de restauration
+  *effective maintenant* — un handoff stable (grid ≈ 0, en charge)
+  n'est pas une raison, donc rien ne se passe.
+- **Ligne 14** : chaque trigger de niveau commence par
+  `has_value(...)`. Si `grid_power` ou `diverted_power` est
+  `unavailable`, aucun des trois ne peut se déclencher. Seuls les
+  triggers d'état (`ev_unplugged`) et le template SoC restent actifs.
+- **Ligne 15** : brancher le VE alors que le surplus est déjà haut
+  n'éteint pas le routeur *immédiatement*. Le template Handoff passe
+  de faux (VE non branché) à vrai, et le timer `for:` attend 60 s
+  avant de tirer.
 
 ## Entrée SoC laissée vide
 
-Si `ev_soc` n'est pas renseigné, les lignes 8 et 9 deviennent
-indétectables côté Home Assistant : le VE devra s'arrêter tout seul
-quand il est plein. Le routeur ne sera *pas* rallumé automatiquement
-au moment où la voiture est pleine — il attendra soit un débranchement
-soit une chute de surplus sous le seuil (ce qui arrivera naturellement
-quand le VE cesse de tirer et que le surplus repasse au-dessus du
-seuil).
+Sans capteur SoC, les lignes 7 et 10 deviennent indétectables via la
+garde SoC — mais la ligne 8 (trigger Release) prend le relais. Quand
+le VE arrête de tirer tout seul, le surplus part au réseau ; dès que
+l'export dépasse `release_export_threshold` pendant l'anti-rebond, le
+routeur est restauré. Le blueprint fonctionne correctement sans
+capteur SoC ; on perd uniquement la garde Handoff contre une voiture
+déjà pleine (une voiture amenée déjà pleine aura brièvement la
+priorité avant que le trigger Release ne se déclenche 60 s plus tard).

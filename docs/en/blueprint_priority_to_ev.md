@@ -10,15 +10,17 @@ Router's water heater. This blueprint arbitrates between the two:
 - When the surplus is *large enough for long enough*, it turns the
   Solar Router **off** so the surplus is released to the grid, where
   the EV charger picks it up.
-- When the EV is full, unplugged, or a passing cloud makes the surplus
-  too small for the car, it turns the Solar Router back **on** so the
-  water heater catches whatever remains.
+- When the EV is full, unplugged, a cloud starts pulling from the
+  grid, or the EV stops taking the surplus, it turns the Solar Router
+  back **on** so the water heater catches whatever remains.
 
 The router firmware itself does **not** talk to the EV charger — the
 blueprint only toggles the router's `Activate Solar Routing` switch.
 Everything else stays in the charger's own hands.
 
-## 2 – Surplus definition
+## 2 – Signals
+
+### 2a – Handoff (router ON → OFF)
 
 ```
 surplus = max(0, -grid_power) + max(0, diverted_power)
@@ -30,68 +32,90 @@ surplus = max(0, -grid_power) + max(0, diverted_power)
 - `diverted_power` is the router's own `Power divertion` sensor —
   always positive, zero when the router is off.
 
-The `max(0, …)` clamps prevent an import (positive `grid_power`) or a
-transient negative diversion reading from pulling the surplus down
-artificially.
+The router is turned OFF when `surplus > EV_Charging_Minimum_Surplus`
+holds continuously for `surplus_duration_trigger` seconds, provided
+the EV is plugged in and (if a SoC sensor is set) still below target.
+
+### 2b – Restore (router OFF → ON)
+
+Once the router is OFF and the EV is drawing on solar, the surplus
+formula collapses to ~0: `diverted_power = 0` because the router is
+off, and `grid_power ≈ 0` because the EV consumes what PV produces.
+The blueprint would then be unable to tell a cloud from ordinary
+charging. Instead, it watches `grid_power` directly:
+
+- **`grid_power > cloud_import_threshold` for N s** → we are importing
+  → PV can no longer cover the EV → **cloud arrived**.
+- **`-grid_power > release_export_threshold` for N s** → we are
+  exporting → the EV isn't taking the surplus → **EV done, paused or
+  capped**.
+
+Plus two immediate signals that don't need debouncing:
+
+- EV unplugged (`ev_connected` transitions to `off`)
+- EV SoC reaches `EV_SoC_Target` (only when a SoC sensor is set)
 
 ## 3 – Behavior
 
 ```text
-IF ev_connected AND ev_soc < ev_soc_target
-   AND surplus > EV_Charging_Minimum_Surplus  for > surplus_duration_trigger
-   AND solar_router is ON
-THEN turn solar_router OFF   (hand priority to the EV)
+HANDOFF (router ON → OFF), when this stays true for surplus_duration_trigger s:
+  ev_connected == on
+  AND solar_router == on
+  AND ( ev_soc_entity is empty OR ev_soc < ev_soc_target )
+  AND surplus > EV_Charging_Minimum_Surplus
 
-IF solar_router is OFF
-   AND ( ev_not_connected
-         OR ev_soc >= ev_soc_target
-         OR surplus < EV_Charging_Minimum_Surplus  for > surplus_duration_trigger )
-THEN turn solar_router ON    (restore normal routing)
+RESTORE (router OFF → ON), on any of:
+  ev_connected transitions to off                                        [immediate]
+  ev_soc >= ev_soc_target                                                [immediate]
+  grid_power > cloud_import_threshold        for surplus_duration_trigger s   [cloud]
+  -grid_power > release_export_threshold     for surplus_duration_trigger s   [EV done]
 ```
 
-- `above:` and `below:` on the `numeric_state` trigger are **strict**
-  inequalities — right at the threshold, nothing fires. That's what
-  keeps the automation from flapping on a marginal surplus.
-- The `for:` clause debounces both directions.
-- If `ev_soc` is left empty, the SoC-based guard is skipped: the EV is
-  expected to stop drawing on its own when full.
+The three level-based triggers use HA template triggers with `for:`,
+so a brief spike either way is absorbed and never toggles the router.
 
 ## 4 – Inputs
 
-| Input | Purpose |
-| --- | --- |
-| `ev_connected` | Binary sensor, ON when the EV is plugged in |
-| `ev_soc` | *(optional)* SoC sensor, % |
-| `ev_soc_target` | Cut-off SoC in % (default **80**) |
-| `grid_power` | Signed grid power in W (default sign: + import, − export) |
-| `diverted_power` | Solar Router's `Power divertion` sensor |
-| `solar_router` | The `Activate Solar Routing` switch to toggle |
-| `ev_charging_minimum_surplus` | Threshold in W (default 1400) |
-| `surplus_duration_trigger` | Debounce in s (default 60) |
+| Input | Purpose | Default |
+| --- | --- | ---: |
+| `ev_connected` | Binary sensor, ON when the EV is plugged in | required |
+| `ev_soc` | *(optional)* SoC sensor, % | empty |
+| `ev_soc_target` | Cut-off SoC in % | **80** |
+| `grid_power` | Signed grid power in W (+ import, − export) | required |
+| `diverted_power` | Solar Router's `Power divertion` sensor | required |
+| `solar_router` | The `Activate Solar Routing` switch to toggle | required |
+| `ev_charging_minimum_surplus` | Surplus threshold for handoff in W | 1400 |
+| `cloud_import_threshold` | Import threshold for cloud detection in W | 200 |
+| `release_export_threshold` | Export threshold for "EV done" detection in W | 200 |
+| `surplus_duration_trigger` | Debounce for all three level triggers in s | 60 |
 
 ## 5 – Requirement: keep `Real Power` alive while the router is OFF
 
 Before this version, turning the `Activate Solar Routing` switch OFF
-also stopped the meter polling and forced `Real Power` to `NaN` — the
-blueprint would then be blind exactly when it most needs eyes. The
-firmware shipped with this blueprint keeps the native power meters
-polling continuously and no longer publishes `NaN` on shutdown, so the
-blueprint's cloud-detection clause works whether the router is on or
-off. No user action is required if you flash the matching firmware
-version.
+also stopped the meter polling and forced `Real Power` to `NaN`. The
+blueprint would then be blind exactly when it most needs eyes — with
+Option-3 signals, that would mean not being able to detect either the
+cloud OR the EV-done cases. The firmware shipped with this blueprint
+keeps the native power meters polling continuously and no longer
+publishes `NaN` on shutdown. No user action is required if you flash
+the matching firmware version.
 
 ## 6 – A day in the life
 
-| Time | Situation | Surplus | Router | Action |
-| :--- | :--- | ---: | :--- | :--- |
-| 06:00 | Night ending, no PV | −300 W | ON idle | — |
-| 09:00 | PV ramps, EV plugged, SoC 40 % | +1600 W | ON diverting | — (debounce running) |
-| 09:01 | Surplus stable > 1400 W for 60 s | +1650 W | **OFF** | hand priority to EV |
-| 09:02 | EV drawing, surplus small | +200 W | OFF | — (below debounce) |
-| 10:30 | Big cloud, surplus < 1400 for 60 s | +100 W | **ON** | cloud — restore router |
-| 11:00 | Sun back, surplus > 1400 for 60 s | +2500 W | **OFF** | EV again |
-| 15:00 | SoC hits target (80 %) | +2200 W | **ON** | car full — release |
-| 20:00 | EV unplugged | −200 W | ON | — |
+Handoff threshold 1400 W, cloud & release thresholds 200 W each,
+debounce 60 s.
+
+| Time | Situation | grid_power | diverted | Router | Action |
+| :--- | :--- | ---: | ---: | :--- | :--- |
+| 06:00 | Night ending, no PV | +300 (import) | 0 | ON idle | — |
+| 09:00 | PV ramps, EV plugged, SoC 40 % | −1600 | 200 | ON diverting | — (debounce running) |
+| 09:01 | Handoff template stable > 60 s | −1650 | 200 | **OFF** | give priority to EV |
+| 09:02 | EV drawing, PV matched | ≈ 0 | 0 | OFF | — (grid stable, no restore) |
+| 10:30 | Big cloud, EV keeps drawing from grid | **+800** | 0 | **ON** | cloud detected — router restored |
+| 11:00 | Sun back, surplus > 1400 for 60 s | −2500 | (rising) | **OFF** | EV again |
+| 15:00 | SoC hits target (80 %) | ≈ 0 | 0 | **ON** | car full — released |
+| 15:30 | Or: no SoC sensor, EV self-stops on full | **−1500** | 0 | **ON** | export release — router restored |
+| 20:00 | EV unplugged | −200 | 100 | ON | — |
 
 ## 7 – Wiring an EV plug sensor (MyEnergi Zappi example)
 
@@ -116,18 +140,30 @@ Import the blueprint into Home Assistant:
 - Paste the raw URL of `blueprints/priority_to_ev.yaml` in this
   repository.
 
-Create an automation from the imported blueprint and fill in the six
-required inputs.
+Create an automation from the imported blueprint and fill in the
+inputs.
 
 ## 9 – Edge cases
 
 - **Brief cloud (< `surplus_duration_trigger` s)** — the router stays
   off; the debounce absorbs it.
 - **HA restart mid-charge** — the automation re-evaluates on
-  `homeassistant.started` and converges to the correct state on the
-  next surplus tick.
-- **User manually turns the router off** while no EV is plugged — the
-  blueprint does not fight the user; it only turns the router back ON
-  if one of its own conditions calls for it.
-- **Surplus exactly at threshold** — neither `above:` nor `below:`
-  fires (strict inequality). No action.
+  `homeassistant.start`, but the restore branch only fires if a real
+  restore reason holds (unplug / SoC target / cloud / EV done). A
+  restart during a stable handoff is a no-op.
+- **Sensor `unavailable`** — every level trigger uses `has_value()`
+  guards; if `grid_power` or `diverted_power` drops out, no restore
+  is triggered.
+- **User manually turns the router ON while EV is plugged and surplus
+  is high** — the next handoff cycle (60 s) will turn it back off. If
+  you want to disable the automation temporarily, disable the
+  automation itself in HA.
+- **Charger with a small export margin** (some chargers leave 100 W
+  going to the grid even at max) — set `release_export_threshold`
+  above that margin (e.g. 200–300 W) to avoid a false "EV done"
+  detection.
+- **Household load spikes** (dishwasher starts) — a large kitchen
+  appliance can push `grid_power` briefly positive; the 60 s debounce
+  absorbs a normal cycle, but a sustained heavy load *will* trigger
+  the cloud branch. Raise `cloud_import_threshold` if this is a
+  frequent nuisance.

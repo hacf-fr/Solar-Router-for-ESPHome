@@ -11,15 +11,18 @@ blueprint arbitre entre les deux :
 - Lorsqu'un surplus *suffisant* est disponible *assez longtemps*, il
   éteint le Solar Router pour que le surplus soit relâché vers le
   réseau, où le chargeur du VE le capte.
-- Lorsque la voiture est pleine, débranchée, ou qu'un passage nuageux
-  fait retomber le surplus sous le seuil, il rallume le Solar Router
-  pour que le chauffe-eau récupère ce qui reste.
+- Lorsque la voiture est pleine, débranchée, qu'un nuage se met à
+  tirer du courant du réseau, ou que le VE cesse de prendre le
+  surplus, il rallume le Solar Router pour que le chauffe-eau
+  récupère ce qui reste.
 
 Le firmware du routeur ne communique **pas** avec le chargeur — le
 blueprint se contente de manipuler l'interrupteur `Activate Solar
 Routing`. Tout le reste reste à la charge du chargeur.
 
-## 2 – Définition du surplus
+## 2 – Signaux
+
+### 2a – Bascule (routeur ON → OFF)
 
 ```
 surplus = max(0, -grid_power) + max(0, diverted_power)
@@ -31,68 +34,93 @@ surplus = max(0, -grid_power) + max(0, diverted_power)
 - `diverted_power` est le capteur `Power divertion` du routeur —
   toujours positif, nul quand le routeur est éteint.
 
-Les `max(0, …)` évitent qu'un import (positif) ou une lecture de
-détournement transitoirement négative ne tirent artificiellement le
-surplus vers le bas.
+Le routeur passe en OFF quand `surplus > EV_Charging_Minimum_Surplus`
+reste vrai en continu pendant `surplus_duration_trigger` secondes, à
+condition que le VE soit branché et (si un capteur SoC est fourni)
+encore sous la cible.
+
+### 2b – Restauration (routeur OFF → ON)
+
+Une fois le routeur éteint et le VE en charge sur le solaire, la
+formule de surplus s'effondre à ~0 : `diverted_power = 0` (routeur
+off) et `grid_power ≈ 0` (le VE mange ce que produit le PV). Le
+blueprint ne saurait plus distinguer un nuage d'une charge ordinaire.
+Il regarde donc `grid_power` directement :
+
+- **`grid_power > cloud_import_threshold` pendant N s** → on importe →
+  le PV ne suffit plus au VE → **nuage arrivé**.
+- **`-grid_power > release_export_threshold` pendant N s** → on
+  exporte → le VE ne prend pas le surplus → **VE plein, en pause ou
+  bridé**.
+
+Plus deux signaux immédiats sans anti-rebond :
+
+- VE débranché (`ev_connected` → `off`)
+- SoC atteint `EV_SoC_Target` (uniquement si un capteur SoC est
+  configuré)
 
 ## 3 – Comportement
 
 ```text
-SI ev_connected ET ev_soc < ev_soc_target
-   ET surplus > EV_Charging_Minimum_Surplus  pendant > surplus_duration_trigger
-   ET solar_router est ON
-ALORS éteindre solar_router   (priorité au VE)
+BASCULE (routeur ON → OFF), quand ceci reste vrai pendant surplus_duration_trigger s :
+  ev_connected == on
+  ET solar_router == on
+  ET ( ev_soc_entity est vide OU ev_soc < ev_soc_target )
+  ET surplus > EV_Charging_Minimum_Surplus
 
-SI solar_router est OFF
-   ET ( ev_non_branché
-        OU ev_soc >= ev_soc_target
-        OU surplus < EV_Charging_Minimum_Surplus  pendant > surplus_duration_trigger )
-ALORS allumer solar_router    (retour au routage normal)
+RESTAURATION (routeur OFF → ON), sur l'un des cas suivants :
+  ev_connected passe à off                                              [immédiat]
+  ev_soc >= ev_soc_target                                               [immédiat]
+  grid_power > cloud_import_threshold      pendant surplus_duration_trigger s   [nuage]
+  -grid_power > release_export_threshold   pendant surplus_duration_trigger s   [VE plein]
 ```
 
-- Les inégalités `above:` et `below:` du déclencheur `numeric_state`
-  sont **strictes** — au seuil exact, rien ne se déclenche. C'est ce
-  qui empêche l'automation de vibrer sur un surplus marginal.
-- La clause `for:` filtre les rebonds dans les deux sens.
-- Si `ev_soc` est laissé vide, le garde-fou SoC est ignoré : c'est
-  alors au VE de s'arrêter quand il est plein.
+Les trois triggers de niveau utilisent des template triggers HA avec
+`for:`, donc une pointe brève d'un côté ou l'autre est absorbée et ne
+fait pas bouger le routeur.
 
 ## 4 – Entrées
 
-| Entrée | Rôle |
-| --- | --- |
-| `ev_connected` | Capteur binaire, ON quand le VE est branché |
-| `ev_soc` | *(optionnel)* capteur d'état de charge, en % |
-| `ev_soc_target` | SoC cible en % (défaut **80**) |
-| `grid_power` | Puissance réseau signée en W (+ import, − export) |
-| `diverted_power` | Capteur `Power divertion` du Solar Router |
-| `solar_router` | Interrupteur `Activate Solar Routing` à piloter |
-| `ev_charging_minimum_surplus` | Seuil en W (défaut 1400) |
-| `surplus_duration_trigger` | Anti-rebond en s (défaut 60) |
+| Entrée | Rôle | Défaut |
+| --- | --- | ---: |
+| `ev_connected` | Capteur binaire, ON quand le VE est branché | obligatoire |
+| `ev_soc` | *(optionnel)* capteur d'état de charge, en % | vide |
+| `ev_soc_target` | SoC cible en % | **80** |
+| `grid_power` | Puissance réseau signée en W (+ import, − export) | obligatoire |
+| `diverted_power` | Capteur `Power divertion` du Solar Router | obligatoire |
+| `solar_router` | Interrupteur `Activate Solar Routing` à piloter | obligatoire |
+| `ev_charging_minimum_surplus` | Seuil de surplus pour la bascule, en W | 1400 |
+| `cloud_import_threshold` | Seuil d'import pour la détection nuage, en W | 200 |
+| `release_export_threshold` | Seuil d'export pour la détection "VE plein", en W | 200 |
+| `surplus_duration_trigger` | Anti-rebond appliqué aux 3 triggers de niveau, en s | 60 |
 
 ## 5 – Prérequis firmware : `Real Power` vivant même routeur éteint
 
 Avant cette version, éteindre `Activate Solar Routing` stoppait aussi
-le sondage du compteur et forçait `Real Power` à `NaN` — le blueprint
-devenait alors aveugle au moment où il en a le plus besoin. Le
-firmware livré avec ce blueprint conserve le sondage des compteurs
-natifs en continu et n'écrit plus `NaN` à l'arrêt, de sorte que la
-détection de nuage fonctionne routeur allumé comme éteint. Aucune
-action n'est requise côté utilisateur si le firmware assorti est
-flashé.
+le sondage du compteur et forçait `Real Power` à `NaN`. Le blueprint
+devenait aveugle au moment où il en a le plus besoin — avec les
+signaux de l'option 3, cela empêcherait autant la détection du nuage
+que celle du VE plein. Le firmware livré avec ce blueprint conserve
+le sondage des compteurs natifs en continu et n'écrit plus `NaN` à
+l'arrêt. Aucune action n'est requise côté utilisateur si le firmware
+assorti est flashé.
 
 ## 6 – Une journée dans la vie
 
-| Heure | Situation | Surplus | Routeur | Action |
-| :--- | :--- | ---: | :--- | :--- |
-| 06:00 | Fin de nuit, pas de PV | −300 W | ON idle | — |
-| 09:00 | PV monte, VE branché, SoC 40 % | +1600 W | ON diverting | — (anti-rebond en cours) |
-| 09:01 | Surplus stable > 1400 W pendant 60 s | +1650 W | **OFF** | priorité au VE |
-| 09:02 | VE charge, surplus faible | +200 W | OFF | — (sous anti-rebond) |
-| 10:30 | Gros nuage, surplus < 1400 pendant 60 s | +100 W | **ON** | nuage — retour au routeur |
-| 11:00 | Soleil de retour, surplus > 1400 pendant 60 s | +2500 W | **OFF** | VE à nouveau |
-| 15:00 | SoC atteint la cible (80 %) | +2200 W | **ON** | voiture pleine — relâche |
-| 20:00 | VE débranché | −200 W | ON | — |
+Seuil de bascule 1400 W, seuils nuage & release 200 W chacun,
+anti-rebond 60 s.
+
+| Heure | Situation | grid_power | diverted | Routeur | Action |
+| :--- | :--- | ---: | ---: | :--- | :--- |
+| 06:00 | Fin de nuit, pas de PV | +300 (import) | 0 | ON idle | — |
+| 09:00 | PV monte, VE branché, SoC 40 % | −1600 | 200 | ON diverting | — (anti-rebond) |
+| 09:01 | Trigger Handoff stable > 60 s | −1650 | 200 | **OFF** | priorité au VE |
+| 09:02 | VE charge, PV équilibré | ≈ 0 | 0 | OFF | — (grid stable) |
+| 10:30 | Gros nuage, VE continue à tirer du réseau | **+800** | 0 | **ON** | nuage détecté — retour au routeur |
+| 11:00 | Soleil de retour, surplus > 1400 pendant 60 s | −2500 | (monte) | **OFF** | VE à nouveau |
+| 15:00 | SoC atteint la cible (80 %) | ≈ 0 | 0 | **ON** | voiture pleine — relâche |
+| 15:30 | Ou : pas de capteur SoC, VE s'arrête tout seul | **−1500** | 0 | **ON** | export release — retour au routeur |
+| 20:00 | VE débranché | −200 | 100 | ON | — |
 
 ## 7 – Détection de VE branché (exemple MyEnergi Zappi)
 
@@ -118,17 +146,28 @@ Importer le blueprint dans Home Assistant :
 - Coller l'URL brute de `blueprints/priority_to_ev.yaml` dans ce dépôt.
 
 Créer ensuite une automatisation depuis le blueprint importé et
-remplir les six entrées obligatoires.
+remplir les entrées.
 
 ## 9 – Cas limites
 
 - **Nuage bref (< `surplus_duration_trigger` s)** — le routeur reste
   éteint ; l'anti-rebond absorbe.
 - **Redémarrage HA en pleine charge** — l'automation se réévalue sur
-  `homeassistant.started` et converge vers le bon état au prochain
-  tick de surplus.
-- **L'utilisateur éteint manuellement le routeur** alors qu'aucun VE
-  n'est branché — le blueprint ne se bat pas ; il ne rallumera que si
-  une de ses propres conditions le demande.
-- **Surplus pile au seuil** — ni `above:` ni `below:` ne se déclenchent
-  (inégalité stricte). Aucune action.
+  `homeassistant.start`, mais la branche de restauration n'agit que
+  si une vraie raison tient (débranchement / SoC / nuage / VE plein).
+  Un redémarrage en pleine priorité VE stable est un no-op.
+- **Capteur `unavailable`** — chaque trigger de niveau vérifie
+  `has_value()` ; si `grid_power` ou `diverted_power` tombe, aucune
+  restauration n'est déclenchée.
+- **L'utilisateur rallume manuellement le routeur** alors que le VE
+  est branché et le surplus élevé — le prochain cycle Handoff (60 s)
+  le rééteindra. Pour désactiver temporairement, désactiver
+  l'automation dans HA.
+- **Chargeur avec une marge d'export** (certains laissent 100 W
+  partir au réseau même à pleine charge) — remonter
+  `release_export_threshold` au-dessus de cette marge (200–300 W).
+- **Pointes de conso maison** (lave-vaisselle qui démarre) — un gros
+  appareil pousse `grid_power` brièvement au positif ; les 60 s
+  d'anti-rebond absorbent un cycle normal, mais une charge lourde
+  soutenue *déclenchera* la branche nuage. Remonter
+  `cloud_import_threshold` si c'est un souci récurrent.
