@@ -53,7 +53,7 @@ EV_MIN = 1400.0        # minimum surplus for Zappi to start / keep charging (eco
 EV_MAX = float('inf')  # EV absorbs 100 % of the surplus (no ceiling in this model)
 ROUTER_MAX = 1000.0    # water-heater capacity (limited)
 TANK_FULL_H = 16.5     # water heater thermostat cuts off at 16:30 (tank hot enough)
-HANDOFF_TH = 1400.0
+HANDOFF_TH = EV_MIN
 CLOUD_TH = 200.0
 RELEASE_TH = 200.0
 DEBOUNCE = 1           # iterations at 1-min resolution → ~1 min (~60 s)
@@ -166,6 +166,7 @@ COLOR_EV = '#3b7ea1'         # calm blue
 COLOR_DIVERT = '#c1436d'     # coral (water heater)
 COLOR_IMPORT = '#b23a48'     # red
 COLOR_EXPORT = '#4d7c3a'     # green
+COLOR_SURPLUS = '#557799'    # blue-gray
 BG_ROUTER_OFF = '#f3f3f3'    # very pale amber
 INK = '#1f2937'
 MUTED = '#9ca3af'
@@ -225,11 +226,19 @@ handles = [
 ]
 ax1.legend(handles=handles, loc='upper left', frameon=False, ncol=2, fontsize=9)
 
-# --- Bottom panel: grid exchange (signed) ---
+# --- Bottom panel: grid exchange (signed) + surplus curve ---
+# Surplus as the blueprint sees it (drives the handoff trigger).
+# Plotted on the negative (export) side of the axis, consistent with the sign
+# convention: surplus is "what could be exported" - it belongs below zero.
+surplus_bp = np.maximum(0.0, -grid) + np.maximum(0.0, divert)
+
 ax2.axhline(0, color=MUTED, lw=1.0, alpha=0.7)
 ax2.fill_between(hours, 0, grid, where=(grid >= 0), color=COLOR_IMPORT, alpha=0.30, interpolate=True)
 ax2.fill_between(hours, 0, grid, where=(grid < 0), color=COLOR_EXPORT, alpha=0.30, interpolate=True)
-ax2.plot(hours, grid, color=INK, lw=1.5, zorder=3)
+ax2.plot(hours, grid, color=INK, lw=1.5, zorder=3, label='Réseau (signé)')
+# Surplus (dashed, no fill) on the export side - the handoff trigger compares |surplus| to 1400 W.
+ax2.plot(hours, -surplus_bp, color=COLOR_SURPLUS, lw=1.6, ls='--', zorder=4,
+         label='Surplus = −(max(0,−grid) + max(0,divert))')
 
 # Restoration thresholds
 ax2.axhline(200, ls='--', color=COLOR_IMPORT, alpha=0.6, lw=1)
@@ -240,7 +249,7 @@ ax2.text(23.8, -420, '−200 W (seuil release)', fontsize=8, ha='right',
          color=COLOR_EXPORT, alpha=0.95, weight='bold')
 
 # Handoff threshold reference on bottom panel
-ax2.axhline(-1400, ls=':', color=INK, alpha=0.5, lw=1)
+ax2.axhline(-HANDOFF_TH, ls=':', color=INK, alpha=0.5, lw=1)
 ax2.text(23.8, -1620, f'−{EV_MIN} W (seuil bascule - export)', fontsize=8, ha='right', color=INK, alpha=0.75)
 
 ax2.set_ylabel('Réseau (W)\n- export  /  + import', color=INK)
@@ -251,10 +260,12 @@ ax2.set_axisbelow(True)
 
 # Import/export legend
 handles2 = [
+    plt.Line2D([], [], color=INK, lw=1.5, label='Grid (signé)'),
+    plt.Line2D([], [], color=COLOR_SURPLUS, lw=1.6, ls='--', label='Surplus'),
     Patch(facecolor=COLOR_IMPORT, alpha=0.30, label='Import (grid > 0)'),
     Patch(facecolor=COLOR_EXPORT, alpha=0.30, label='Export (grid < 0)'),
 ]
-ax2.legend(handles=handles2, loc='lower left', frameon=False, fontsize=9)
+ax2.legend(handles=handles2, loc='lower left', frameon=False, fontsize=9, ncol=2)
 
 # --- X-axis ---
 ax2.set_xticks(range(0, 25, 2))
@@ -264,7 +275,7 @@ ax2.set_xlim(0, 24)
 # --- Event markers on the top strip: numbered dots only, full labels in a bottom caption ---
 # Times sourced from the simulation state-machine transitions (printed above).
 events = [
-    (7.6,           '1', '07:40  Le surplus commenc à être rerouté'),
+    (7.6,           '1', '07:40  Le surplus commence à être rerouté'),
     (8 + 52/60,     '2', f'08:52  Bascule → routeur OFF (surplus > {EV_MIN} W stable 60 s)'),
     (11.5,          '3', '11:30  Nuage → VE pause → export → Release → routeur ON'),
     (12.0,          '4', '12:00  Soleil revient → Bascule → routeur OFF'),
