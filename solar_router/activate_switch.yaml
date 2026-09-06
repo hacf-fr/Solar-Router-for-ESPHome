@@ -1,0 +1,81 @@
+# ----------------------------------------------------------------------------------------------------
+# Physical ON/OFF switch driving solar routing activation
+# ----------------------------------------------------------------------------------------------------
+# The position of the physical switch is mirrored on the "activate" switch provided by the engine.
+# The physical switch always wins: any other source (Home Assistant, web server, scheduler) is
+# realigned on its position.
+
+substitutions:
+  # By default the contact shorts the pin to GND when it is in the "routing enabled" position
+  activate_switch_inverted: "True"
+  # By default the physical switch is not exposed in Home Assistant
+  hide_activate_switch: "True"
+  # By default the position of the physical switch is reported in Home Assistant
+  hide_activate_switch_position: "False"
+  # Debounce time of the mechanical contact
+  activate_switch_debounce: 50ms
+  # When true, "activate" is continuously realigned on the position of the physical switch.
+  # Set it to "false" to only apply the position when the switch is operated, and let Home
+  # Assistant, the push button or the scheduler drive "activate" in between.
+  activate_switch_strict: "true"
+
+binary_sensor:
+  - platform: gpio
+    id: activate_switch
+    name: "Activate Switch"
+    internal: ${hide_activate_switch}
+    pin:
+      number: ${activate_switch_pin}
+      mode: INPUT_PULLUP
+      inverted: ${activate_switch_inverted}
+    filters:
+      - delayed_on_off: ${activate_switch_debounce}
+    on_state:
+      then:
+        - script.execute: activate_switch_control
+
+text_sensor:
+  # Position of the physical switch, as read from the contact
+  - platform: template
+    id: activate_switch_position
+    name: "Activate Switch Position"
+    entity_category: diagnostic
+    internal: ${hide_activate_switch_position}
+    update_interval: never
+
+script:
+  - id: activate_switch_control
+    mode: single
+    then:
+      - lambda: |-
+          bool routing = id(activate_switch).state;
+
+          // Report the position of the physical switch, only when it changes:
+          // TextSensor::publish_state() does not deduplicate.
+          const char *label = routing ? "Solar routing" : "Disabled";
+          if (id(activate_switch_position).state != label) {
+            id(activate_switch_position).publish_state(label);
+          }
+
+          // Realign "activate" only when it actually differs. TemplateSwitch::write_state()
+          // triggers on_turn_on / on_turn_off unconditionally, before publish_state(), so an
+          // unguarded call would re-run the whole engine automation on every tick.
+          if (id(activate).state != routing) {
+            if (routing) {
+              id(activate).turn_on();
+            } else {
+              id(activate).turn_off();
+            }
+          }
+
+interval:
+  # Realign "activate" on the position of the physical switch.
+  # This also covers the boot sequence, where "activate" is restored from flash before the
+  # position of the physical switch is known.
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            lambda: return ${activate_switch_strict};
+          then:
+            - script.execute: activate_switch_control
