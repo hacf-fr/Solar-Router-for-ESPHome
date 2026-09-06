@@ -28,29 +28,36 @@ binary_sensor:
       inverted: ${activate_switch_inverted}
     filters:
       - delayed_on_off: ${activate_switch_debounce}
-    on_press:
+    on_state:
       then:
-        - switch.turn_on: activate
-    on_release:
-      then:
-        - switch.turn_off: activate
+        - script.execute: activate_switch_control
+
+script:
+  - id: activate_switch_control
+    mode: single
+    then:
+      - lambda: |-
+          bool routing = id(activate_switch).state;
+
+          // Realign "activate" only when it actually differs. TemplateSwitch::write_state()
+          // triggers on_turn_on / on_turn_off unconditionally, before publish_state(), so an
+          // unguarded call would re-run the whole engine automation on every tick.
+          if (id(activate).state != routing) {
+            if (routing) {
+              id(activate).turn_on();
+            } else {
+              id(activate).turn_off();
+            }
+          }
 
 interval:
   # Realign "activate" on the position of the physical switch.
   # This also covers the boot sequence, where "activate" is restored from flash before the
   # position of the physical switch is known.
-  # Asking for a state which is already the current one is a no-op: Switch::publish_state()
-  # deduplicates, so on_turn_on / on_turn_off of the engine are not triggered again.
   - interval: 1s
     then:
       - if:
           condition:
             lambda: return ${activate_switch_strict};
           then:
-            - if:
-                condition:
-                  binary_sensor.is_on: activate_switch
-                then:
-                  - switch.turn_on: activate
-                else:
-                  - switch.turn_off: activate
+            - script.execute: activate_switch_control
