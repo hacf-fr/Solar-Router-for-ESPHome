@@ -50,6 +50,7 @@ nav:
       - External control:
               - Push button: activate_button.md
               - ON/OFF switch: activate_switch.md
+              - 3-position switch: activate_switch_3positions.md
       - Home Assistant:
               - Recorder configuration: recorder_configuration.md
               - Debug sensors: debug_sensors.md
@@ -101,6 +102,7 @@ plugins:
                       build: true
                       link: /Solar-Router-for-ESPHome/fr/
                       nav_translations:
+                            3-position switch: Interrupteur 3 positions
                             About: A propos
                             Alternatives: Alternatives
                             Contributing: Contribution

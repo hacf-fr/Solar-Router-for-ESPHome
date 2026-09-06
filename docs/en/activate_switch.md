@@ -5,6 +5,8 @@ This package adds a **physical two-position switch** to the solar router, wired 
 - switch closed → solar routing **enabled**,
 - switch open → solar routing **disabled**.
 
+If you also want a position forcing the router at 100 %, use [activate_switch_3positions](activate_switch_3positions.md) instead.
+
 !!! warning "The physical switch always wins"
     The position of the physical switch is mirrored on the `activate` switch **continuously**, in both directions. As long as this package is included:
 
@@ -42,6 +44,10 @@ With this wiring, the contact is **closed** when routing must be enabled, which 
 !!! danger "Choose a usable GPIO"
     GPIO6 to GPIO11 are wired to the internal SPI flash of the ESP32 and cannot be used. GPIO34 to GPIO39 are input-only and have **no internal pull-up**, so they are not suitable either unless you add an external pull-up resistor. GPIO32 and GPIO33 are a safe choice.
 
+## Feedback in Home Assistant
+
+The package exposes an *Activate Switch Position* text sensor, in the diagnostic category, reporting the position actually read from the contact: `Disabled` or `Solar routing`. Set `hide_activate_switch_position` to `"True"` to hide it.
+
 ## Configuration
 
 To use this package, add the following lines to your configuration file:
@@ -65,3 +71,4 @@ packages:
 | `activate_switch_debounce` | no       | `50ms`   | Debounce time of the mechanical contact.                                                                                            |
 | `activate_switch_strict`   | no       | `"true"` | Set to `"false"` so the position is only applied when the switch is operated, letting Home Assistant, a push button or the scheduler drive `activate` in between. |
 | `hide_activate_switch`     | no       | `"True"` | Set to `"False"` to expose the raw state of the contact in Home Assistant, which is handy to check your wiring.                     |
+| `hide_activate_switch_position` | no  | `"False"`| Set to `"True"` to hide the *Activate Switch Position* text sensor.                                                                 |

@@ -10,8 +10,8 @@ Ce package n'est pas autonome. Il repose sur un identifiant fourni par un autre 
 
 - un package `engine_*` (par exemple `engine_1dimmer.yaml`) qui fournit l'interrupteur `activate`.
 
-!!! warning "À ne pas combiner avec l'interrupteur d'activation"
-    Si le package [activate_switch](activate_switch.md) est également inclus avec son comportement strict par défaut, l'interrupteur physique réaligne en permanence `activate` sur sa propre position et le bouton n'a plus d'effet durable. Utilisez l'un **ou** l'autre, ou positionnez `activate_switch_strict` à `"false"` pour que les deux puissent piloter le routeur.
+!!! warning "À ne pas combiner avec un interrupteur d'activation"
+    Si [activate_switch](activate_switch.md) ou [activate_switch_3positions](activate_switch_3positions.md) est également inclus avec son comportement strict par défaut, l'interrupteur physique applique en permanence sa propre position et le bouton n'a plus d'effet durable. Utilisez l'un **ou** l'autre, ou positionnez `activate_switch_strict` à `"false"` pour que les deux puissent piloter le routeur.
 
 ## Comportement au démarrage
 

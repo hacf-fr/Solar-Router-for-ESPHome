@@ -10,8 +10,8 @@ This package is not standalone. It relies on a symbol provided by another packag
 
 - an `engine_*` package (e.g. `engine_1dimmer.yaml`) that provides the `activate` switch.
 
-!!! warning "Not to be combined with the activation switch"
-    If the [activate_switch](activate_switch.md) package is also included with its default strict behaviour, the physical switch continuously realigns `activate` on its own position and the button has no lasting effect. Use one **or** the other, or set `activate_switch_strict` to `"false"` so both can drive the router.
+!!! warning "Not to be combined with an activation switch"
+    If [activate_switch](activate_switch.md) or [activate_switch_3positions](activate_switch_3positions.md) is also included with its default strict behaviour, the physical switch continuously enforces its own position and the button has no lasting effect. Use one **or** the other, or set `activate_switch_strict` to `"false"` so both can drive the router.
 
 ## Behaviour at boot
 

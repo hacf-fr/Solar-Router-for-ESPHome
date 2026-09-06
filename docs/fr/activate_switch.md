@@ -5,6 +5,8 @@ Ce package ajoute au routeur solaire un **interrupteur physique à deux position
 - interrupteur fermé → routage solaire **activé**,
 - interrupteur ouvert → routage solaire **désactivé**.
 
+Si vous souhaitez en plus une position forçant le routeur à 100 %, utilisez plutôt [activate_switch_3positions](activate_switch_3positions.md).
+
 !!! warning "L'interrupteur physique est toujours prioritaire"
     La position de l'interrupteur physique est recopiée **en permanence** sur l'interrupteur `activate`, dans les deux sens. Tant que ce package est inclus :
 
@@ -42,6 +44,10 @@ Avec ce câblage, le contact est **fermé** lorsque le routage doit être activ�
 !!! danger "Choisissez une broche GPIO utilisable"
     Les broches GPIO6 à GPIO11 sont reliées à la mémoire flash SPI interne de l'ESP32 et ne peuvent pas être utilisées. Les broches GPIO34 à GPIO39 sont en entrée seule et ne disposent **pas** de résistance de tirage interne : elles ne conviennent donc pas non plus, sauf à ajouter une résistance de tirage externe. GPIO32 et GPIO33 sont des choix sûrs.
 
+## Retour d'état dans Home Assistant
+
+Le package expose un capteur texte *Activate Switch Position*, en catégorie diagnostic, indiquant la position réellement lue sur le contact : `Disabled` ou `Solar routing`. Positionnez `hide_activate_switch_position` à `"True"` pour le masquer.
+
 ## Configuration
 
 Pour utiliser ce package, ajoutez les lignes suivantes à votre fichier de configuration :
@@ -65,3 +71,4 @@ packages:
 | `activate_switch_debounce` | non         | `50ms`   | Temps d'anti-rebond du contact mécanique.                                                                                                               |
 | `activate_switch_strict`   | non         | `"true"` | À mettre à `"false"` pour n'appliquer la position que lors des manœuvres, et laisser Home Assistant, un bouton poussoir ou le planificateur piloter `activate` entre-temps. |
 | `hide_activate_switch`     | non         | `"True"` | À mettre à `"False"` pour exposer l'état brut du contact dans Home Assistant, ce qui est pratique pour vérifier votre câblage.                          |
+| `hide_activate_switch_position` | non    | `"False"`| À mettre à `"True"` pour masquer le capteur texte *Activate Switch Position*.                                                                            |
