@@ -10,6 +10,8 @@ substitutions:
   activate_switch_inverted: "True"
   # By default the physical switch is not exposed in Home Assistant
   hide_activate_switch: "True"
+  # By default the position of the physical switch is reported in Home Assistant
+  hide_activate_switch_position: "False"
   # Debounce time of the mechanical contact
   activate_switch_debounce: 50ms
   # When true, "activate" is continuously realigned on the position of the physical switch.
@@ -32,12 +34,28 @@ binary_sensor:
       then:
         - script.execute: activate_switch_control
 
+text_sensor:
+  # Position of the physical switch, as read from the contact
+  - platform: template
+    id: activate_switch_position
+    name: "Activate Switch Position"
+    entity_category: diagnostic
+    internal: ${hide_activate_switch_position}
+    update_interval: never
+
 script:
   - id: activate_switch_control
     mode: single
     then:
       - lambda: |-
           bool routing = id(activate_switch).state;
+
+          // Report the position of the physical switch, only when it changes:
+          // TextSensor::publish_state() does not deduplicate.
+          const char *label = routing ? "Solar routing" : "Disabled";
+          if (id(activate_switch_position).state != label) {
+            id(activate_switch_position).publish_state(label);
+          }
 
           // Realign "activate" only when it actually differs. TemplateSwitch::write_state()
           // triggers on_turn_on / on_turn_off unconditionally, before publish_state(), so an
