@@ -6,3 +6,18 @@ sensor:
   - platform: uptime
     type: seconds
     name: Uptime Sensor
+
+text_sensor:
+  - platform: template
+    id: version_common
+    name: "common"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.1.1"};
+    disabled_by_default: false

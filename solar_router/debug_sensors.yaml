@@ -15,6 +15,19 @@ text_sensor:
       name: "Device Info"
     reset_reason:
       name: "Reset Reason"
+  - platform: template
+    id: version_debug_sensors
+    name: "debug_sensors"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.3"};
+    disabled_by_default: false
 
 sensor:
   - platform: debug

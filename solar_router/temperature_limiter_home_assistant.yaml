@@ -4,7 +4,8 @@
 substitutions:
   red_led_inverted: "False"
 
-<<: !include temperature_limiter_common.yaml
+packages:
+  temperature_limiter_common: !include temperature_limiter_common.yaml
 
 sensor:
   # Sensor showing the temprature to monitor
@@ -18,3 +19,18 @@ sensor:
     on_value:
       - script.execute:
           id: safety_limit_check
+
+text_sensor:
+  - platform: template
+    id: version_temperature_limiter_home_assistant
+    name: "temperature_limiter_home_assistant"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.4.1"};
+    disabled_by_default: false

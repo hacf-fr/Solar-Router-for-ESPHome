@@ -1,3 +1,8 @@
+# Merged with '<<:' on purpose, unlike the other power meters: the merge key keeps the
+# FIRST definition of a key, which is how this file overrides real_power and consumption
+# to read them straight from Home Assistant. The trade-off is that its own 'text_sensor:'
+# also replaces the common's, so power_meter_common never publishes its version here --
+# treat that package as absent-but-loaded rather than not loaded.
 <<: !include power_meter_common.yaml
 
 # ----------------------------------------------------------------------------------------------------
@@ -24,3 +29,18 @@ sensor:
     name: "Consumption"
     device_class: "power"
     unit_of_measurement: "W"
+
+text_sensor:
+  - platform: template
+    id: version_power_meter_home_assistant
+    name: "power_meter_home_assistant"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.3"};
+    disabled_by_default: false

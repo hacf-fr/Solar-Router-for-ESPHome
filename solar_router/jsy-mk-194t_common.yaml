@@ -302,3 +302,18 @@ sensor:
 time:
   - platform: homeassistant
     id: homeassistant_time_for_solar_router
+
+text_sensor:
+  - platform: template
+    id: version_jsy_mk_194t_common
+    name: "jsy-mk-194t_common"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.3"};
+    disabled_by_default: false

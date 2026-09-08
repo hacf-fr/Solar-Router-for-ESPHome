@@ -154,3 +154,18 @@ script:
           double new_router_level = id(router_level).state + delta;
           new_router_level = std::max(0.0, std::min(100.0, new_router_level));
           id(router_level).publish_state(new_router_level);
+
+text_sensor:
+  - platform: template
+    id: version_engine_1dimmer
+    name: "engine_1dimmer"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.6"};
+    disabled_by_default: false

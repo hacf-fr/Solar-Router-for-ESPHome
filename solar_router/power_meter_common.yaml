@@ -35,3 +35,18 @@ sensor:
     unit_of_measurement: "W"
     update_interval: 1s
     internal: ${consumption_sensor_internal}
+
+text_sensor:
+  - platform: template
+    id: version_power_meter_common
+    name: "power_meter_common"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.4"};
+    disabled_by_default: false
