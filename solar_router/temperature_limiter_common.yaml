@@ -127,3 +127,18 @@ output:
     pin:
       number: ${red_led_pin}
       inverted: ${red_led_inverted}
+
+text_sensor:
+  - platform: template
+    id: version_temperature_limiter_common
+    name: "temperature_limiter_common"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.7"};
+    disabled_by_default: false

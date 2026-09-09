@@ -275,3 +275,18 @@ script:
           }
 
           id(router_level).publish_state(new_router_level);
+
+text_sensor:
+  - platform: template
+    id: version_engine_1dimmer_2switches
+    name: "engine_1dimmer_2switches"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.3"};
+    disabled_by_default: false

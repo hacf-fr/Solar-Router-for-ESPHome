@@ -1,4 +1,5 @@
-<<: !include power_meter_common.yaml
+packages: 
+  power_meter_common: !include power_meter_common.yaml
 
 esphome:
   min_version: 2025.5.0
@@ -111,24 +112,6 @@ script:
 
 # Sense the per-phase active powers for debugging / tuning (hidden by default)
 sensor:
-  # Re-declared from power_meter_common.yaml: the '<<' merge only keeps the
-  # FIRST definition of a key, and this file defines its own 'sensor:' section.
-  # The engine depends on these two template sensors.
-  - id: real_power
-    platform: template
-    name: "Real Power"
-    device_class: "power"
-    unit_of_measurement: "W"
-    update_interval: 1s
-
-  - id: consumption
-    platform: template
-    name: "Consumption"
-    device_class: "power"
-    unit_of_measurement: "W"
-    update_interval: 1s
-    internal: ${consumption_sensor_internal}
-
   - platform: template
     id: em3_phase_a_power
     name: "EM3 Phase A Active Power"
@@ -168,3 +151,18 @@ time:
                 - lambda: return id(power_meter_activated) != 0;
               then:
                 - script.execute: power_meter_source
+
+text_sensor:
+  - platform: template
+    id: version_power_meter_shelly_em3
+    name: "power_meter_shelly_em3"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.6"};
+    disabled_by_default: false                

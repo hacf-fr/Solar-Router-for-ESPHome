@@ -37,3 +37,18 @@ light:
     output: ac_dimmer_output
     internal: True
     default_transition_length: 0s
+
+text_sensor:
+  - platform: template
+    id: version_regulator_triac
+    name: "regulator_triac"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.3"};
+    disabled_by_default: false

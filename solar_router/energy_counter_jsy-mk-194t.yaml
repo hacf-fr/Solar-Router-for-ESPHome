@@ -22,7 +22,7 @@ sensor:
     id: power_divertion
     unit_of_measurement: 'W'
     device_class: power
-    
+
 # Script updating the power consumed counter
 script:
   - id: energy_diverted_counter
@@ -54,3 +54,18 @@ interval:
   - interval: 1s
     then:
       - script.execute: energy_diverted_counter
+
+text_sensor:
+  - platform: template
+    id: version_energy_counter_jsy_mk_194t
+    name: "energy_counter_jsy-mk-194t"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.7"};
+    disabled_by_default: false

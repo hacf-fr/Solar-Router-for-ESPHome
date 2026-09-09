@@ -240,3 +240,18 @@ script:
             lambda:  id(regulator_opening).publish_state(0.0);
       - script.execute: relay_regulation_control
       - script.execute: regulation_control
+
+text_sensor:
+  - platform: template
+    id: version_engine_1dimmer_1bypass
+    name: "engine_1dimmer_1bypass"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.3"};
+    disabled_by_default: false
