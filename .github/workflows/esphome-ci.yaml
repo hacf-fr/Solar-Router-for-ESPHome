@@ -31,6 +31,18 @@ jobs:
           TERM: xterm
         run: ./tools/check_build_coverage.sh
 
+  # Step 2.5 : Check Version
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: 🔍 Run Version Check
+        run: ./tools/check_module_version.sh
+
   # Step 3 : Build & Validate Documentation
   docs:
     runs-on: ubuntu-latest
@@ -61,7 +73,7 @@ jobs:
 
   # Step 4 : Compile files
   build:
-    needs: list-files
+    needs: [list-files, check-version]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
