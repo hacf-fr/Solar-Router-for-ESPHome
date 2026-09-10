@@ -75,6 +75,8 @@ jobs:
   build:
     needs: [list-files, check-version]
     runs-on: ubuntu-latest
+    env:
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
     strategy:
       fail-fast: false
       matrix:
@@ -117,6 +119,9 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "ESPHome version: $VERSION"
 
+      - name: 🧰 Install ccache
+        run: sudo apt-get update && sudo apt-get install -y ccache
+
       - name: 💾 Cache PlatformIO & ESPHome (shared)
         uses: actions/cache@v6
         with:
@@ -129,11 +134,31 @@ jobs:
             ${{ runner.os }}-esphome-${{ steps.esphome-version.outputs.version }}
             ${{ runner.os }}-esphome-
 
+      - name: 💾 Cache ccache
+        uses: actions/cache@v6
+        with:
+          path: .ccache
+          key: ${{ runner.os }}-ccache-${{ steps.esphome-version.outputs.version }}-${{ matrix.file }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-${{ steps.esphome-version.outputs.version }}-${{ matrix.file }}
+            ${{ runner.os }}-ccache-${{ steps.esphome-version.outputs.version }}-
+            ${{ runner.os }}-ccache-
+
+      - name: ⚙️ Configure ccache
+        run: |
+          ccache --set-config=max_size=2G
+          ccache --zero-stats
+          ccache --show-config
+
       - name: 🚀 Build ESPHome Binary
-        uses: esphome/build-action@v7
+        uses: esphome/build-action@v8.1.0
         with:
           yaml-file: ${{ matrix.file }}
           version: latest
+
+      - name: 📊 Show ccache statistics
+        if: always()
+        run: ccache --show-stats
 
       # Décommente si tu veux récupérer les firmwares
       # - name: 📦 Upload firmware
