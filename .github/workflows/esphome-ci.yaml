@@ -1,6 +1,6 @@
 name: ESPHome Full Build CI
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   # Step 0 : Test repository tooling first
@@ -31,14 +31,10 @@ jobs:
       - name: 📄 Build matrix
         id: set-matrix
         run: |
-          if [ "${{ github.event_name }}" = "push" ]; then
-            MATRIX=$(bash ./tools/build_matrix.sh --all | jq -R -s -c 'split("\n") | map(select(length > 0))')
-          else
-            MATRIX=$(bash ./tools/build_matrix.sh \
-              "${{ github.event.pull_request.base.sha }}" \
-              "${{ github.event.pull_request.head.sha }}" \
-              | jq -R -s -c 'split("\n") | map(select(length > 0))')
-          fi
+          MATRIX=$(bash ./tools/build_matrix.sh \
+            "${{ github.event.pull_request.base.sha }}" \
+            "${{ github.event.pull_request.head.sha }}" \
+            | jq -R -s -c 'split("\n") | map(select(length > 0))')
           echo "ESPHome build matrix: $MATRIX"
           echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
 
@@ -116,7 +112,7 @@ jobs:
       - name: 🔄 Point packages at the PR head repo & ref
         env:
           HEAD_REPO_URL: ${{ github.event.pull_request.head.repo.clone_url || format('https://github.com/{0}.git', github.repository) }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           echo "Rewriting package source in ${{ matrix.file }} → $HEAD_REPO_URL @ $HEAD_REF"
           sed -i \
