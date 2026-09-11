@@ -36,7 +36,7 @@ Full-matrix checks (run these before proposing a change):
 ./tools/compile_all_local_yaml.sh        # convert + config + compile every root yaml against local packages
 ./tools/check_build_coverage.sh          # every solar_router/*.yaml must be referenced by a root yaml or another package
 ./tools/check_documentation_coverage.sh  # every non-*_common module needs docs/en/<module>.md
-./tools/check_module_version.sh          # every module must announce a version. if a module has changed, the version should be grater than last release
+./tools/check_module_version.sh          # every module announces a version; modified modules share one version above the last tag
 mkdocs build --strict                    # docs must build with zero warnings/broken links
 mkdocs serve                             # preview on 127.0.0.1:8000
 ```
@@ -115,13 +115,16 @@ well-known ids. New packages must honour them:
   `internal:` and `inverted:`.
 - GPIO pins are always package `vars`, never hard-coded in a package.
 - Every package ends with a `Module version` `text_sensor` publishing `<file>.yaml <version>` — a diagnostic
-  entity that tells you which modules a device is built from. All modules share one version, the latest git
-  tag; `tools/set_version.sh <x.y.z>` rewrites them all and must run before tagging a release. The version is
-  a literal, never a substitution (a `substitutions:` block would shadow the merged common's). Multi-instance
-  packages parameterize the `id`/`name` with their `*_unique_id`. `power_meter_common.yaml` and
-  `temperature_limiter_common.yaml` are excluded: they are merged with `<<: !include`, so a `text_sensor` key
-  in the leaf would replace theirs. For the same reason no package declares `esphome: on_boot:` for it — the
-  lambda self-publishes once with a `static bool` guard.
+  entity that tells you which modules a device is built from. Its `id` is `version_` plus the file name with
+  every `-` turned into `_`, and its `name` is the file name verbatim; multi-instance packages append their
+  `_${*_unique_id}` to both. The version is a literal, never a substitution (a `substitutions:` block would
+  shadow the merged common's). No package declares `esphome: on_boot:` for it — the lambda self-publishes
+  once with a `static bool` guard.
+- Versions are per-module and deliberately uneven (`common.yaml` sits at 1.1.1 while `engine_common.yaml` is
+  at 1.6.9): a release only bumps the modules it touched. The rule `tools/check_module_version.sh` enforces
+  is that **every module modified since the last release carries the same version, strictly greater than the
+  last tag** — so a PR touching `common.yaml` and `engine_common.yaml` must set both to the upcoming release
+  number. Untouched modules keep whatever version they had.
 - Keep `url:` and `ref: main` literal in root configs: CI `sed`-rewrites those exact strings to the PR head repo/ref so
   the matrix build tests the branch's packages.
 - `secrets.yaml` and `local_*.yaml` are gitignored. CI generates its own `secrets.yaml`, so a root config may only use
@@ -129,9 +132,11 @@ well-known ids. New packages must honour them:
 
 ## CI
 
-`.github/workflows/esphome-ci.yaml` runs four jobs: a matrix ESPHome build of every root `*.yaml` (note
-`esp8266-proof-of-concept.yml` is skipped — `.yml` extension), build coverage, documentation coverage, and
-`mkdocs build --strict`.
+`.github/workflows/esphome-ci.yaml` runs, in order: `tools-tests` (Bats suites under `tests/tools/`, which gate
+every other job), then a matrix ESPHome build of every root `*.yaml` (note `esp8266-proof-of-concept.yml` is
+skipped — `.yml` extension), build coverage, module version check, documentation coverage, and
+`mkdocs build --strict`. The version check receives `BASE_SHA: ${{ github.event.pull_request.base.sha }}`;
+without it the script falls back to `origin/main` or the last tag, which is environment-dependent.
 
 `pr-title-check.yaml` enforces conventional-commit PR titles. This matters beyond style: `cliff.toml` generates the
 published changelog from *merge commit* subjects, so the PR title is what users read.
