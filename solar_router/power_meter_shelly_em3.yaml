@@ -134,23 +134,21 @@ sensor:
     internal: ${show_phase_power}
     update_interval: never
 
-time:
-  # Poll cadence note:
-  # Polling every second (/1) opens/closes an esp_http_client connection every
-  # second; over hours this can provoke a stale-transport use-after-free inside
-  # ESP-IDF's tcp_transport (LoadProhibited in base_poll_read / transport_ssl.c,
-  # "CRASH DETECTED ON PREVIOUS BOOT"). We therefore poll every 2 seconds (/2):
-  # ~2x less connection churn, which sacrifices ~1s of reaction time. Revisit
-  # if a future ESPHome release fixes the http_request/IDF transport reuse race.
-  - platform: sntp
-    on_time:
-      - seconds: /2
-        then:
-          - if:
-              condition:
-                - lambda: return id(power_meter_activated) != 0;
-              then:
-                - script.execute: power_meter_source
+# Poll cadence note:
+# Polling every second (/1) opens/closes an esp_http_client connection every
+# second; over hours this can provoke a stale-transport use-after-free inside
+# ESP-IDF's tcp_transport (LoadProhibited in base_poll_read / transport_ssl.c,
+# "CRASH DETECTED ON PREVIOUS BOOT"). We therefore poll every 2 seconds (/2):
+# ~2x less connection churn, which sacrifices ~1s of reaction time. Revisit
+# if a future ESPHome release fixes the http_request/IDF transport reuse race.
+interval:
+  - interval: 2s
+    then:
+      - if:
+          condition:
+            - lambda: return id(power_meter_activated) != 0;
+          then:
+            - script.execute: power_meter_source
 
 text_sensor:
   - platform: template
@@ -164,5 +162,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.6"};
+      return {"1.6.9"};
     disabled_by_default: false                

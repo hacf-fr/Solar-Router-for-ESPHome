@@ -315,5 +315,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.3"};
+      return {"1.6.9"};
     disabled_by_default: false

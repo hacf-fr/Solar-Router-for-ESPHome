@@ -101,7 +101,7 @@ switch:
   # When bypass relay is ON, the regulator opening is set to 0
   # When bypass relay is OFF, the regulator opening is set to the value defined by the solar router
   - platform: template
-    name: "Energy divertion Realy 3 Bypass"
+    name: "Energy divertion Relay 3 Bypass"
     id: energy_divertion3
     optimistic: True
     internal: ${hide_regulators}
@@ -330,5 +330,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.3"};
+      return {"1.6.9"};
     disabled_by_default: false          
