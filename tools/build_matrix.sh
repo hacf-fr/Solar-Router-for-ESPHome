@@ -106,7 +106,7 @@ local_base_ref() {
     return 0
   fi
 
-  return 1
+  git rev-parse HEAD
 }
 
 build_from_worktree() {
