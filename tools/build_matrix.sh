@@ -42,7 +42,9 @@ extract_deps() {
     printf '%s\n' "$dep"
   done < <(printf '%s\n' "$content" | sed -nE 's/.*!include[[:space:]]+([^[:space:]#]+).*/\1/p')
 
-  # Package paths are repository-relative, even when declared by a root file.
+  # Package paths are repository-relative, including the common YAML list form:
+  #   files:
+  #     - path: solar_router/foo.yaml
   while IFS= read -r dep; do
     dep=${dep#"${dep%%[![:space:]]*}"}
     dep=${dep%"${dep##*[![:space:]]}"}
@@ -50,7 +52,7 @@ extract_deps() {
     dep=${dep#'"'}; dep=${dep%'"'}
     [[ "$dep" == *.yaml || "$dep" == *.yml ]] || continue
     printf '%s\n' "$dep"
-  done < <(printf '%s\n' "$content" | sed -nE 's/^[[:space:]]*path:[[:space:]]*([^[:space:]#]+).*/\1/p')
+  done < <(printf '%s\n' "$content" | sed -nE 's/^[[:space:]]*(-[[:space:]]*)?path:[[:space:]]*([^[:space:]#]+).*/\2/p')
 }
 
 impacted_by_ref() {
