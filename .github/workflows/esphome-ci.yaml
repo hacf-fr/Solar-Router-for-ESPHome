@@ -3,7 +3,7 @@ name: ESPHome Full Build CI
 on: [push, pull_request]
 
 jobs:
-  # Step 1 : List all .yaml files
+  # Step 1 : Determine impacted root configurations
   list-files:
     runs-on: ubuntu-latest
     outputs:
@@ -17,40 +17,29 @@ jobs:
       - name: 📄 Build matrix
         id: set-matrix
         run: |
-          # Liste les .yaml à la racine, exclut secrets.yaml.
-          # Sur une PR, ne compile que les configurations modifiées lorsque
-          # les seuls changements sont des fichiers de configuration à la racine.
-          # Toute modification d'un fichier de build/package partagé force
-          # la compilation complète pour conserver une validation fiable.
-          ALL_FILES=$(ls *.yaml | grep -v "secrets.yaml" | jq -R -s -c 'split("\n")[:-1]')
-
           if [ "${{ github.event_name }}" = "push" ]; then
-            echo "matrix=$ALL_FILES" >> "$GITHUB_OUTPUT"
-            exit 0
+            MATRIX=$(bash ./tools/build_matrix.sh --all | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          else
+            MATRIX=$(bash ./tools/build_matrix.sh \
+              "${{ github.event.pull_request.base.sha }}" \
+              "${{ github.event.pull_request.head.sha }}" \
+              | jq -R -s -c 'split("\n") | map(select(length > 0))')
           fi
-
-          CHANGED_FILES=$(git diff --name-only "${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}")
-          echo "Changed files:"
-          echo "$CHANGED_FILES"
-
-          # Shared build inputs: package/config YAMLs outside the root,
-          # source files, Python build helpers, dependency files, or this workflow.
-          BUILD_INPUTS=$(echo "$CHANGED_FILES" \
-            | grep -vE '^([^/]+\.yaml)$' \
-            | grep -E '(^|/).*\.(yaml|yml|h|hpp|c|cc|cpp|py|json|toml|ini)$|^requirements\.txt$|^\.github/workflows/esphome-ci\.yaml$' \
-            || true)
-
-          if [ -n "$BUILD_INPUTS" ]; then
-            echo "Shared/build inputs changed; compiling all configurations."
-            echo "$BUILD_INPUTS"
-            echo "matrix=$ALL_FILES" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          ROOT_FILES=$(echo "$CHANGED_FILES" | grep -E '^([^/]+\.yaml)$' | grep -v '^secrets\.yaml$' || true)
-          MATRIX=$(printf '%s\n' "$ROOT_FILES" | jq -R -s -c 'split("\n") | map(select(length > 0))')
-          echo "PR configuration matrix: $MATRIX"
+          echo "ESPHome build matrix: $MATRIX"
           echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+
+  # Step 1.5 : Test repository tooling
+  tools-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v7
+
+      - name: 🧪 Install Bats
+        run: sudo apt-get update && sudo apt-get install -y bats
+
+      - name: 🧪 Run tool tests
+        run: bats tests/tools
 
   # Step 2 : Check Coverage
   coverage:
@@ -106,7 +95,7 @@ jobs:
 
   # Step 4 : Compile files
   build:
-    needs: [list-files, check-version]
+    needs: [list-files, check-version, tools-tests]
     if: ${{ needs.list-files.outputs.matrix != '[]' }}
     runs-on: ubuntu-latest
     env:

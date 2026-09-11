@@ -1,17 +1,26 @@
-for iloop in $(ls *.yaml | grep -v secrets | grep -v local_) ; do
-   echo
-   echo "#########################################"
-   echo Converting $iloop to local_$iloop
-   python ./tools/convert_to_local_source.py $iloop || exit 1
+#!/usr/bin/env bash
+set -euo pipefail
+
+PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+
+mapfile -t configs < <(cd "$PROJECT_ROOT" && bash ./tools/build_matrix.sh --all)
+
+for iloop in "${configs[@]}"; do
+  echo
+  echo "#########################################"
+  echo "Converting $iloop to local_$iloop"
+  python "$PROJECT_ROOT/tools/convert_to_local_source.py" "$iloop" || exit 1
 done
-for iloop in $(ls local_*.yaml); do
-   filename=$(basename $iloop)
-   echo
-   echo Verifying $iloop
-   esphome config $iloop || exit 1
+
+shopt -s nullglob
+local_files=(local_*.yaml)
+for iloop in "${local_files[@]}"; do
+  echo
+  echo "Verifying $iloop"
+  esphome config "$iloop" || exit 1
 done
-for iloop in $(ls local_*.yaml); do
-   echo
-   echo Compiling $iloop
-   esphome compile $iloop || exit 1
+for iloop in "${local_files[@]}"; do
+  echo
+  echo "Compiling $iloop"
+  esphome compile "$iloop" || exit 1
 done
