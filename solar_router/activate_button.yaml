@@ -1,0 +1,43 @@
+# ----------------------------------------------------------------------------------------------------
+# Physical push button toggling solar routing activation
+# ----------------------------------------------------------------------------------------------------
+# Each press toggles the "activate" switch provided by the engine. The button is a shortcut to the
+# switch available in Home Assistant, it does not hold any state by itself.
+
+substitutions:
+  # By default the button shorts the pin to GND when it is pressed
+  activate_button_inverted: "True"
+  # By default the push button is not exposed in Home Assistant
+  hide_activate_button: "True"
+  # Debounce time of the mechanical contact
+  activate_button_debounce: 50ms
+
+binary_sensor:
+  - platform: gpio
+    id: activate_button
+    name: "Activate Button"
+    internal: ${hide_activate_button}
+    pin:
+      number: ${activate_button_pin}
+      mode: INPUT_PULLUP
+      inverted: ${activate_button_inverted}
+    filters:
+      - delayed_on_off: ${activate_button_debounce}
+    on_press:
+      then:
+        - switch.toggle: activate
+
+text_sensor:
+  - platform: template
+    id: version_activate_button
+    name: "activate_button"
+    icon: mdi:tag-outline
+    entity_category: diagnostic
+    update_interval: 10s
+    lambda: |-
+      // Publish once shortly after boot, then stay silent.
+      static bool published = false;
+      if (published) return {};
+      published = true;
+      return {"1.6.10"};
+    disabled_by_default: false
