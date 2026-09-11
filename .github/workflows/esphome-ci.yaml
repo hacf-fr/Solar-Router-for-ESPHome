@@ -30,10 +30,11 @@ jobs:
 
       - name: 📄 Build matrix
         id: set-matrix
+        env:
+          BUILD_MATRIX_BASE: ${{ github.event.pull_request.base.sha }}
+          BUILD_MATRIX_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           MATRIX=$(bash ./tools/build_matrix.sh \
-            "${{ github.event.pull_request.base.sha }}" \
-            "${{ github.event.pull_request.head.sha }}" \
             | jq -R -s -c 'split("\n") | map(select(length > 0))')
           echo "ESPHome build matrix: $MATRIX"
           echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
