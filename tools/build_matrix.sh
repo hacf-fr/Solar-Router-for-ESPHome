@@ -2,7 +2,7 @@
 set -euo pipefail
 
 usage() {
-  echo "Usage: $0 --all | <base-ref> <head-ref>" >&2
+  echo "Usage: $0 [--all]" >&2
   exit 2
 }
 
@@ -13,6 +13,15 @@ repo_file() {
   fi
 }
 
+worktree_file() {
+  local path="$1"
+  if [[ -f "$path" ]]; then
+    cat "$path"
+  elif git cat-file -e "HEAD:${path}" 2>/dev/null; then
+    git show --format= --no-ext-diff "HEAD:${path}"
+  fi
+}
+
 root_files() {
   local ref="$1"
   git ls-tree -r --name-only "$ref" \
@@ -20,9 +29,14 @@ root_files() {
     | sort
 }
 
-extract_deps() {
-  local ref="$1" source="$2" content dir dep
-  content=$(repo_file "$ref" "$source")
+root_files_worktree() {
+  find . -maxdepth 1 -type f -name '*.yaml' -printf '%f\n' \
+    | awk '$0 != "secrets.yaml" && $0 !~ /^local_/' \
+    | sort
+}
+
+extract_deps_from_content() {
+  local source="$1" content="$2" dir dep
   dir=$(dirname "$source")
 
   # ESPHome !include paths are relative to the file containing the tag.
@@ -55,6 +69,16 @@ extract_deps() {
   done < <(printf '%s\n' "$content" | sed -nE 's/^[[:space:]]*(-[[:space:]]*)?path:[[:space:]]*([^[:space:]#]+).*/\2/p')
 }
 
+extract_deps() {
+  local ref="$1" source="$2"
+  extract_deps_from_content "$source" "$(repo_file "$ref" "$source")"
+}
+
+extract_deps_worktree() {
+  local source="$1"
+  extract_deps_from_content "$source" "$(worktree_file "$source")"
+}
+
 impacted_by_ref() {
   local ref="$1" root="$2" changed="$3"
   declare -A seen=()
@@ -76,15 +100,88 @@ impacted_by_ref() {
   return 1
 }
 
+impacted_by_worktree() {
+  local root="$1" changed="$2"
+  declare -A seen=()
+  local queue=("$root") current dep
+
+  while ((${#queue[@]})); do
+    current=${queue[0]}
+    queue=("${queue[@]:1}")
+    [[ -n "${seen[$current]+x}" ]] && continue
+    seen["$current"]=1
+
+    [[ "$current" == "$changed" ]] && return 0
+
+    while IFS= read -r dep; do
+      [[ -n "$dep" ]] && [[ -z "${seen[$dep]+x}" ]] && queue+=("$dep")
+    done < <(extract_deps_worktree "$current")
+  done
+
+  return 1
+}
+
+local_changes() {
+  {
+    git diff --name-only HEAD
+    git ls-files --others --exclude-standard
+  } | sort -u
+}
+
+build_from_changes() {
+  local mode="$1"
+  shift
+  local root path hit
+  local -a changed=("$@")
+  local -a roots=()
+
+  if [[ "$mode" == "worktree" ]]; then
+    mapfile -t roots < <(root_files_worktree)
+  else
+    mapfile -t roots < <(root_files "$1")
+  fi
+
+  for root in "${roots[@]}"; do
+    hit=0
+    for path in "${changed[@]}"; do
+      if [[ "$path" == "$root" ]]; then
+        hit=1
+        break
+      fi
+      if [[ "$mode" == "worktree" ]]; then
+        if impacted_by_worktree "$root" "$path"; then
+          hit=1
+          break
+        fi
+      else
+        if impacted_by_ref "$1" "$root" "$path" || impacted_by_ref "$2" "$root" "$path"; then
+          hit=1
+          break
+        fi
+      fi
+    done
+    if (( hit )); then
+      printf '%s\n' "$root"
+    fi
+  done
+}
+
 if [[ "${1:-}" == "--all" ]]; then
+  [[ $# -eq 1 ]] || usage
   root_files HEAD
   exit 0
 fi
 
-[[ $# -eq 2 ]] || usage
-base=$1
-head=$2
+[[ $# -eq 0 ]] || usage
 
+mapfile -t changed < <(local_changes)
+if ((${#changed[@]})); then
+  build_from_changes worktree "${changed[@]}"
+  exit 0
+fi
+
+base="${BUILD_MATRIX_BASE:-HEAD^}"
+head="${BUILD_MATRIX_HEAD:-HEAD}"
 mapfile -t changed < <(git diff --name-only "$base...$head")
 mapfile -t roots < <(root_files "$head")
 
