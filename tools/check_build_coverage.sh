@@ -14,12 +14,12 @@ for iloop in $(ls solar_router/*); do
     echo -n "$iloop -> "
     
     # First search within .yaml files
-    if grep  "$iloop" *.yaml | grep -v local > /dev/null; then
-        COUNT=$(grep $iloop *.yaml 2> /dev/null | wc -l)
+    if grep -h "$iloop" *.yaml | grep -v local > /dev/null; then
+        COUNT=$(grep -h $iloop *.yaml | grep -v ^# 2> /dev/null | wc -l)
         echo "${GREEN}OK ($COUNT)${RESET}"
     else
         # If not found, search for the filename within the solar_router directory files
-        if grep -r "$filename" solar_router/*.yaml > /dev/null; then
+        if grep -hr "$filename" solar_router/*.yaml | grep -v ^# > /dev/null; then
             echo "${GREEN}OK (include)${RESET}"
         else
             echo "${RED}KO${RESET}"
