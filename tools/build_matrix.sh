@@ -151,6 +151,25 @@ build_from_refs() {
   done
 }
 
+build_from_local() {
+  local base="$1" head="$2" root
+  local -a changed=()
+  declare -A impacted=()
+
+  while IFS= read -r root; do
+    if [[ -n "$root" ]]; then impacted["$root"]=1; fi
+  done < <(build_from_refs "$base" "$head")
+
+  mapfile -t changed < <(local_changes)
+  if ((${#changed[@]})); then
+    while IFS= read -r root; do
+      if [[ -n "$root" ]]; then impacted["$root"]=1; fi
+    done < <(build_from_worktree "${changed[@]}")
+  fi
+
+  for root in "${!impacted[@]}"; do printf '%s\n' "$root"; done | sort
+}
+
 if [[ "${1:-}" == "--all" ]]; then
   [[ $# -eq 1 ]] || usage
   root_files HEAD
@@ -158,20 +177,16 @@ if [[ "${1:-}" == "--all" ]]; then
 fi
 [[ $# -eq 0 ]] || usage
 
-mapfile -t changed < <(local_changes)
-if ((${#changed[@]})); then
-  build_from_worktree "${changed[@]}"
-  exit 0
-fi
-
 if [[ -n "${BUILD_MATRIX_BASE:-}" || -n "${BUILD_MATRIX_HEAD:-}" ]]; then
   [[ -n "${BUILD_MATRIX_BASE:-}" && -n "${BUILD_MATRIX_HEAD:-}" ]] || { echo "BUILD_MATRIX_BASE and BUILD_MATRIX_HEAD must be set together" >&2; exit 2; }
   base="$BUILD_MATRIX_BASE"; head="$BUILD_MATRIX_HEAD"
-else
-  head=HEAD
-  if ! base=$(local_base_ref); then
-    exit 0
-  fi
+  build_from_refs "$base" "$head"
+  exit 0
 fi
 
-build_from_refs "$base" "$head"
+head=HEAD
+if ! base=$(local_base_ref); then
+  exit 0
+fi
+
+build_from_local "$base" "$head"
