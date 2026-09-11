@@ -134,6 +134,21 @@ build_matrix() {
   [ "$output" = "b.yaml" ]
 }
 
+@test "clean branch compares against main, not only HEAD^" {
+  printf 'packages:\n  p:\n    path: solar_router/shared.yaml\n' > a.yaml
+  printf 'value: 1\n' > solar_router/shared.yaml
+  commit_fixture >/dev/null
+  git branch -M main
+  git checkout -qb feature
+  echo 'value: 2' > solar_router/shared.yaml
+  commit_fixture >/dev/null
+  echo 'more docs' >> README.md
+  commit_fixture >/dev/null
+  run build_matrix
+  [ "$status" -eq 0 ]
+  [ "$output" = "a.yaml" ]
+}
+
 @test "uncommitted dependency change selects dependent root" {
   printf 'packages:\n  p:\n    files:\n      - path: solar_router/shared.yaml\n' > a.yaml
   printf 'value: 1\n' > solar_router/shared.yaml
