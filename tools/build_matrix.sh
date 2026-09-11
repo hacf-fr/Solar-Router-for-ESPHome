@@ -98,7 +98,9 @@ build_from_worktree() {
   declare -A impacted=()
   build_graph worktree
   for path in "${changed[@]}"; do
-    while IFS= read -r root; do [[ -n "$root" ]] && impacted["$root"]=1; done < <(impacted_roots_from_graph "$path")
+    while IFS= read -r root; do
+      if [[ -n "$root" ]]; then impacted["$root"]=1; fi
+    done < <(impacted_roots_from_graph "$path")
   done
   for path in "${!impacted[@]}"; do printf '%s\n' "$path"; done | sort
 }
@@ -112,16 +114,24 @@ build_from_refs() {
 
   build_graph ref "$head"
   for path in "${changed[@]}"; do
-    while IFS= read -r root; do [[ -n "$root" ]] && impacted["$root"]=1; done < <(impacted_roots_from_graph "$path")
+    while IFS= read -r root; do
+      if [[ -n "$root" ]]; then impacted["$root"]=1; fi
+    done < <(impacted_roots_from_graph "$path")
   done
 
   build_graph ref "$base"
   for path in "${changed[@]}"; do
-    while IFS= read -r root; do [[ -n "$root" ]] && impacted["$root"]=1; done < <(impacted_roots_from_graph "$path")
+    while IFS= read -r root; do
+      if [[ -n "$root" ]]; then impacted["$root"]=1; fi
+    done < <(impacted_roots_from_graph "$path")
   done
 
   mapfile -t roots < <(root_files "$head")
-  for root in "${roots[@]}"; do [[ -n "${impacted[$root]+x}" ]] && printf '%s\n' "$root"; done
+  for root in "${roots[@]}"; do
+    if [[ -n "${impacted[$root]+x}" ]]; then
+      printf '%s\n' "$root"
+    fi
+  done
 }
 
 if [[ "${1:-}" == "--all" ]]; then
