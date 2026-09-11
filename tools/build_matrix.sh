@@ -128,36 +128,18 @@ local_changes() {
   } | sort -u
 }
 
-build_from_changes() {
-  local mode="$1"
-  shift
+build_from_worktree() {
   local root path hit
   local -a changed=("$@")
   local -a roots=()
-
-  if [[ "$mode" == "worktree" ]]; then
-    mapfile -t roots < <(root_files_worktree)
-  else
-    mapfile -t roots < <(root_files "$1")
-  fi
+  mapfile -t roots < <(root_files_worktree)
 
   for root in "${roots[@]}"; do
     hit=0
     for path in "${changed[@]}"; do
-      if [[ "$path" == "$root" ]]; then
+      if [[ "$path" == "$root" ]] || impacted_by_worktree "$root" "$path"; then
         hit=1
         break
-      fi
-      if [[ "$mode" == "worktree" ]]; then
-        if impacted_by_worktree "$root" "$path"; then
-          hit=1
-          break
-        fi
-      else
-        if impacted_by_ref "$1" "$root" "$path" || impacted_by_ref "$2" "$root" "$path"; then
-          hit=1
-          break
-        fi
       fi
     done
     if (( hit )); then
@@ -176,12 +158,26 @@ fi
 
 mapfile -t changed < <(local_changes)
 if ((${#changed[@]})); then
-  build_from_changes worktree "${changed[@]}"
+  build_from_worktree "${changed[@]}"
   exit 0
 fi
 
-base="${BUILD_MATRIX_BASE:-HEAD^}"
-head="${BUILD_MATRIX_HEAD:-HEAD}"
+if [[ -n "${BUILD_MATRIX_BASE:-}" || -n "${BUILD_MATRIX_HEAD:-}" ]]; then
+  [[ -n "${BUILD_MATRIX_BASE:-}" && -n "${BUILD_MATRIX_HEAD:-}" ]] || {
+    echo "BUILD_MATRIX_BASE and BUILD_MATRIX_HEAD must be set together" >&2
+    exit 2
+  }
+  base="$BUILD_MATRIX_BASE"
+  head="$BUILD_MATRIX_HEAD"
+else
+  head=HEAD
+  if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+    base=HEAD^
+  else
+    exit 0
+  fi
+fi
+
 mapfile -t changed < <(git diff --name-only "$base...$head")
 mapfile -t roots < <(root_files "$head")
 
