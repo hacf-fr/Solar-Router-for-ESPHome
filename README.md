@@ -18,3 +18,9 @@ This integration enables users to effortlessly monitor and control the router's 
 <img src="docs/images/SolarRouterClosed.png" alt="drawing" style="width:400px;"/>
 <img src="docs/images/SolarRouterInHomeAssistantDashboard.png" alt="drawing" style="width:350px;"/>
 </div>
+
+## Transparency about AI-Assisted Development
+
+The initial development has been preformed from scratch wihtout any AI assistance.
+
+Since version 1.6.7, the development could be assisted by an AI agents, closely coached and supervised by developers. Particular attention is given to the software architecture, code quality, maintainability, and test coverage, with the goal of ensuring a robust and well-engineered codebase.
