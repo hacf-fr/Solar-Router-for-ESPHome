@@ -3,7 +3,7 @@
 setup() {
   export FIXTURE="$(mktemp -d)"
   cd "$FIXTURE"
-  git init -q
+  git init -q -b fixture
   git config user.email test@example.invalid
   git config user.name "Build Matrix Tests"
   mkdir -p solar_router
