@@ -92,6 +92,23 @@ local_changes() {
   { git diff --name-only HEAD; git ls-files --others --exclude-standard; } | sort -u
 }
 
+local_base_ref() {
+  local ref
+  for ref in origin/main main; do
+    if git rev-parse --verify "$ref" >/dev/null 2>&1; then
+      git merge-base HEAD "$ref"
+      return 0
+    fi
+  done
+
+  if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+    git rev-parse HEAD^
+    return 0
+  fi
+
+  return 1
+}
+
 build_from_worktree() {
   local path root
   local -a changed=("$@")
@@ -152,7 +169,9 @@ if [[ -n "${BUILD_MATRIX_BASE:-}" || -n "${BUILD_MATRIX_HEAD:-}" ]]; then
   base="$BUILD_MATRIX_BASE"; head="$BUILD_MATRIX_HEAD"
 else
   head=HEAD
-  if git rev-parse --verify HEAD^ >/dev/null 2>&1; then base=HEAD^; else exit 0; fi
+  if ! base=$(local_base_ref); then
+    exit 0
+  fi
 fi
 
 build_from_refs "$base" "$head"
