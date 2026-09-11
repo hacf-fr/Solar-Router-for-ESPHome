@@ -19,7 +19,7 @@ jobs:
         run: |
           # Liste les .yaml à la racine, exclut secrets.yaml.
           # Sur une PR, ne compile que les configurations modifiées lorsque
-          # les seuls changements sont des fichiers YAML à la racine.
+          # les seuls changements sont des fichiers de configuration à la racine.
           # Toute modification d'un fichier de build/package partagé force
           # la compilation complète pour conserver une validation fiable.
           ALL_FILES=$(ls *.yaml | grep -v "secrets.yaml" | jq -R -s -c 'split("\n")[:-1]')
@@ -33,28 +33,24 @@ jobs:
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
-          # If anything outside a root-level YAML changed, a shared package,
-          # component, workflow or other build input may be affected.
-          if echo "$CHANGED_FILES" | grep -qE '(^|/)|(^|)\.(h|hpp|c|cc|cpp|py|json|toml|ini)$'; then
-            if echo "$CHANGED_FILES" | grep -qE '^([^/]+\.yaml)$'; then
-              NON_ROOT=$(echo "$CHANGED_FILES" | grep -vE '^([^/]+\.yaml)$' || true)
-            else
-              NON_ROOT="$CHANGED_FILES"
-            fi
-          else
-            NON_ROOT=""
-          fi
+          # Shared build inputs: package/config YAMLs outside the root,
+          # source files, Python build helpers, dependency files, or this workflow.
+          BUILD_INPUTS=$(echo "$CHANGED_FILES" \
+            | grep -vE '^([^/]+\.yaml)$' \
+            | grep -E '(^|/).*\.(yaml|yml|h|hpp|c|cc|cpp|py|json|toml|ini)$|^requirements\.txt$|^\.github/workflows/esphome-ci\.yaml$' \
+            || true)
 
-          if [ -n "$NON_ROOT" ]; then
+          if [ -n "$BUILD_INPUTS" ]; then
             echo "Shared/build inputs changed; compiling all configurations."
+            echo "$BUILD_INPUTS"
             echo "matrix=$ALL_FILES" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           ROOT_FILES=$(echo "$CHANGED_FILES" | grep -E '^([^/]+\.yaml)$' | grep -v '^secrets\.yaml$' || true)
           MATRIX=$(printf '%s\n' "$ROOT_FILES" | jq -R -s -c 'split("\n") | map(select(length > 0))')
-          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
           echo "PR configuration matrix: $MATRIX"
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
 
   # Step 2 : Check Coverage
   coverage:
