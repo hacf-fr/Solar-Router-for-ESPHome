@@ -94,7 +94,7 @@ local_changes() {
 
 local_base_ref() {
   local ref
-  for ref in origin/main main; do
+  for ref in main origin/main; do
     if git rev-parse --verify "$ref" >/dev/null 2>&1; then
       git merge-base HEAD "$ref"
       return 0
