@@ -58,13 +58,11 @@ switch:
     on_turn_off:
       then:
         - light.turn_off: green_led
-        - lambda: |- 
-            id(consumption).publish_state(NAN);
+        - lambda: |-
             id(energy_divertion1).turn_off();
             id(energy_divertion2).turn_off();
             id(energy_divertion3).turn_off();
             id(power_meter_activated) = 0;
-            id(real_power).publish_state(NAN);
             id(regulator_opening).publish_state(0);
             id(relay1_tempo_counter).publish_state(0);
             id(relay2_tempo_counter).publish_state(0);
@@ -330,5 +328,6 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.9"};
+      return {"1.6.10"};
     disabled_by_default: false          
+ 
