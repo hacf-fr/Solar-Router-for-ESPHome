@@ -14,7 +14,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y bats
 
       - name: 🧪 Run tool tests
-        run: bats tests/tools
+        run: bats tests/tools/build_matrix.bats tests/tools/check_module_version.bats
 
   # Step 1 : Determine impacted root configurations
   list-files:
@@ -63,6 +63,8 @@ jobs:
           fetch-depth: 0
 
       - name: 🔍 Run Version Check
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: ./tools/check_module_version.sh
 
   # Step 3 : Build & Validate Documentation

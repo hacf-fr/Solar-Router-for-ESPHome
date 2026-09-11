@@ -55,16 +55,18 @@ sensor:
     unit_of_measurement: 'W'
     device_class: power
 
+# Update energy diverted counter
+interval:
+  - interval: 1s
+    then:
+      - script.execute: energy_diverted_counter
+
 # Enable time component to 
-#  - Update energy diverted counter
 #  - Reset energy counter at midnight
 time:
   - platform: sntp
+    id: energy_counter_theorical_sntp
     on_time:
-      # Trigger action every second
-      - seconds: /1
-        then:
-          - script.execute: energy_diverted_counter
       - seconds: 0
         minutes: 0
         hours: 0
@@ -83,5 +85,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.3"};
+      return {"1.6.9"};
     disabled_by_default: false

@@ -30,6 +30,7 @@ uart:
 
 modbus:
   id: modbus1
+  turnaround_time: 100ms
 
 modbus_controller:
   - id: jsymk
@@ -37,7 +38,6 @@ modbus_controller:
     address: 0x1
     modbus_id: modbus1
     update_interval: 2s
-    command_throttle: 100ms
 
 sensor:  
 # Voltage on Channel 1
@@ -315,5 +315,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.3"};
+      return {"1.6.9"};
     disabled_by_default: false

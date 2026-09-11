@@ -98,16 +98,14 @@ script:
                     - lambda: |-
                         ESP_LOGW("custom", "HTTP Request failed or timeout occurred");
                         id(consumption).publish_state(NAN);
-time:
-  - platform: sntp
-    on_time:
-      - seconds: /1
-        then:
-          - if:
-              condition:
-                - lambda: return id(power_meter_activated) != 0;
-              then:
-                - script.execute: power_meter_source
+interval:
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            - lambda: return id(power_meter_activated) != 0;
+          then:
+            - script.execute: power_meter_source
 
 text_sensor:
   - platform: template
@@ -121,5 +119,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.3"};
+      return {"1.6.9"};
     disabled_by_default: false

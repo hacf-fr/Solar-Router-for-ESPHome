@@ -34,40 +34,37 @@ substitutions:
 
 # Component managing time.
 # If the activate switch is ON, yellow LED update is performed every second
-time:
-  - platform: sntp
-    on_time:
-      # Trigger action every second
-      - seconds: /1
-        then:
-          - if:
-              condition:
-                switch.is_on: activate
-              then:
-                - light.turn_off: yellow_led
-                - if:
-                    condition:
-                      lambda: return isnan(id(real_power).state);
-                    then:
-                      # When real_power is NaN, it means an error occurred. Yellow LED blinks fast
-                      - light.turn_on:
-                          id: yellow_led
-                          effect: fast
-                    else:
-                      - light.turn_on: yellow_led
-      # Manage WiFi feedback with yellow LED
-      - seconds: /5
-        then:
-          - light.turn_off: yellow_led
-          - if:
-              condition:
-                lambda: return network::is_connected();
-              then:
-                - light.turn_on: yellow_led
-              else:
-                - light.turn_on:
-                    id: yellow_led
-                    effect: blink
+interval:
+  - interval: 1s
+    then:
+      - if:
+          condition:
+            switch.is_on: activate
+          then:
+            - light.turn_off: yellow_led
+            - if:
+                condition:
+                  lambda: return isnan(id(real_power).state);
+                then:
+                  # When real_power is NaN, it means an error occurred. Yellow LED blinks fast
+                  - light.turn_on:
+                      id: yellow_led
+                      effect: fast
+                else:
+                  - light.turn_on: yellow_led
+  # Manage WiFi feedback with yellow LED
+  - interval: 5s
+    then:
+      - light.turn_off: yellow_led
+      - if:
+          condition:
+            lambda: return network::is_connected();
+          then:
+            - light.turn_on: yellow_led
+          else:
+            - light.turn_on:
+                id: yellow_led
+                effect: blink
 
 # ----------------------------------------------------------------------------------------------------
 # LED Management
@@ -139,5 +136,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.6"};
+      return {"1.6.9"};
     disabled_by_default: false
