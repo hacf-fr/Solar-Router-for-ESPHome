@@ -3,8 +3,22 @@ name: ESPHome Full Build CI
 on: [push, pull_request]
 
 jobs:
+  # Step 0 : Test repository tooling first
+  tools-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v7
+
+      - name: 🧪 Install Bats
+        run: sudo apt-get update && sudo apt-get install -y bats
+
+      - name: 🧪 Run tool tests
+        run: bats tests/tools
+
   # Step 1 : Determine impacted root configurations
   list-files:
+    needs: [tools-tests]
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -28,21 +42,9 @@ jobs:
           echo "ESPHome build matrix: $MATRIX"
           echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
 
-  # Step 1.5 : Test repository tooling
-  tools-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v7
-
-      - name: 🧪 Install Bats
-        run: sudo apt-get update && sudo apt-get install -y bats
-
-      - name: 🧪 Run tool tests
-        run: bats tests/tools
-
   # Step 2 : Check Coverage
   coverage:
+    needs: [tools-tests]
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout repository
@@ -55,6 +57,7 @@ jobs:
 
   # Step 2.5 : Check Version
   check-version:
+    needs: [tools-tests]
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout repository
@@ -67,6 +70,7 @@ jobs:
 
   # Step 3 : Build & Validate Documentation
   docs:
+    needs: [tools-tests]
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout repository
