@@ -3,7 +3,9 @@ set -euo pipefail
 
 PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 
-mapfile -t configs < <(cd "$PROJECT_ROOT" && bash ./tools/build_matrix.sh --all)
+rm -f ${PROJECT_ROOT}/local_*.yaml
+
+mapfile -t configs < <(cd "$PROJECT_ROOT" && bash ./tools/build_matrix.sh ${1:-})
 
 for iloop in "${configs[@]}"; do
   echo

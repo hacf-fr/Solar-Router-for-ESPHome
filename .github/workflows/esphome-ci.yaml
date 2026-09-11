@@ -1,26 +1,47 @@
 name: ESPHome Full Build CI
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
-  # Step 1 : List all .yaml files
+  # Step 0 : Test repository tooling first
+  tools-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v7
+
+      - name: 🧪 Install Bats
+        run: sudo apt-get update && sudo apt-get install -y bats
+
+      - name: 🧪 Run tool tests
+        run: bats tests/tools
+
+  # Step 1 : Determine impacted root configurations
   list-files:
+    needs: [tools-tests]
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: 📄 Build matrix
         id: set-matrix
+        env:
+          BUILD_MATRIX_BASE: ${{ github.event.pull_request.base.sha }}
+          BUILD_MATRIX_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          # Liste les .yaml à la racine, exclut secrets.yaml
-          FILES=$(ls *.yaml | grep -v "secrets.yaml" | jq -R -s -c 'split("\n")[:-1]')
-          echo "matrix=$FILES" >> "$GITHUB_OUTPUT"
+          MATRIX=$(bash ./tools/build_matrix.sh \
+            | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "ESPHome build matrix: $MATRIX"
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
 
   # Step 2 : Check Coverage
   coverage:
+    needs: [tools-tests]
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout repository
@@ -33,6 +54,7 @@ jobs:
 
   # Step 2.5 : Check Version
   check-version:
+    needs: [tools-tests]
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout repository
@@ -45,6 +67,7 @@ jobs:
 
   # Step 3 : Build & Validate Documentation
   docs:
+    needs: [tools-tests]
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout repository
@@ -60,7 +83,7 @@ jobs:
       - name: 📦 Install dependencies
         run: |
           python -m pip install --upgrade pip
-          sed -i "/esphome/d" requirements.txt 
+          sed -i "/esphome/d" requirements.txt
           pip install -r requirements.txt
 
       - name: 📄 Check Documentation Coverage
@@ -73,7 +96,8 @@ jobs:
 
   # Step 4 : Compile files
   build:
-    needs: [list-files, check-version]
+    needs: [list-files, check-version, tools-tests]
+    if: ${{ needs.list-files.outputs.matrix != '[]' }}
     runs-on: ubuntu-latest
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
@@ -89,7 +113,7 @@ jobs:
       - name: 🔄 Point packages at the PR head repo & ref
         env:
           HEAD_REPO_URL: ${{ github.event.pull_request.head.repo.clone_url || format('https://github.com/{0}.git', github.repository) }}
-          HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           echo "Rewriting package source in ${{ matrix.file }} → $HEAD_REPO_URL @ $HEAD_REF"
           sed -i \
