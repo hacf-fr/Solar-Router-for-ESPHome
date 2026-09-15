@@ -101,11 +101,7 @@ script:
 interval:
   - interval: 1s
     then:
-      - if:
-          condition:
-            - lambda: return id(power_meter_activated) != 0;
-          then:
-            - script.execute: power_meter_source
+      - script.execute: power_meter_source
 
 text_sensor:
   - platform: template
@@ -119,5 +115,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.9"};
+      return {"1.6.10"};
     disabled_by_default: false

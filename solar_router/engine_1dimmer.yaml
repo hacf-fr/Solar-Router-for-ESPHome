@@ -22,9 +22,7 @@ switch:
         - light.turn_off: green_led
         - number.to_min: router_level
         - lambda: |-
-            id(consumption).publish_state(NAN);
             id(power_meter_activated) = 0;
-            id(real_power).publish_state(NAN);
             id(router_level).publish_state(0);
 
 number:
@@ -167,5 +165,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.6"};
+      return {"1.6.10"};
     disabled_by_default: false

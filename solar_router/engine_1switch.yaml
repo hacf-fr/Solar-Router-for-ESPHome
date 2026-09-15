@@ -20,11 +20,9 @@ switch:
             id(green_led).turn_on();
     on_turn_off:
       then:
-        - lambda: |- 
-            id(consumption).publish_state(NAN);
+        - lambda: |-
             id(green_led).turn_off();
             id(power_meter_activated) = 0;
-            id(real_power).publish_state(NAN);
             id(router_level).publish_state(0);
             id(start_tempo_counter).publish_state(NAN);
             id(stop_tempo_counter).publish_state(NAN);
@@ -230,5 +228,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.3"};
+      return {"1.6.10"};
     disabled_by_default: false
