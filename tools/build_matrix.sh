@@ -22,13 +22,16 @@ worktree_file() {
   fi
 }
 
+# Root configs live in examples/; paths stay relative to the repository root so they
+# can be compared against git diff output and consumed as-is by the CI build matrix.
 root_files() {
   local ref="$1"
-  git ls-tree -r --name-only "$ref" | awk -F/ 'NF == 1 && $0 ~ /\.yaml$/ && $0 != "secrets.yaml" && $0 !~ /^local_/ { print }' | sort
+  git ls-tree -r --name-only "$ref" | awk -F/ 'NF == 2 && $1 == "examples" && $2 ~ /\.yaml$/ && $2 != "secrets.yaml" && $2 !~ /^local_/ { print }' | sort
 }
 
 root_files_worktree() {
-  find . -maxdepth 1 -type f -name '*.yaml' -printf '%f\n' | awk '$0 != "secrets.yaml" && $0 !~ /^local_/' | sort
+  [[ -d examples ]] || return 0
+  find examples -maxdepth 1 -type f -name '*.yaml' -printf 'examples/%f\n' | awk -F/ '$2 != "secrets.yaml" && $2 !~ /^local_/' | sort
 }
 
 extract_deps_from_content() {
@@ -82,7 +85,7 @@ impacted_roots_from_graph() {
     current=${queue[0]}; queue=("${queue[@]:1}")
     [[ -n "${seen[$current]+x}" ]] && continue
     seen["$current"]=1
-    if [[ "$current" == *.yaml && "$current" != */* && "$current" != "secrets.yaml" && "$current" != local_* ]]; then roots_set["$current"]=1; fi
+    if [[ "$current" == examples/*.yaml && "$current" != examples/*/* && "$current" != "examples/secrets.yaml" && "$current" != examples/local_* ]]; then roots_set["$current"]=1; fi
     for parent in ${reverse_deps[$current]-}; do [[ -n "${seen[$parent]+x}" ]] || queue+=("$parent"); done
   done
   for root in "${!roots_set[@]}"; do printf '%s\n' "$root"; done | sort
