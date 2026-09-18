@@ -151,7 +151,7 @@ export.*
 Si votre chargeur n'expose qu'un statut texte, encapsulez-le dans un
 capteur binaire template :
 
-```yaml
+```yaml linenums=1
 template:
   - binary_sensor:
       - name: EV plugged in
