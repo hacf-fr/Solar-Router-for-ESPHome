@@ -6,5 +6,5 @@ GPIO pins have been defined to match hardware configuration described [here](har
 
 
 ```yaml linenums="1"
---8<-- "esp32-standalone.yaml"
+--8<-- "examples/esp32-standalone.yaml"
 ```

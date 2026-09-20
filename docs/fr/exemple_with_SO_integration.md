@@ -129,7 +129,7 @@ Comme le Solar Router ne gère pas ON/OFF directement :
 
 ### Exemple d’automatisation
 
-```yaml
+```yaml linenums=1
 alias: Gestion mise OFF cumulus
 description: ""
 
@@ -181,7 +181,7 @@ Cette valeur représente le pourcentage théorique souhaité.
 
 ### Template de correction
 
-```yaml
+```yaml linenums=1
 {% set input_value = states('input_number.router_level_desired') | float %}
 
 {% set points = [
@@ -237,7 +237,7 @@ Explications :
 
 ### Automatisation de mise à jour de **routeur_level** avec la valeur calculée
 
-```yaml
+```yaml linenums=1
 alias: Mise à jour router + gestion ON/OFF
 description: ""
 
@@ -306,7 +306,7 @@ en fonction du SOC batterie.
 
 ### Automatisation
 
-```yaml
+```yaml linenums=1
 alias: Bascule mode solar router selon seuil batterie
 description: ""
 

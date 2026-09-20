@@ -5,7 +5,7 @@ This file provides guidance to AI agent when working with code in this repositor
 ## What this repository is
 
 **Solar Router for ESPHome** is a library of composable ESPHome YAML packages (`solar_router/`) plus example device
-configurations (root-level `*.yaml`) for DIY solar-surplus diverters, and an mkdocs site (`docs/`) published to GitHub
+configurations (`examples/*.yaml`) for DIY solar-surplus diverters, and an mkdocs site (`docs/`) published to GitHub
 Pages. There is no application source code: the deliverable is YAML that ESPHome compiles into ESP32/ESP8266 firmware.
 
 Users reference the packages *remotely* from GitHub, so `solar_router/*.yaml` is effectively a public API. Renaming a
@@ -24,7 +24,8 @@ Validate/build a single config. **Root configs fetch packages from GitHub `main`
 convert to a local-source copy first:
 
 ```bash
-python tools/convert_to_local_source.py esp32-standalone.yaml   # -> local_esp32-standalone.yaml (gitignored)
+cd examples                                                         # configs, secrets.yaml and .esphome/ all live here
+python ../tools/convert_to_local_source.py esp32-standalone.yaml    # -> local_esp32-standalone.yaml (gitignored)
 esphome config  local_esp32-standalone.yaml    # fast syntax / substitution check
 esphome compile local_esp32-standalone.yaml    # full firmware build
 esphome run     local_esp32-standalone.yaml    # build + flash/OTA
@@ -127,15 +128,17 @@ well-known ids. New packages must honour them:
   number. Untouched modules keep whatever version they had.
 - Keep `url:` and `ref: main` literal in root configs: CI `sed`-rewrites those exact strings to the PR head repo/ref so
   the matrix build tests the branch's packages.
-- `secrets.yaml` and `local_*.yaml` are gitignored. CI generates its own `secrets.yaml`, so a root config may only use
-  secret names listed in the `esphome-ci.yaml` workflow — add new ones there.
+- `examples/secrets.yaml` and `examples/local_*.yaml` are gitignored. ESPHome resolves `!secret` next to the config
+  file, never at the repository root, so the secrets file belongs in `examples/`. CI generates its own
+  `examples/secrets.yaml`, so a root config may only use secret names listed in the `esphome-ci.yaml` workflow — add
+  new ones there.
 
 ## CI
 
 `.github/workflows/esphome-ci.yaml` runs, in order: `tools-tests` (Bats suites under `tests/tools/`, which gate
-every other job), then a matrix ESPHome build of every root `*.yaml` (note `esp8266-proof-of-concept.yml` is
-skipped — `.yml` extension), build coverage, module version check, documentation coverage, and
-`mkdocs build --strict`. The version check receives `BASE_SHA: ${{ github.event.pull_request.base.sha }}`;
+every other job), then a matrix ESPHome build of every root config in `examples/` (note `esp8266-proof-of-concept.yml`
+is skipped — it sits at the repository root, outside `examples/`), build coverage, module version check, documentation
+coverage, and `mkdocs build --strict`. The version check receives `BASE_SHA: ${{ github.event.pull_request.base.sha }}`;
 without it the script falls back to `origin/main` or the last tag, which is environment-dependent.
 
 `pr-title-check.yaml` enforces conventional-commit PR titles. This matters beyond style: `cliff.toml` generates the
@@ -146,7 +149,7 @@ published changelog from *merge commit* subjects, so the PR title is what users 
 English is the source of truth; `docs/en/` and `docs/fr/` are kept file-for-file in parity (mkdocs-static-i18n, folder
 structure). A new module needs `docs/en/<module>.md`, `docs/fr/<module>.md`, a `nav:` entry in `mkdocs.yml`, and a
 `nav_translations` entry if its title is new. Example device configs are inlined into the site with
-`--8<-- "esp32-standalone.yaml"`, so editing a root config changes the docs.
+`--8<-- "examples/esp32-standalone.yaml"`, so editing a root config changes the docs.
 
 ## Local scratch area
 
