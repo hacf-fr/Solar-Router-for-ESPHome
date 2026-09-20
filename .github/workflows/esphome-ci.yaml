@@ -125,7 +125,7 @@ jobs:
 
       - name: 🤫 Create dummy secrets.yaml
         run: |
-          cat > secrets.yaml << 'EOF'
+          cat > examples/secrets.yaml << 'EOF'
           wifi_ssid: "ssid"
           wifi_password: "password"
           api_encryption_key: "/TQQDQvCLeJ1RfoihmoIUjSk+PtvOF9oUCoOGI53ie8="
@@ -154,7 +154,7 @@ jobs:
           path: |
             ~/.cache/pip
             ~/.platformio
-            .esphome
+            examples/.esphome
           key: ${{ runner.os }}-esphome-${{ steps.esphome-version.outputs.version }}
           restore-keys: |
             ${{ runner.os }}-esphome-${{ steps.esphome-version.outputs.version }}
