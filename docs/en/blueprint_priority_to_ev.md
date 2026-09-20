@@ -19,6 +19,10 @@ The router firmware itself does **not** talk to the EV charger — the
 blueprint only toggles the router's `Activate Solar Routing` switch.
 Everything else stays in the charger's own hands.
 
+## Install it
+
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fhacf-fr%2FSolar-Router-for-ESPHome%2Fblob%2Fmain%2Fblueprints%2Fpriority_to_ev.yaml)
+
 ## Signals
 
 ### Handoff (router ON → OFF)
@@ -86,18 +90,18 @@ that once the car actually stops drawing.
 
 ## Inputs
 
-| Input | Purpose | Default |
-| --- | --- | ---: |
-| `ev_connected` | Binary sensor, ON when the EV is plugged in | required |
-| `ev_soc` | *(optional)* SoC sensor, % | empty |
-| `ev_soc_target` | Above this SoC no new handoff — restore still waits for real export | **80** |
-| `grid_power` | Signed grid power in W (+ import, − export) | required |
-| `diverted_power` | Solar Router's `Power divertion` sensor | required |
-| `solar_router` | The `Activate Solar Routing` switch to toggle | required |
-| `ev_charging_minimum_surplus` | Surplus threshold for handoff in W | 1400 |
-| `cloud_import_threshold` | Import threshold for cloud detection in W | 200 |
-| `release_export_threshold` | Export threshold for "EV done" detection in W | 200 |
-| `surplus_duration_trigger` | Debounce for all three level triggers in s | 60 |
+| Input                         | Purpose                                                             |  Default |
+| ----------------------------- | ------------------------------------------------------------------- | -------: |
+| `ev_connected`                | Binary sensor, ON when the EV is plugged in                         | required |
+| `ev_soc`                      | *(optional)* SoC sensor, %                                          |    empty |
+| `ev_soc_target`               | Above this SoC no new handoff — restore still waits for real export |   **80** |
+| `grid_power`                  | Signed grid power in W (+ import, − export)                         | required |
+| `diverted_power`              | Solar Router's `Power divertion` sensor                             | required |
+| `solar_router`                | The `Activate Solar Routing` switch to toggle                       | required |
+| `ev_charging_minimum_surplus` | Surplus threshold for handoff in W                                  |     1400 |
+| `cloud_import_threshold`      | Import threshold for cloud detection in W                           |      200 |
+| `release_export_threshold`    | Export threshold for "EV done" detection in W                       |      200 |
+| `surplus_duration_trigger`    | Debounce for all three level triggers in s                          |       60 |
 
 ## Requirement: keep `Real Power` alive while the router is OFF
 
@@ -123,17 +127,17 @@ stacked; the blue outline is the total consumption. Bottom panel:
 signed grid exchange (import above zero, export below) and the
 dashed blueprint surplus curve plotted on the export side.*
 
-| Time | Situation | grid_power | diverted | Router | Action |
-| :--- | :--- | ---: | ---: | :--- | :--- |
-| 06:00 | Night ending, no PV | +300 (import) | 0 | ON idle | — |
-| 09:00 | PV ramps, EV plugged, SoC 40 % | −1600 | 200 | ON diverting | — (debounce running) |
-| 09:01 | Handoff template stable > 60 s | −1650 | 200 | **OFF** | give priority to EV |
-| 09:02 | EV drawing, PV matched | ≈ 0 | 0 | OFF | — (grid stable, no restore) |
-| 10:30 | Big cloud, EV keeps drawing from grid | **+800** | 0 | **ON** | cloud detected — router restored |
-| 11:00 | Sun back, surplus > 1400 for 60 s | −2500 | (rising) | **OFF** | EV again |
-| 15:00 | SoC hits target (80 %), car keeps tapering | ≈ 0 | 0 | OFF | — (handoff frozen, but EV still draws) |
-| 15:30 | EV self-stops on full, export stable > 60 s | **−1500** | 0 | **ON** | export release — router restored |
-| 20:00 | EV unplugged | −200 | 100 | ON | — |
+| Time  | Situation                                   |    grid_power | diverted | Router       | Action                                 |
+| :---- | :------------------------------------------ | ------------: | -------: | :----------- | :------------------------------------- |
+| 06:00 | Night ending, no PV                         | +300 (import) |        0 | ON idle      | —                                      |
+| 09:00 | PV ramps, EV plugged, SoC 40 %              |         −1600 |      200 | ON diverting | — (debounce running)                   |
+| 09:01 | Handoff template stable > 60 s              |         −1650 |      200 | **OFF**      | give priority to EV                    |
+| 09:02 | EV drawing, PV matched                      |           ≈ 0 |        0 | OFF          | — (grid stable, no restore)            |
+| 10:30 | Big cloud, EV keeps drawing from grid       |      **+800** |        0 | **ON**       | cloud detected — router restored       |
+| 11:00 | Sun back, surplus > 1400 for 60 s           |         −2500 | (rising) | **OFF**      | EV again                               |
+| 15:00 | SoC hits target (80 %), car keeps tapering  |           ≈ 0 |        0 | OFF          | — (handoff frozen, but EV still draws) |
+| 15:30 | EV self-stops on full, export stable > 60 s |     **−1500** |        0 | **ON**       | export release — router restored       |
+| 20:00 | EV unplugged                                |          −200 |      100 | ON           | —                                      |
 
 ## Wiring an EV plug sensor (MyEnergi Zappi example)
 
