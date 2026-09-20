@@ -1,6 +1,5 @@
-# ----------------------------------------------------------------------------------------------------
-# User interaction
-# ----------------------------------------------------------------------------------------------------
+esphome:
+  min_version: 2026.9.0
 
 substitutions:
   U_Ch1_internal: "true"
@@ -39,7 +38,7 @@ modbus_controller:
     modbus_id: modbus1
     update_interval: 2s
 
-sensor:  
+sensor:
 # Voltage on Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
@@ -54,8 +53,6 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 0.0001
-    register_count: 1
-    response_size: 4
     internal: ${U_Ch1_internal}
 
 # Current on Channel 1
@@ -71,8 +68,6 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 0.0001
-    register_count: 1
-    response_size: 4
     state_class: measurement
     internal: ${I_Ch1_internal}
 
@@ -89,8 +84,6 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 0.0001
-    register_count: 1
-    response_size: 4
     state_class: measurement
     internal: ${AP_Ch1_internal}
 
@@ -107,8 +100,6 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 0.0001
-    register_count: 1
-    response_size: 4
     state_class: total
     internal: ${PAE_Ch1_internal}
 
@@ -125,8 +116,6 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 0.001
-    register_count: 1
-    response_size: 4
     internal: ${PF_Ch1_internal}
 
 # Negative Active Energy of Channel 1
@@ -141,12 +130,10 @@ sensor:
     value_type: U_DWORD
     accuracy_decimals: 1
     filters:
-      - multiply: 0.0001     
-    register_count: 1
-    response_size: 4 
+      - multiply: 0.0001
     state_class: total
     internal: ${NAE_Ch1_internal}
-    
+
 # Power Direction on Channel 1
   - platform: modbus_controller
     modbus_controller_id: jsymk
@@ -159,8 +146,6 @@ sensor:
     bitmask: 0X01000000
     filters:
       - multiply: 1
-    register_count: 1
-    response_size: 4
     internal: ${PD_Ch1_internal}
 
 # Power Direction on Channel 2
@@ -175,8 +160,6 @@ sensor:
     bitmask: 0X00010000
     filters:
       - multiply: 1
-    register_count: 1
-    response_size: 4
     internal: ${PD_Ch2_internal}
 
 # Frequency
@@ -185,15 +168,13 @@ sensor:
     id: frequency
     name: "Frequency"
     address: 0x004F
-    unit_of_measurement: "Hz"    
+    unit_of_measurement: "Hz"
     device_class: frequency
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
     filters:
       - multiply: 0.01
-    register_count: 1
-    response_size: 4
     internal: ${frequency_internal}
 
 # Voltage on Channel 2 => same as Voltage on Channel 1
@@ -209,10 +190,8 @@ sensor:
 #    accuracy_decimals: 1
 #    filters:
 #      - multiply: 0.0001
-#    register_count: 1
-#    response_size: 4
 #    internal: ${U_Ch2_internal}
-    
+
 # Current on Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
@@ -226,8 +205,6 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 0.0001
-    register_count: 1
-    response_size: 4
     internal: ${I_Ch2_internal}
 
 # Active Power of Channel 2
@@ -243,28 +220,24 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 0.0001
-    register_count: 1
-    response_size: 4 
     internal: ${AP_Ch2_internal}
-    
+
 # Positive Active Energy of Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PAE_Ch2
     name: "Positive Active Energy Ch2"
     address: 0x0053
-    unit_of_measurement: "kWh"    
+    unit_of_measurement: "kWh"
     device_class: energy
     register_type: holding
     value_type: U_DWORD
     accuracy_decimals: 1
     filters:
       - multiply: 0.0001
-    register_count: 1
-    response_size: 4
     internal: ${PAE_Ch2_internal}
 
-# Power Factor on Channel 2 
+# Power Factor on Channel 2
   - platform: modbus_controller
     modbus_controller_id: jsymk
     id: PF_Ch2
@@ -277,8 +250,6 @@ sensor:
     accuracy_decimals: 1
     filters:
       - multiply: 0.001
-    register_count: 1
-    response_size: 4
     internal: ${PF_Ch2_internal}
 
 # Negative Active Energy of Channel 2
@@ -293,9 +264,7 @@ sensor:
     value_type: U_DWORD
     accuracy_decimals: 1
     filters:
-      - multiply: 0.0001     
-    register_count: 1
-    response_size: 4 
+      - multiply: 0.0001
     internal: ${NAE_Ch2_internal}
 
 
@@ -315,5 +284,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.10"};
+      return {"1.6.11"};
     disabled_by_default: false
