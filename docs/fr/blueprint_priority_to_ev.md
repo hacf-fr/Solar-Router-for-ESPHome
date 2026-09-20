@@ -21,6 +21,10 @@ Le firmware du routeur ne communique **pas** avec le chargeur — le
 blueprint se contente de manipuler l'interrupteur `Activate Solar
 Routing`. Tout le reste reste à la charge du chargeur.
 
+## Installation
+
+[![Ouvre votre instance Home Assistant et affiche la boîte de dialogue d'importation de blueprint avec un blueprint spécifique déjà sélectionné.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fhacf-fr%2FSolar-Router-for-ESPHome%2Fblob%2Fmain%2Fblueprints%2Fpriority_to_ev.yaml)
+
 ## Signaux
 
 ### Bascule (routeur ON → OFF)
