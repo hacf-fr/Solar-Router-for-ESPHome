@@ -1,6 +1,15 @@
 # Temperature limiter
 
-Un *temperature limiter* est conçu pour surveiller une température et **arrêter le détournement d'énergie lorsqu'un seuil est atteint**. La régulation est réactivée **lorsque les conditions de redémarrage sont à nouveau réunies**.
+## Description
+
+Un *temperature limiter* surveille une source de température et **arrête le détournement d'énergie lorsqu'un seuil configurable est atteint**. Dès que la température redescend (ou remonte pour les systèmes de refroidissement) à un niveau sûr, la régulation est **réactivée automatiquement**.
+
+Deux packages sont disponibles selon la façon dont la température est mesurée :
+
+| Package | Source de température | Prérequis |
+| --- | --- | --- |
+| [`temperature_limiter_DS18B20.yaml`](temperature_limiter_DS18B20.md) | Capteur 1-Wire DS18B20 câblé directement sur l'ESP | Broche GPIO, sonde DS18B20 |
+| [`temperature_limiter_home_assistant.yaml`](temperature_limiter_home_assistant.md) | N'importe quel capteur exposé dans Home Assistant | Entité capteur Home Assistant |
 
 La régulation à 2 seuils est appelée hystérésis. Ce mécanisme évite les oscillations de la régulation.
 
@@ -29,10 +38,6 @@ La régulation à 2 seuils est appelée hystérésis. Ce mécanisme évite les o
       Lorsque la régulation est utilisée sur un système de chauffage, la *température de redémarrage* doit être inférieure à la *température d'arrêt*. C'est l'inverse pour un système de refroidissement.
 
 <pre> 
-
-
-
-
 
 
 

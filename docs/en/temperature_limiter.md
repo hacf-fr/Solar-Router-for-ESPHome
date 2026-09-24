@@ -1,8 +1,17 @@
 # Temperature limiters
 
-A temperature limiter is designed to monitor a temperature and **stop energy diverting when a threshold is reached**. The regulation is reactivated **when restart condition is ready again** .
+## Description
 
-The 2 thresholds regulation is named hysteresis. This mechansim avoid regulation bouncing.
+A temperature limiter monitors a temperature source and **stops energy diverting when a configurable threshold is reached**. Once the temperature drops back (or rises back for cooling systems) to a safe level, the regulation is **automatically reactivated**.
+
+Two packages are available depending on how the temperature is measured:
+
+| Package | Temperature source | Requires |
+| --- | --- | --- |
+| [`temperature_limiter_DS18B20.yaml`](temperature_limiter_DS18B20.md) | DS18B20 1-Wire sensor wired directly to the ESP | GPIO pin, DS18B20 probe |
+| [`temperature_limiter_home_assistant.yaml`](temperature_limiter_home_assistant.md) | Any sensor exposed in Home Assistant | Home Assistant sensor entity ID |
+
+The 2-threshold regulation is named hysteresis. This mechanism avoids regulation bouncing.
 ??? Note "More details about hysteresis and Schmitt trigger here"
     The implementation of hysteresis in this package is similar to the electronic circuit named [Schmitt trigger](https://en.wikipedia.org/wiki/Schmitt_trigger). The circuit is named a **trigger** because the output retains its value until the input changes sufficiently to trigger a change.
 
@@ -28,10 +37,6 @@ The 2 thresholds regulation is named hysteresis. This mechansim avoid regulation
       When regulation is use on a heating system *restart temperature* has to be lower than *stop temperature*. This is the oposit for a cooling system.
 
 <pre> 
-
-
-
-
 
 
 
