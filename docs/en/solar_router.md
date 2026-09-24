@@ -49,22 +49,22 @@
       What is the current percentage of energy sent to the load by the overall router
       Either 0 OR 100. 0 means no energy diverted, 100 means all energy diverted.
     * ***Start power level***  
-      Define the level of energy when divertion has to start  
+      Define the power level at which diversion has to start
     * ***Start tempo***  
-      How long the start level has to be exceed before diverting energy  
+      How long the start level has to be exceeded before diverting energy
     * ***Stop power level***  
-      Define the level of energy when divertion has to stop  
+      Define the power level at which diversion has to stop
     * ***Start tempo***  
-      How long the stop level has to be reached before diverting energy
+      How long the stop level has to be reached before stopping diversion
 !!! note ""
     **Sensors**
     
     * ***Real Power***  
       Energy actually exchanged with the grid. Updated every secondes.
     * ***Start Tempo***
-      Counter defining when enegy divertion has to start 
+      Counter defining when energy diversion has to start
     * ***Stop Tempo***
-      Counter defining when enegy divertion has to stop 
+      Counter defining when energy diversion has to stop
 
 <br>
 <br>

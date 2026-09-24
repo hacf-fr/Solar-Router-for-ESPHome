@@ -59,7 +59,7 @@ packages:
           uart_baud_rate: 4800
           AP_Ch2_internal: "false" # optionnel, permet d'afficher un des sensors du JSY-MK-194T
 
-      # mesure d'energie dérivé via JSY-MK-194T
+      # mesure d'énergie dérivée via JSY-MK-194T
       - path: solar_router/energy_counter_jsy-mk-194t.yaml
 
       # en mode automatique, mesure de puissance échangé avec le réseau via JSY-MK-194T
@@ -88,10 +88,10 @@ packages:
           uart_baud_rate: 4800
           AP_Ch2_internal: "false"
 
-      # mesure d'energie dérivé via JSY-MK-194T
+      # mesure d'énergie dérivée via JSY-MK-194T
       - path: solar_router/energy_counter_jsy-mk-194t.yaml
 
-      # en mode automatique et en ayant configuré un JSY-MK-194T pour le calcul de l'energie dérivée, mesure de puissance échangé 
+      # en mode automatique et en ayant configuré un JSY-MK-194T pour le calcul de l'énergie dérivée, mesure de puissance échangée 
       # avec le réseau via home assistant ( cas où le JSY n'a pas accès à la mesure, ou si on est en 0 injection)
       - path: solar_router/power_meter_home_assistant.yaml
         vars:

@@ -2,7 +2,7 @@
 
 This package is designed to monitor a temperature coming from a DS18B20 sensor connected on ESP32 and determines if a temperature threshold as been reached or not.
 
-When safety limit is reached, it is possible to turn on a LED. LED configuration has to be added in `vars` section of `packages` as explained bellow.
+When safety limit is reached, it is possible to turn on a LED. LED configuration has to be added in `vars` section of `packages` as explained below.
 
 !!! danger "WARNING: Conduct some tests before letting the system regulate alone"
     This temperature limit monitoring and safety limit may have some bug. It is strongly advised to validate the behaviour of your system carefully before letting the system working by its own.

@@ -20,13 +20,13 @@ Packages can be combined to create a variety of solar router as in following exa
 
 ### Standalone configuration
 
-In this standalone configuration, only one ESP32 is doing the job and is running all the 3 packages.
+In this standalone configuration, only one ESP32 is doing the job and is running all 3 packages.
 
 ![hardware connection](images/standalone.drawio.png){width=374}
 
 ### Power Meter Proxy configuration
 
-In this proxy configuration, two ESP is doing the job. The first one (which coud be located into the electrical panel) gather the power meter information. The second one (which could be located close to the water heater) is getting the power meter information from the first ESP through the network and perfom the regulation.
+In this proxy configuration, two ESPs are doing the job. The first one (which could be located in the electrical panel) gathers the power meter information. The second one (which could be located close to the water heater) is getting the power meter information from the first ESP through the network and performs the regulation.
 
 ![hardware connection](images/with_proxy.drawio.png){width=535}
 
@@ -35,7 +35,7 @@ In this proxy configuration, two ESP is doing the job. The first one (which coud
 
 ### Multiple Solar Router configuration
 
-In this multiple Solar Router configuration, two solar router are installed. The first one is reading the power exchanged with the grid and is diverting surplus to a wather heater. The second one is reading power exchange information from the first one using a proxy power meter. Base on the information collected, it will divert the surplus of energy to an anti frost system.
+In this multiple Solar Router configuration, two solar routers are installed. The first one is reading the power exchanged with the grid and is diverting surplus to a water heater. The second one is reading power exchange information from the first one using a proxy power meter. Based on the information collected, it will divert the surplus of energy to an anti-frost system.
 
 ![hardware connection](images/multiple_routers.drawio.png){width=756}
 

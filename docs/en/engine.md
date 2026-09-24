@@ -2,7 +2,7 @@
 
 An engine is designed to define how many and when energy has to be diverted.
 
-Different kind of engine exists whach can progressively divert energy to a load and manage an ON/OFF switch. See details into engine's dedicated pages.
+Different kind of engine exists which can progressively divert energy to a load and manage an ON/OFF switch. See details into engine's dedicated pages.
 
 !!! note "Engine naming"
     The name of engine is reflecting how energy divertion is performed:  
@@ -24,7 +24,7 @@ The green LED is reflecting the actual configuration of regulation:
 - ***ON*** : automatic regulation is active and is not diverting energy to the load.
 - ***blink*** : solar router is currently sending energy to the load.
 
-LEDs configuraton are done in engine configuration.
+LEDs configuration are done in engine configuration.
 
 ### Hide or show sensors
 
@@ -32,4 +32,4 @@ An optionnal `hide_regulators` variable allow to change regulators sensors visib
 
 An optionnal `hide_leds` variable allow to change leds values visibility in HA (hidden by default).
 
-This configuraton is done in engine configuration.
+This configuration is done in engine configuration.
