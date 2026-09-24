@@ -1,31 +1,32 @@
-
 # Engine 1 x switch
 
-This package is implementing the engine of the solar router which determines energy can be diverted to a local load or not.
+## Description
 
-**Engine 1 x switch** calls the power meter everytime it's updated to get the actual power consumed. If energy sent to the grid is greater than the divertion start level (in W) during start tempo (in s), the relay is closed to use the energy locally. When the energy sent to the grid reach the level (in W) defined to stop the divertion during stop tempo (in s), the relay is openned and local consomption is stopped.
+This package implements the engine of the solar router which determines whether energy can be diverted to a local load or not.
 
-Engine 1 x switch's automatic regulation can be activated or deactivated with the activation switch.
+**Engine 1 x switch** reads the power meter on every update to get the actual power consumed. If the energy sent to the grid exceeds the start level (W) for the configured start tempo (s), the relay closes to consume the energy locally. When the energy sent to the grid drops to the stop level (W) for the stop tempo (s), the relay opens and local consumption is stopped.
 
-The following schema is representing the consumption with this engine activated:
+Engine automatic regulation can be activated or deactivated with the activation switch.
+
+The following schema represents the consumption with this engine activated:
 
 ![Engine 1 x switch](images/engine_1switch.png)
 
 **Legend:**
 
- * Green: Energy consummed coming from solar pannel (self consumption)
+ * Green: Energy consumed coming from solar panels (self consumption)
  * Yellow: Energy sent to the grid
- * Red: Energy consummed coming from the grid
+ * Red: Energy consumed coming from the grid
 
 **How does it work?**
 
-* **①** The yellow part of the graph is showing the start level. When the energy send to the grid reach the start level, energy is diverted locally.
-* **②** The yellow part of the graph is showing the stop level. In this example 0W.
+* **①** The yellow part of the graph shows the start level. When the energy sent to the grid reaches the start level, energy is diverted locally.
+* **②** The yellow part of the graph shows the stop level. In this example 0 W.
 
 !!! Danger "Carefully set the start and stop levels"
-    The start level has to be greater than the power of the load plugged to the solar router. If not, as soon as the energy will be diverted to the load, the stop level will be reached and you will see the router switching between ON and OFF (based on temporisation you defined).
+    The start level has to be greater than the power of the load plugged to the solar router. If not, as soon as the energy is diverted to the load, the stop level will be reached and you will see the router switching between ON and OFF (based on the temporisation you defined).
 
-!!! tips "finely adjust start and stop tempo"
+!!! tip "Finely adjust start and stop tempo"
     The start and stop tempo determine the responsiveness of the regulation. These delays must be finely adjusted to avoid oscillations. For example, if you have an electric stove, pay attention to the heating delays.
 
 ## Configuration
@@ -47,9 +48,15 @@ packages:
           hide_leds: 'True'
 ```
 
-When this package is used it is required to define `green_led_pin` and `yellow_led_pin` in `vars` section as show in the upper example.
+When this package is used it is required to define `green_led_pin` and `yellow_led_pin` in the `vars` section as shown in the example above.
 
-* `xxx_led_inverted` can define is led is active on high or low signal and is optional.
-* `hide_regulators` allow to hide or show regulators sensors from HA and is optionnal.
-* `hide_leds` allow to hide or show leds values from HA and is optionnal.
+### Variables
 
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `green_led_pin` | yes | — | GPIO pin for the green status LED |
+| `yellow_led_pin` | yes | — | GPIO pin for the yellow network/error LED |
+| `green_led_inverted` | no | `'False'` | Set to `'True'` if the green LED is active low |
+| `yellow_led_inverted` | no | `'False'` | Set to `'True'` if the yellow LED is active low |
+| `hide_regulators` | no | `'True'` | Set to `'False'` to expose relay state sensors in Home Assistant |
+| `hide_leds` | no | `'True'` | Set to `'False'` to expose LED state sensors in Home Assistant |

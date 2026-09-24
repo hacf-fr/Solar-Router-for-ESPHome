@@ -1,10 +1,12 @@
 # Engine 1 x dimmer
 
-This package is implementing the engine of the solar router which determines when and how many energy has to be diverted to the load.
+## Description
 
-**Engine 1 x dimmer** calls the power meter everytime it's updated to get the actual energy exchanged with the grid. If energy produce is greater than energy consummed and exceed the define echange target, the engine will determine the **percentage of the regulator "opening"** and adjusts it dynamically to reach the target.
+This package implements the engine of the solar router which determines when and how much energy has to be diverted to the load.
 
-Engine's automatic regulation can be activated or deactivated with the activation switch.
+**Engine 1 x dimmer** reads the power meter on every update to get the actual energy exchanged with the grid. If energy produced exceeds energy consumed and the surplus exceeds the configured exchange target, the engine calculates the **percentage of regulator opening** and adjusts it dynamically to reach the target.
+
+Engine automatic regulation can be activated or deactivated with the activation switch.
 
 ## Router Level vs Regulator Opening
 
@@ -14,9 +16,9 @@ The solar router uses two distinct but related level controls:
 
 - **Regulator Opening**: This represents the actual opening level (0-100%) of the physical regulator. By default, it mirrors the router level since there is only one regulator. While it can be controlled independently, changes to regulator_opening alone won't affect the router_level or trigger LED state changes.
 
-The regulator opening entity is hidden from Home Assistant by default. To expose it, add this to your vars:
+The regulator opening entity is hidden from Home Assistant by default. To expose it, set `hide_regulators: 'False'` in your vars.
 
-Note: It's recommended to adjust the router_level rather than regulator_opening directly, as this ensures proper system feedback through LEDs and energy monitoring.
+Note: It's recommended to adjust the `router_level` rather than `regulator_opening` directly, as this ensures proper system feedback through LEDs and energy monitoring.
 
 ## Configuration
 
@@ -37,9 +39,15 @@ packages:
           hide_leds: 'True'
 ```
 
-When this package is used it is required to define `green_led_pin` and `yellow_led_pin` in `vars` section as show in the upper example.
+When this package is used it is required to define `green_led_pin` and `yellow_led_pin` in the `vars` section as shown in the example above.
 
-* `xxx_led_inverted` can define is led is active on high or low signal and is optional.
-* `hide_regulators` allow to hide or show regulators sensors from HA and is optionnal.
-* `hide_leds` allow to hide or show leds values from HA and is optionnal.
+### Variables
 
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `green_led_pin` | yes | — | GPIO pin for the green status LED |
+| `yellow_led_pin` | yes | — | GPIO pin for the yellow network/error LED |
+| `green_led_inverted` | no | `'False'` | Set to `'True'` if the green LED is active low |
+| `yellow_led_inverted` | no | `'False'` | Set to `'True'` if the yellow LED is active low |
+| `hide_regulators` | no | `'True'` | Set to `'False'` to expose regulator sensors in Home Assistant |
+| `hide_leds` | no | `'True'` | Set to `'False'` to expose LED state sensors in Home Assistant |

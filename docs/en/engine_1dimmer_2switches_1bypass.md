@@ -1,5 +1,7 @@
 # Engine 1 x dimmer + 2 x switches + 1 x bypass
 
+## Description
+
 This package implements the engine of the solar router which determines when and how much energy has to be diverted to three loads using three channels, or a single load with three channels like a water heater with three heating resistors, with the third channel having bypass functionality for maximum efficiency.
 
 The engine uses three relays to control different loads, with an additional regulator for fine-grained power control. The loads are activated sequentially as more power becomes available:
@@ -15,9 +17,9 @@ When power needs increase:
 - When regulator reaches 66.66%, relay 2 activates
 - When regulator reaches 100%, relay 3 activates and bypasses the regulator
 
-**Engine 1 x dimmer + 2 x switches + 1 x bypass** calls every second the power meter to get the actual energy exchanged with the grid. If energy produced is greater than energy consumed and exceeds the defined exchange target, the engine will determine the appropriate combination of relays and regulator opening to reach the target.
+**Engine 1 x dimmer + 2 x switches + 1 x bypass** calls the power meter every second to get the actual energy exchanged with the grid. If energy produced is greater than energy consumed and exceeds the defined exchange target, the engine determines the appropriate combination of relays and regulator opening to reach the target.
 
-Engine's automatic regulation can be activated or deactivated with the activation switch.
+Engine automatic regulation can be activated or deactivated with the activation switch.
 
 ## How to wire the relay (Channel 1 & 2)
 
@@ -56,17 +58,24 @@ packages:
           hide_regulators: 'True'
           hide_leds: 'True'
 ```
-When this package is used it is required to define `green_led_pin` and `yellow_led_pin` in `vars` section as show in the upper example.
+When this package is used it is required to define `green_led_pin` and `yellow_led_pin` in the `vars` section as shown in the example above.
 
-* `xxx_led_inverted` can define is led is active on high or low signal and is optional.
-* `hide_regulators` allow to hide or show regulators sensors from HA and is optionnal.
-* `hide_leds` allow to hide or show leds values from HA and is optionnal.
+### Variables
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `green_led_pin` | yes | — | GPIO pin for the green status LED |
+| `yellow_led_pin` | yes | — | GPIO pin for the yellow network/error LED |
+| `green_led_inverted` | no | `'False'` | Set to `'True'` if the green LED is active low |
+| `yellow_led_inverted` | no | `'False'` | Set to `'True'` if the yellow LED is active low |
+| `hide_regulators` | no | `'True'` | Set to `'False'` to expose regulator sensors in Home Assistant |
+| `hide_leds` | no | `'True'` | Set to `'False'` to expose LED state sensors in Home Assistant |
 
 !!! note "Power Distribution"
     The engine divides the total available power into three equal portions (33.33% each). This allows for smooth transitions between different power levels and efficient distribution of excess solar power across multiple loads. 
 
-!!! tip "Bypass tempo adjustement"
-    The Bypass Tempo determines how many consecutive regulations at 33.33%, 66.66% or 100% are needed before activating the _bypass_ relay. A lower value will make the bypass more reactive but might cause more frequent switching (flickering). Because there's roughly 1 regulation per second, Bypass Tempo can be approximated as the time in second with the regulator at 33.33%, 66.66% or 100% before which relay are activated.
+!!! tip "Bypass tempo adjustment"
+    The Bypass Tempo determines how many consecutive regulations at 33.33%, 66.66% or 100% are needed before activating the _bypass_ relay. A lower value will make the bypass more reactive but might cause more frequent switching (flickering). Because there is roughly 1 regulation per second, Bypass Tempo can be approximated as the time in seconds with the regulator at 33.33%, 66.66% or 100% before the relays are activated.
 
 ![HA](images/countdown_engine_1dimmer_2switch_1bypass.png){ align=left }
 !!! note ""
@@ -107,5 +116,5 @@ packages:
           relay_unique_id: "3"
 ```
 
-!!! note "Relay Ids"
-    Relay unique ids can't be change to use this engine, especially the `relay_unique_id: "3"` is always used for the bypass relay.
+!!! note "Relay IDs"
+    Relay unique IDs cannot be changed when using this engine; in particular, `relay_unique_id: "3"` is always used for the bypass relay.
