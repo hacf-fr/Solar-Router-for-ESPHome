@@ -117,5 +117,5 @@ The documentation is stored in the `docs` directory. To see your changes in real
     Versions are based on tags.  
     Lines added to the changelog are based on *merge commit messages*.
 
-    The `tools\update_documentation.sh` script is designed to update `changelog.md`, generate and publish the `mkdocs` documentation on [github pages](https://hacf-fr.github.io/Solar-Router-for-ESPHome/).  
+    The `tools/update_documentation.sh` script is designed to update `changelog.md`, generate and publish the `mkdocs` documentation on [github pages](https://hacf-fr.github.io/Solar-Router-for-ESPHome/).  
     **The documentation update script is intended to be used only by the repository maintainer.**

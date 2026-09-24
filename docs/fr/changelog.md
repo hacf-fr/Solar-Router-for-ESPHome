@@ -1,11 +1,12 @@
 !!! note "Mise à jour du journal des modifications (Changelog)"
-    Le Changelog n'est disponible que dans la [documentation](https://hacf-fr.github.io/Solar-Router-for-ESPHome/changelog/) officiellement publiée.  
-    Le Changelog est mis à jour manuellement après la publication d'une nouvelle version.
+    Le journal des modifications officiel est disponible dans la [documentation publiée](https://hacf-fr.github.io/Solar-Router-for-ESPHome/changelog/). 
 
-    Le Changelog est généré à l'aide de `git-cliff`.  
-    Les versions sont basées sur les tags.  
-    Les lignes ajoutées dans le Changelog sont basées sur les *messages de commit de fusion*.
-    Le script `tools/update_documentation.sh` est conçu pour mettre à jour automatiquement et mettre en ligne la documentation sur gh-pages. Le journal des modifications (log) de la version actuelle est utilisé pour décrire la "release" sur GitHub.
+    **Processus de génération** :
 
-    Le script `tools\update_documentation.sh` est conçu pour mettre à jour `changelog.md`, générer et publier la documentation `mkdocs` sur [github pages](https://hacf-fr.github.io/Solar-Router-for-ESPHome/).  
-    **Le script de mise à jour de la documentation est destiné à être utilisé uniquement par le responsable du dépôt au moment the la publication d'une nouvell "release".**
+    - Le journal des modifications est généré automatiquement à l'aide de [git-cliff](https://github.com/orhun/git-cliff) basé sur les messages de commit conventionnels.
+    - Les versions sont basées sur les tags Git.
+    - Les lignes sont extraites des *messages de commit de fusion*.
+    **Mise à jour de la documentation** :
+    Le script `tools/update_documentation.sh` (maintenu exclusivement par les responsables du dépôt) met à jour `changelog.md`, génère le site MkDocs et déploie sur [GitHub Pages](https://hacf-fr.github.io/Solar-Router-for-ESPHome/). Le journal de la version actuelle est utilisé pour décrire la release sur GitHub.
+
+    **Remarque** : Ce script est destiné à être utilisé uniquement par le responsable du dépôt lors de la publication d'une nouvelle release.
