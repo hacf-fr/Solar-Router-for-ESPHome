@@ -1,7 +1,13 @@
 # Scheduler / Planificateur
 
-Un *scheduler / planificateur* est conçu pour effectuer une automatisation directement via EspHome afin d'être plus robuste en cas de perte de liason avec HomeAssistant par exemple.
+## Description
 
-Chaque *scheduler / planificateur* expose des contrôles afin de personnaliser l'automatisation à vos besoins depuis l'interface HomeAssistant.
+Un *scheduler* / planificateur exécute une automatisation directement sur ESPHome afin que le routeur solaire reste robuste même en cas de perte de liaison avec Home Assistant.
 
-Le premier exemple d'utilisation est de permettre une marche forcée de la charge pendant les heures creuses.
+Chaque *scheduler* expose des contrôles pour personnaliser l'automatisation depuis l'interface Home Assistant.
+
+### Planificateurs disponibles
+
+| Planificateur | Cas d'usage |
+| --- | --- |
+| [`scheduler_forced_run`](scheduler_forced_run.md) | Force la charge ON ou OFF pendant une fenêtre horaire configurée (ex. : heures creuses). |

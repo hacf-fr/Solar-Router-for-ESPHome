@@ -1,13 +1,15 @@
 # Scheduler Forced Run / Planificateur marche forcée
 
-Le *scheduler forced run / planificateur marche forcée* est conçu pour automatiser l'arrêt du routeur solaire et la marche forcée à une certainne puissance de la charge.
+## Description
 
-Exemples d'utilisation:
+Le *scheduler forced run* / planificateur marche forcée automatise l'arrêt du routeur solaire et la marche forcée à un niveau de puissance configuré pendant une fenêtre horaire.
 
-- Permettre une marche forcée de la charge pendant les heures creuses. (Router Level=100%)
-- Désactiver le routeur et éteindre la charge afin de laisser la place à d'autres usages (Router Level=0%)
+Exemples d'utilisation :
 
-Ce *scheduler / planificateur* expose des contrôles afin de personnaliser l'automatisation à vos besoins depuis l'interface HomeAssistant.
+- Permettre une marche forcée de la charge pendant les heures creuses (Router Level = 100 %)
+- Désactiver le routeur et éteindre la charge afin de laisser la place à d'autres usages (Router Level = 0 %)
+
+Ce *scheduler* expose des contrôles pour personnaliser l'automatisation depuis l'interface Home Assistant.
 
 ![HA](images/SchedulerForcedRunInHomeAssistant.png){ align=left }
 !!! note ""
@@ -15,31 +17,31 @@ Ce *scheduler / planificateur* expose des contrôles afin de personnaliser l'aut
     
     * ***Activer le planificateur***  
       Contrôle si le planificateur doit être activé ou non.
-      Ceci permet de désactiver la planification suivant vos propres critères (par exemple si votre chauffe-eau à eu déjà assez de puissance en journée, inutile de faire une marche forcée la nuit).
-    * ***Heure de début du planifacteur***   
-      De 0h à 23h. Heure à laquelle la marche forcée commence.
-    * ***Minute de début du planifacteur***  
+      Ceci permet de désactiver la planification selon vos propres critères (par exemple si votre chauffe-eau a déjà eu assez de puissance en journée, inutile de faire une marche forcée la nuit).
+    * ***Heure de début***   
+      De 0 h à 23 h. Heure à laquelle la marche forcée commence.
+    * ***Minute de début***  
       De 0 minute à 55 minutes, avec un pas de 5 minutes.
-      Si l'heure de début est à 1h et les minutes à 15 minutes, alors la planification de marche forcée débute à 1h15.
-    * ***Seuil de vérification de l'arrêt du planificateur***  
+      Si l'heure de début est 1 h et les minutes 15, alors la marche forcée débute à 1 h 15.
+    * ***Seuil de vérification de fin***  
       De 0 minute à 720 minutes, avec un pas de 5 minutes.
-      Cette option permet de définir une marge de sécurité afin de vérifier toutes les 5 minutes entre la fin de la planification + X minutes que le routeur à bien été remis en fonctionnement.
-      Par exemple si l'heure de fin est définit à 2h00 et le seuil de vérification à 60 minutes, toutes les 5 minutes entre 2h et 3h (inclus) le planificateur relance le routeur solaire s'il est arrêté.
-      Ceci permet de s'assurer que la planification prend fin même s'il y a un plantage de l'ESP lors de l'heure de fin.
-    * ***Heure de fin du planifacteur***   
-      De 0h à 23h. Heure à laquelle la marche forcée s'arrête.
-    * ***Minute de fin du planifacteur***  
+      Cette option définit une marge de sécurité pour vérifier toutes les 5 minutes, entre la fin de la planification + X minutes, que le routeur a bien été remis en fonctionnement.
+      Par exemple, si l'heure de fin est définie à 2 h 00 et le seuil de vérification à 60 minutes, toutes les 5 minutes entre 2 h et 3 h (inclus) le planificateur relance le routeur solaire s'il est arrêté.
+      Ceci permet de s'assurer que la planification prend fin même en cas de plantage de l'ESP à l'heure de fin.
+    * ***Heure de fin***   
+      De 0 h à 23 h. Heure à laquelle la marche forcée s'arrête.
+    * ***Minute de fin***  
       De 0 minute à 55 minutes, avec un pas de 5 minutes.
-      Si l'heure de fin est à 1h et les minutes à 15 minutes, alors la planification de marche forcée termine à 1h15.
+      Si l'heure de fin est 1 h et les minutes 15, alors la marche forcée se termine à 1 h 15.
     * ***Niveau du routeur***  
-      De 0% à 100% avec un pas de 1%.
-      Définit le niveau cible où le routeur sera réglé pendant le fonctionnement du planificateur entre l'heure de début et de fin.
+      De 0 % à 100 % avec un pas de 1 %.
+      Définit le niveau cible auquel le routeur sera réglé pendant le fonctionnement du planificateur entre l'heure de début et de fin.
 
+## Configuration
 
+### Configuration basique
 
-## Configuration basique
-
-Pour utiliser plusieurs ce package, ajoutez les lignes suivantes à votre fichier de configuration :
+Pour utiliser une seule instance de ce package, ajoutez les lignes suivantes à votre fichier de configuration :
 
 ```yaml linenums="1"
 packages:
@@ -49,9 +51,9 @@ packages:
       - path: solar_router/scheduler_forced_run.yaml
 ```
 
-## Configuration multiple
+### Configuration multiple
 
-Pour utiliser plusieurs instances de ce package, par exemple pour programée une marche forcée en journée et une autre la nuit, ajoutez les lignes suivantes à votre fichier de configuration :
+Pour utiliser plusieurs instances de ce package, par exemple une marche forcée en journée et une autre la nuit, ajoutez les lignes suivantes à votre fichier de configuration :
 
 ```yaml linenums="1"
 packages:
@@ -66,14 +68,11 @@ packages:
           scheduler_unique_id: "DayForced"
 ```
 
-Il est necessaire de définir `scheduler_unique_id` dans la section `vars` comme montré dans l'exemple ci-dessus. Cette variable ne doit pas contenir d'espace ou de caractères spéciaux, et doit être unique pour chaque *scheduler forced run / planificateur marche forcée*. Elle permet d'avoir autant d'instance que nécessaire sans aucun conflits.
+### Configuration avancée (script personnalisé)
 
+Ce package peut appeler un script personnalisé toutes les 5 minutes pendant l'exécution de la planification.
 
-## Configuration avancée (script)
-
-Ce package fournit la possibilité d'appeler un script personnalisé toutes les 5 minutes lors de l'éxécution de la planification.
-
-Par exemple pour arrêter la planification avant l'heure de fin si un capteur de température atteint une valeur cible, ajoutez les lignes suivantes à votre fichier de configuration :
+Par exemple, pour arrêter la planification avant l'heure de fin si un capteur de température atteint une valeur cible :
 
 ```yaml linenums="1"
 packages:
@@ -90,13 +89,18 @@ script:
   - id: check_temperature_for_NightForcedScheduler
     mode: single
     then:
-        -if:
+        - if:
             condition:
                 - lambda: return id(myTemperatureSensor).state >= 80;
             then:
-                # Name of the switch is different for every scheduler, it depend of the scheduler_unique_id (default value: forced) : "${scheduler_unique_id}_scheduler_activate"
+                # Le nom de l'interrupteur dépend de scheduler_unique_id (défaut : Forced) :
+                # "${scheduler_unique_id}_scheduler_activate"
                 - switch.turn_off: NightForced_scheduler_activate
 ```
 
-Il est necessaire de définir `custom_script` dans la section `vars` comme montré dans l'exemple ci-dessus. Cette variable permet de transmettre le nom du script qui sera appellé toutes les 5 minutes lors de l'éxécution du planificateur.
+### Variables
 
+| Variable | Requis | Défaut | Description |
+| --- | --- | --- | --- |
+| `scheduler_unique_id` | non | `"Forced"` | Identifiant unique de cette instance. Requis en cas d'instances multiples. Ne doit pas contenir d'espaces ni de caractères spéciaux. |
+| `custom_script` | non | `${scheduler_unique_id}_fake_script` | Nom d'un script appelé toutes les 5 minutes pendant l'exécution du planificateur |
