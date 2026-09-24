@@ -12,6 +12,7 @@ nav:
       - Firmware:
               - Overview: firmware.md
               - Installation: installation.md
+              - Troubleshooting: troubleshooting.md
       - Usage Examples:
               - Standalone: example_standalone.md
               - With proxy: example_proxy.md
@@ -80,7 +81,11 @@ markdown_extensions:
               line_spans: __span
               pygments_lang_class: true
       - pymdownx.inlinehilite
-      - pymdownx.superfences
+      - pymdownx.superfences:
+              custom_fences:
+                    - name: mermaid
+                      class: mermaid
+                      format: !!python/name:pymdownx.superfences.fence_code_format
       - attr_list
       - md_in_html
 
@@ -124,6 +129,7 @@ plugins:
                             Standalone: Routeur autonome
                             Temperature Limiter: Limiteur de température
                             Theorical: Théorique
+                            Troubleshooting: Dépannage
                             With proxy: Router utilisant un proxy
                             With Solar Optimizer integration: Avec l'utilisation de l'intégration Solar Optimizer
       - search
