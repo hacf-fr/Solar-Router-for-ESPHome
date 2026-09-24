@@ -1,60 +1,80 @@
-# AGENTS.md
+# Agent Collaboration & Development Guidelines
 
-This file provides guidance to AI agent when working with code in this repository.
+This document provides technical rules, architectural principles, and collaboration workflow guidelines for AI agents working in this repository.
 
-## What this repository is
+---
 
-**Solar Router for ESPHome** is a library of composable ESPHome YAML packages (`solar_router/`) plus example device
-configurations (`examples/*.yaml`) for DIY solar-surplus diverters, and an mkdocs site (`docs/`) published to GitHub
-Pages. There is no application source code: the deliverable is YAML that ESPHome compiles into ESP32/ESP8266 firmware.
+## 1. What This Repository Is
 
-Users reference the packages *remotely* from GitHub, so `solar_router/*.yaml` is effectively a public API. Renaming a
-file, an ESPHome `id:`, or a `vars` key breaks existing user configurations at their next package `refresh`.
+**Solar Router for ESPHome** is a library of composable ESPHome YAML packages (`solar_router/`) plus example device configurations (`examples/*.yaml`) for DIY solar-surplus diverters, and a static documentation site (`docs/`) published to GitHub Pages via Material for MkDocs.
 
-## Commands
+There is no compiled application source code in the repository: the deliverable is YAML that ESPHome compiles into ESP32/ESP8266/WT32-ETH01 firmware.
 
-Setup:
+> [!CAUTION]
+> **Public API Stability:**
+> Users import packages *remotely* from GitHub (e.g. `ref: main`), so `solar_router/*.yaml` is effectively a public API. Renaming a file, an ESPHome `id:`, or a `vars` key breaks existing user configurations at their next package `refresh`.
 
+---
+
+## 2. Environment & CLI Commands
+
+### Python Environment
+Activate the pre-configured virtual environment:
+```bash
+source ~/.venv/bin/activate
+# or use the user's alias:
+venv
+```
+
+If setting up from scratch:
 ```bash
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt      # pinned esphome + mkdocs toolchain
 ```
 
-Validate/build a single config. **Root configs fetch packages from GitHub `main`, so they never test local edits** —
-convert to a local-source copy first:
+### Validating & Building a Single Configuration
+**Root configs in `examples/` fetch packages from GitHub `main`, so they never test local edits directly.**
+Always convert to a local-source copy first:
 
 ```bash
 cd examples                                                         # configs, secrets.yaml and .esphome/ all live here
 python ../tools/convert_to_local_source.py esp32-standalone.yaml    # -> local_esp32-standalone.yaml (gitignored)
-esphome config  local_esp32-standalone.yaml    # fast syntax / substitution check
-esphome compile local_esp32-standalone.yaml    # full firmware build
-esphome run     local_esp32-standalone.yaml    # build + flash/OTA
+esphome config  local_esp32-standalone.yaml                         # fast syntax / substitution check
+esphome compile local_esp32-standalone.yaml                         # full firmware compilation
+esphome run     local_esp32-standalone.yaml                         # build + flash / OTA
 ```
 
-Full-matrix checks (run these before proposing a change):
+### Pre-Commit Validation Matrix
+Before proposing or committing any changes, run the relevant checks:
 
 ```bash
-./tools/compile_all_local_yaml.sh        # convert + config + compile every root yaml against local packages
-./tools/check_build_coverage.sh          # every solar_router/*.yaml must be referenced by a root yaml or another package
-./tools/check_documentation_coverage.sh  # every non-*_common module needs docs/en/<module>.md
-./tools/check_module_version.sh          # every module announces a version; modified modules share one version above the last tag
-mkdocs build --strict                    # docs must build with zero warnings/broken links
-mkdocs serve                             # preview on 127.0.0.1:8000
+# Documentation checks:
+mkdocs build --strict                    # Docs must build with zero warnings and zero broken links
+./tools/check_documentation_coverage.sh  # Every non-*_common module needs docs/en/<module>.md
+
+# Module structure and versioning:
+./tools/check_module_version.sh          # Structural check & version bump verification against last release
+
+# Automated test suite:
+bats tests/tools/                        # Bats test suites for repository tools
+
+# Full matrix firmware compilation (when modifying YAML packages):
+./tools/compile_all_local_yaml.sh        # Convert + config + compile every root config against local packages
+./tools/check_build_coverage.sh          # Every solar_router/*.yaml must be referenced by an example or package
 ```
 
-Other tools:
+### Utility Scripts in `tools/`
+- `tools/update_documentation.sh`: Updates changelog via `git-cliff`, builds MkDocs, and deploys to GitHub Pages.  
+  **Maintainer only:** AI agents must never run or modify this script.
+- `tools/http_server_simulator.py`: Serves a simulated Shelly-EM HTTP JSON endpoint on port 8000 for local testing.
 
-- `tools/compile_all_remote_yaml.sh` builds against GitHub rather than local files. Its `-s github_branch` flag is a
-  no-op (no config uses that substitution), so it always resolves `ref: main`. To exercise a branch remotely, edit
-  `url:`/`ref:` temporarily the way CI does.
-- `tools/http_server_simulator.py` serves a fake Shelly-EM-style JSON payload on `:8000` for power-meter work without
-  hardware.
-- `tools/update_documentation.sh` regenerates the changelog with `git cliff` and runs `mkdocs gh-deploy` —
-  maintainer-only, don't run it.
+---
 
-## Package architecture
+## 3. Package Architecture & Contracts
 
-A root device config owns the hardware/network/API sections, then composes packages:
+### Composition
+A router requires at minimum: **one power meter** + **one engine** + **at least one regulator**.  
+A *proxy* is a power meter alone, re-served over HTTP to other routers.
 
 ```yaml
 packages:
@@ -67,92 +87,118 @@ packages:
         vars: { power_meter_ip_address: "192.168.1.21" }
 ```
 
-A router needs at minimum one **power meter** + one **engine** + at least one **regulator**; a *proxy* is a power meter
-alone, re-served over HTTP to other routers.
+### Module Roles
 
-| Category                | Responsibility                                                                                                                                                                     |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `power_meter_*`         | Publish `real_power` (grid exchange, W; positive = importing) and `consumption`, polled every second while global `power_meter_activated != 0`. `power_sign` flips meter polarity. |
-| `engine_*`              | Own the `activate` switch, `router_level` (0–100 %), the `energy_regulation` script, and LED feedback. Decide *how much* to divert.                                                |
-| `regulator_*`           | Own the `regulation_control` script that turns `regulator_opening` into hardware action (triac dimmer, SSR, relay).                                                                |
-| `energy_counter_*`      | Integrate `power_divertion` into the `energy_diverted` total.                                                                                                                      |
-| `temperature_limiter_*` | Drive the `safety_limit` global from `safety_temperature` with hysteresis; engines refuse to divert while it is true. `temperature_fan_control.yaml` adds cooling.                 |
-| `scheduler_*`           | Force or inhibit routing over a time window.                                                                                                                                       |
-| shared                  | `common.yaml` (restart switch + uptime), `debug_sensors.yaml`, `jsy-mk-194t_common.yaml` (UART sensor block shared by the JSY power meter and its energy counter).                 |
+| Category | Responsibility |
+| --- | --- |
+| `power_meter_*` | Measures power exchanged with grid. Publishes `real_power` (W; positive = import) and `consumption`, polled every 1s while `power_meter_activated != 0`. `power_sign` flips polarity. |
+| `engine_*` | Controls decision logic. Owns `activate` switch, `router_level` (0–100%), `energy_regulation` script, and LED status. Decides *how much* power to divert. |
+| `regulator_*` | Controls physical actuator. Owns `regulation_control` script that turns `regulator_opening` into hardware action (Triac dimmer, SSR burst-fire, mechanical relay ON/OFF). |
+| `energy_counter_*` | Integrates `power_divertion` into cumulative `energy_diverted` total. |
+| `temperature_limiter_*` | Drives `safety_limit` global from `safety_temperature` with hysteresis; engines inhibit diversion when true. `temperature_fan_control.yaml` manages fan cooling. |
+| `scheduler_*` | Forces or inhibits routing over defined time windows. |
+| Shared | `common.yaml` (restart switch + uptime), `debug_sensors.yaml`, `jsy-mk-194t_common.yaml` (shared UART sensor block). |
 
-**Regulation loop:** power meter publishes `real_power` → `engine_common.yaml`'s `copy` sensor `real_power_internal`
-fires → `energy_regulation` computes `delta = -(real_power - target_grid_exchange) * reactivity / 1000` and clamps
-`router_level` to 0–100 → `router_level.on_value` writes `regulator_opening` → `regulation_control` drives the hardware.
-`up_reactivity` / `down_reactivity` damp oscillation. A NaN `real_power` or an active `safety_limit` forces level 0.
+### Regulation Loop
+1. Power meter publishes `real_power`.
+2. `engine_common.yaml` copy sensor `real_power_internal` triggers.
+3. `energy_regulation` calculates:  
+   `delta = -(real_power - target_grid_exchange) * reactivity / 1000`  
+   and clamps `router_level` between 0% and 100%.
+4. `router_level.on_value` updates `regulator_opening`.
+5. `regulation_control` drives the physical regulator hardware.
+6. Oscillation damping: `up_reactivity` / `down_reactivity`. Active `safety_limit` or NaN `real_power` forces level 0.
 
-**Cross-package contract.** ESPHome merges every package into one flat config, so packages communicate *only* through
-well-known ids. New packages must honour them:
+### Cross-Package Contract (Well-Known IDs)
+ESPHome merges all package declarations into a flat namespace. All modules communicate **strictly** via well-known IDs:
+- **Sensors:** `real_power`, `consumption`, `safety_temperature`, `power_divertion`, `energy_diverted`
+- **Numbers:** `router_level`, `regulator_opening`, `target_grid_exchange`, `up_reactivity`, `down_reactivity`, `load_power`
+- **Switches & Globals:** switch `activate`, globals `power_meter_activated`, `safety_limit`, `used_for_cooling`
+- **Status LEDs:** `green_led`, `yellow_led`, output `red_led` (semantics documented in `docs/en/engine.md`)
+- **Scripts:** `energy_regulation`, `regulation_control`, `power_meter_source`, `energy_diverted_counter`, `safety_limit_check`
 
-- sensors: `real_power`, `consumption`, `safety_temperature`, `power_divertion`, `energy_diverted`
-- numbers: `router_level`, `regulator_opening`, `target_grid_exchange`, `up_reactivity`, `down_reactivity`, `load_power`
-- switch: `activate`; globals: `power_meter_activated`, `safety_limit`, `used_for_cooling`
-- lights `green_led` / `yellow_led`, output `red_led` (LED semantics are documented in `docs/en/engine.md`)
-- scripts: `energy_regulation`, `regulation_control`, `power_meter_source`, `energy_diverted_counter`,
-  `safety_limit_check`
+### The Two Include Styles (Not Interchangeable!)
+- `<<: !include <file>.yaml`: YAML anchor merge key. Used by power meters and temperature limiters to merge a common dictionary into the same YAML file.
+- `packages: - !include <file>.yaml`: ESPHome package list merge. Used by engines to include common packages.
 
-**Two include styles, not interchangeable:**
+---
 
-- `<<: !include power_meter_common.yaml` — YAML merge key, used by power meters and temperature limiters to pull a
-  shared block into the same package file.
-- `packages: - !include engine_common.yaml` — ESPHome package merge (concatenates lists), used by engines.
+## 4. Critical Conventions & Gotchas
 
-## Conventions and traps
+1. **Substitutions vs `<<:` Merge:**  
+   A `substitutions:` block in a file that also merges a common file with `<<:` **replaces** the merged block wholesale instead of extending it. Always re-declare any defaults you need (see comment in `power_meter_shelly_em3.yaml`).
+2. **Periodic Execution:**  
+   Prefer `interval: - interval: 1s` over `time: - platform: sntp / on_time: ...`. Anonymous `sntp` blocks merge across packages and cause circular-dependency build failures when combined with named time components.
+3. **Multi-Instance Parameterization:**  
+   Packages that can be instantiated multiple times must parameterize entity IDs using a substitution (`${relay_unique_id}`, `${scheduler_unique_id}`).
+4. **Quoted Booleans:**  
+   Substitutions are plain strings in ESPHome. Always quote booleans (`"false"`, `"true"`) when used in fields like `internal:` or `inverted:`.
+5. **GPIO Pins:**  
+   Never hardcode GPIO pin numbers in packages. Always define them as package `vars`.
+6. **Module Versioning Text Sensor:**  
+   Every module in `solar_router/*.yaml` must end with a diagnostic `text_sensor`:
+   - `id`: `version_<filename_without_ext_with_underscores>` (e.g. `version_regulator_mechanical_relay_${relay_unique_id}`)
+   - `name`: `<filename_without_ext>` (e.g. `regulator_mechanical_relay_${relay_unique_id}`)
+   - Literal version string returned in lambda with `static bool` single-publish guard.
+7. **Release Version Rule (`tools/check_module_version.sh`):**  
+   Versions are per-module. When any module is modified, its version must be **strictly greater than the last release tag** (e.g. `> 1.6.11`), and all modules modified within the same release must share the exact same version number.
+8. **Secrets & CI Resolution:**  
+   `examples/secrets.yaml` is gitignored. ESPHome resolves `!secret` in the directory of the root config (`examples/`), never at root. Only use secret keys registered in `.github/workflows/esphome-ci.yaml`.
 
-- A `substitutions:` block in a file that also merges a common file with `<<:` **replaces** the merged block wholesale
-  instead of extending it. Re-declare every default you still need — see the explanatory comment in
-  `power_meter_shelly_em3.yaml`.
-- Prefer `interval: - interval: 1s` over `time: - platform: sntp / on_time: seconds: /1` for plain periodic work.
-  Anonymous sntp blocks from several packages merge, and combining them with a package that owns a named time component
-  (`jsy-mk-194t_common.yaml`'s `homeassistant_time_for_solar_router`) caused circular-dependency build failures;
-  `esp32-JSY-MK-194T-circular-deps.yaml` exists as the regression case for that fix.
-- Packages that could be instantiated twice parameterize their ids with a substitution (`relay_unique_id`,
-  `scheduler_unique_id`) — keep that pattern for any new multi-instance package.
-- Substitutions are strings: quote booleans (`"False"`, `"true"`) since they are interpolated into fields like
-  `internal:` and `inverted:`.
-- GPIO pins are always package `vars`, never hard-coded in a package.
-- Every package ends with a `Module version` `text_sensor` publishing `<file>.yaml <version>` — a diagnostic
-  entity that tells you which modules a device is built from. Its `id` is `version_` plus the file name with
-  every `-` turned into `_`, and its `name` is the file name verbatim; multi-instance packages append their
-  `_${*_unique_id}` to both. The version is a literal, never a substitution (a `substitutions:` block would
-  shadow the merged common's). No package declares `esphome: on_boot:` for it — the lambda self-publishes
-  once with a `static bool` guard.
-- Versions are per-module and deliberately uneven (`common.yaml` sits at 1.1.1 while `engine_common.yaml` is
-  at 1.6.9): a release only bumps the modules it touched. The rule `tools/check_module_version.sh` enforces
-  is that **every module modified since the last release carries the same version, strictly greater than the
-  last tag** — so a PR touching `common.yaml` and `engine_common.yaml` must set both to the upcoming release
-  number. Untouched modules keep whatever version they had.
-- Keep `url:` and `ref: main` literal in root configs: CI `sed`-rewrites those exact strings to the PR head repo/ref so
-  the matrix build tests the branch's packages.
-- `examples/secrets.yaml` and `examples/local_*.yaml` are gitignored. ESPHome resolves `!secret` next to the config
-  file, never at the repository root, so the secrets file belongs in `examples/`. CI generates its own
-  `examples/secrets.yaml`, so a root config may only use secret names listed in the `esphome-ci.yaml` workflow — add
-  new ones there.
+---
 
-## CI
+## 5. Documentation Guidelines
 
-`.github/workflows/esphome-ci.yaml` runs, in order: `tools-tests` (Bats suites under `tests/tools/`, which gate
-every other job), then a matrix ESPHome build of every root config in `examples/` (note `esp8266-proof-of-concept.yml`
-is skipped — it sits at the repository root, outside `examples/`), build coverage, module version check, documentation
-coverage, and `mkdocs build --strict`. The version check receives `BASE_SHA: ${{ github.event.pull_request.base.sha }}`;
-without it the script falls back to `origin/main` or the last tag, which is environment-dependent.
+### Bilingual Parity
+- Documentation is fully bilingual: English (`docs/en/`) and French (`docs/fr/`).
+- **English is the source of truth.**
+- Parity is mandatory: any file created or modified in `docs/en/` must have its exact counterpart in `docs/fr/`.
+- File names, relative image paths, and heading structures must remain identical between `docs/en/` and `docs/fr/`.
 
-`pr-title-check.yaml` enforces conventional-commit PR titles. This matters beyond style: `cliff.toml` generates the
-published changelog from *merge commit* subjects, so the PR title is what users read.
+### Navigation & MkDocs
+- When adding a page, register it in `mkdocs.yml` under `nav:`.
+- Add French translations for all new navigation titles under `plugins -> i18n -> nav_translations`.
+- Examples are inlined into docs using `--8<-- "examples/<file>.yaml"`.
 
-## Documentation
+### Component Documentation Standard
+Every component page (regulator, power meter, engine) should follow this standard structure:
+1. `# <Component Name>`
+2. `## Description`: Clear explanation of the operating principle.
+3. `## Diagram`: Visual flowchart or waveform diagram (`images/*.png`).
+4. `## Hardware`: Photos, specs, and safety warnings.
+5. `## Wiring Diagram`: Electrical connection schematic (`images/*.drawio.png`).
+6. `## Configuration`: Minimal YAML configuration snippet.
+7. `### Variables`: Markdown table listing `Variable`, `Required`, `Default`, and `Description`.
 
-English is the source of truth; `docs/en/` and `docs/fr/` are kept file-for-file in parity (mkdocs-static-i18n, folder
-structure). A new module needs `docs/en/<module>.md`, `docs/fr/<module>.md`, a `nav:` entry in `mkdocs.yml`, and a
-`nav_translations` entry if its title is new. Example device configs are inlined into the site with
-`--8<-- "examples/esp32-standalone.yaml"`, so editing a root config changes the docs.
+---
 
-## Local scratch area
+## 6. AI Agent Collaboration Workflow
 
-`wip/` is gitignored local scratch, not part of the repository — it holds design work for a separate Rust/WASM "Solar
-Router Configurator" (a HACS Home Assistant dashboard element). When working in there, `wip/AGENTS.md` (engineering
-rules), `wip/SKILL.md` (dev environment) and `wip/PLAN.md` (roadmap) are the governing documents.
+### Atomic Commits
+Every commit must be **atomic** — all changes related to a single issue or improvement are grouped into one commit, and unrelated changes are never mixed:
+- Use Conventional Commits format:
+  - `fix:` bug fixes, broken links, typos
+  - `feat:` new packages, new components
+  - `docs:` documentation improvements
+  - `refactor:` code restructuring without feature change
+  - `chore:` maintenance tasks, tool updates
+- Use partial commits (`git add -p` or patch staging) when a file touches multiple separate concerns.
+
+### Validation Before Commit (Strict Rule)
+**Never create a commit without explicit user validation.**
+1. Explain the proposed changes clearly.
+2. Ensure automated validations pass (`mkdocs build --strict`, `check_module_version.sh`, etc.).
+3. Wait for the user's explicit approval ("ok", "go", or similar).
+4. Create the commit locally.
+5. **NEVER push to remote.** The human reviewer will inspect and push.
+
+### Accuracy & Integrity
+- **Never invent or assume unverified information** (no fictitious links, channels, or hardware pinouts).
+- When encountering an ambiguity, ask the user for clarification.
+- If a command or check fails, acknowledge the failure, explain the root cause, propose a fix, and wait for confirmation.
+
+---
+
+## 7. Local Scratch Area
+
+`wip/` is a gitignored scratch workspace for experimental or external elements (such as the Rust/WASM Solar Router Configurator). When working in `wip/`, consult `wip/AGENTS.md`, `wip/SKILL.md`, and `wip/PLAN.md`.
