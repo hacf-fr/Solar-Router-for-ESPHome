@@ -1,6 +1,19 @@
 # Home Assistant Power Meter
 
-This power meter is designed get power consumption directly from Home Assistant sensor.
+## Description
+
+This power meter reads power consumption directly from Home Assistant sensors.
+
+* `main_power_sensor` reflects the power exchanged with the grid. It is expected in Watts (W), positive (> 0) when electricity is consumed from the grid, and negative (< 0) when electricity is sent to the grid.
+
+* `consumption_sensor` reflects the power consumption of your house. This value is used, for example, to calculate the energy diverted.
+
+!!! warning "Data availability and refresh rate"
+    This power meter relies on Home Assistant to gather the value of energy exchanged with the grid. It also depends on the sensor update rate. If a sensor is updated too slowly, regulation may not work as expected.
+
+    Unlike this Home Assistant power meter, native power meters are autonomous and can continue to regulate even if Home Assistant is offline. Some power meters have direct access to the measurement and may even be independent of the network.
+
+## Configuration
 
 To use this package, add the following lines to your configuration file:
 
@@ -15,14 +28,10 @@ packages:
           consumption_sensor: "sensor.solarnet_power_load_consumed"
 ```
 
+### Variables
 
-This package needs to know which sensors to use to obtain the energy exchanged with the grid and energy consumed by the house. The name of thes sensors is given by `main_power_sensor` and `consumption_sensor` in `vars` section as show upper.
-
-* `main_power_sensor` reflects the power exchanged with the grid. It is expected that this sensor is in Watts (W), positive (>0) when electricity is consumed from the grid, and negative (<0) when electricity is sent to the grid.
-
-* `consumption_sensor` reflects the power consumption of you house. This value is, for example, used to calculate the energie diverted.
-
-!!! warning "Data availability and refresh rate"
-    This power meter rely on Home Assistant to gather the value of energy exchanged with the grid. It also depends on the rate of sensor update. If a sensor is updated too slowly, the regulation may not work as expected.
-
-    Contrary to Home Assistant power meter, native power meters are autonomous and can continue to regulate even is Home Assistant is offline. Some power meter can have a direct access to the measure and may even be independent to the network.
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `main_power_sensor` | yes | — | Home Assistant entity ID for grid exchange power (W) |
+| `consumption_sensor` | yes | — | Home Assistant entity ID for house consumption power (W) |
+| `power_sign` | no | `"1"` | Polarity multiplier (`"-1"` to invert the sign of `main_power_sensor`) |
