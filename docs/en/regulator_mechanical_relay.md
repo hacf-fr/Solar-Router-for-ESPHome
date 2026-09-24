@@ -1,18 +1,30 @@
 # Mechanical Relay Regulator
 
-This regulator is performing an **All or Nothing Regulation**.
+## Description
 
-![alt text](images/Regulation_on_off.png)
+This regulator performs an **All or Nothing Regulation**.
 
-A relay is able to let current pass to the load or not. 
+A relay is able to let current pass to the load or not. This is the simplest form of regulation: the load is either fully powered or completely off.
 
-The following schematic is representing the wiring of the relay:
+!!! Warning "Be careful during wiring and use the Normally Open (NO) pin."
 
-![relay](images/mechanical_relay.drawio.png)
+!!! Danger "This kind of relay can only be used with [Engine 1 x switch](engine_1switch.md) or [Engine 1 x dimmer + 1 x bypass](engine_1dimmer_1bypass.md)"
 
-!!! Warning "Be carefull during wiring and use the Normally Open (NO) pin."
+## Diagram
 
-!!! Danger "This kind of relay is only use it with [Engine 1 x switch](engine_1switch.md) or [Engine 1 x dimmer + 1 x bypass](engine_1dimmer_1bypass.md)"
+![All or nothing regulation](images/Regulation_on_off.png)
+
+## Hardware
+
+This regulator works with standard mechanical relays.
+
+## Wiring Diagram
+
+The following schematic shows the wiring of the relay:
+
+![Mechanical relay wiring](images/mechanical_relay.drawio.png)
+
+## Configuration
 
 To use this package, add the following lines to your configuration file:
 
@@ -26,4 +38,8 @@ packages:
           relay_regulator_gate_pin: GPIO22
 ```
 
-This package require the definition of pin connected to the gate of the relay. Set `relay_regulator_gate_pin` into `vars` according to your hardware
+### Variables
+
+| Variable | Required | Default | Description |
+| -------- | -------- | ------- | ----------- |
+| `relay_regulator_gate_pin` | yes | — | GPIO pin connected to the gate of the relay. |
