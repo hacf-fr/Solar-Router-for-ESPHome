@@ -8,7 +8,7 @@ This component enables users to effortlessly monitor and control the router's fu
 
 !!! danger "Important Notice"
     This project involves working with high voltage (110 or 230 volts), which can be hazardous.  
-    Please read the [disclaimer](disclamer.md) before proceeding with the **Solar Router for ESPHome** project. 
+    Please read the [disclaimer](disclaimer.md) before proceeding with the **Solar Router for ESPHome** project. 
 
 !!! tips "Extended capabilities with Home Assistant sensors"
 

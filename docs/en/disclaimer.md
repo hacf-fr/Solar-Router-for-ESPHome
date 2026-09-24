@@ -1,4 +1,4 @@
-# Disclamer
+# Disclaimer
 
 !!! danger "Disclaimer"
 
