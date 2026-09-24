@@ -82,14 +82,14 @@ packages:
   relay1_regulator:
     url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
-      - path: solar_router/regulator_mecanical_relay.yaml
+      - path: solar_router/regulator_mechanical_relay.yaml
         vars:
           relay_regulator_gate_pin: GPIO17
           relay_unique_id: "1"
   relay2_regulator:
     url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
-      - path: solar_router/regulator_mecanical_relay.yaml
+      - path: solar_router/regulator_mechanical_relay.yaml
         vars:
           relay_regulator_gate_pin: GPIO18
           relay_unique_id: "2"

@@ -23,7 +23,7 @@ et son état est la version :
 La liste que vous voyez **est** la composition de votre routeur. Un package non chargé ne publie
 rien : le régulateur, le compteur de puissance et le moteur se distinguent donc d'un coup d'œil. Cela
 compte surtout pour les régulateurs, car `regulator_triac`, `regulator_solid_state_relay` et
-`regulator_mecanical_relay` ne publient aucune autre entité.
+`regulator_mechanical_relay` ne publient aucune autre entité.
 
 ## Lire les versions
 
@@ -53,9 +53,9 @@ connaître :
 
 ## Packages chargés plusieurs fois
 
-`regulator_mecanical_relay` et `scheduler_forced_run` peuvent être chargés plusieurs fois : le nom de
+`regulator_mechanical_relay` et `scheduler_forced_run` peuvent être chargés plusieurs fois : le nom de
 leur entité porte donc leur identifiant unique. Avec trois relais mécaniques vous obtenez
-`regulator_mecanical_relay_1`, `_2` et `_3` ; avec le planificateur par défaut, vous obtenez
+`regulator_mechanical_relay_1`, `_2` et `_3` ; avec le planificateur par défaut, vous obtenez
 `scheduler_forced_run_Forced`.
 
 !!! warning "Un module reste invisible"

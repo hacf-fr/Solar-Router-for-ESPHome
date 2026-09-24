@@ -61,11 +61,11 @@ packages:
       - path: solar_router/power_meter_fronius.yaml
         vars:
           power_meter_ip_address: "192.168.1.21"
-      - path: solar_router/regulator_mecanical_relay.yaml
+      - path: solar_router/regulator_mechanical_relay.yaml
         vars:
           relay_regulator_gate_pin: GPIO14
           relay_unique_id: "1"
-      - path: solar_router/regulator_mecanical_relay.yaml
+      - path: solar_router/regulator_mechanical_relay.yaml
         vars:
           relay_regulator_gate_pin: GPIO15
           relay_unique_id: "2"

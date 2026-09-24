@@ -34,8 +34,8 @@ output:
 
 text_sensor:
   - platform: template
-    id: version_regulator_mecanical_relay_${relay_unique_id}
-    name: "regulator_mecanical_relay_${relay_unique_id}"
+    id: version_regulator_mechanical_relay_${relay_unique_id}
+    name: "regulator_mechanical_relay_${relay_unique_id}"
     icon: mdi:tag-outline
     entity_category: diagnostic
     update_interval: 10s
@@ -44,5 +44,5 @@ text_sensor:
       static bool published = false;
       if (published) return {};
       published = true;
-      return {"1.6.2"};
+      return {"1.6.12"};
     disabled_by_default: false
