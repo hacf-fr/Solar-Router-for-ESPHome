@@ -1,32 +1,36 @@
 # Home Assistant Recorder configuration
 
-**Power meters** and **energy sensors** are updated every secondes. 
-By default, Home Assistant *recorder* is saving these informations in its database.  
-To optimize data storage in Home Assistant, it's essential to configure databases appropriately.
+## Description
 
-* First **Identify the Target Sensor to filter out**  
-  Power meter provides a sensor named `real_power`.  
-  Energy counter provides a sensor named `theorical_energy_diverted`.  
-  In your Home Assistant it should be prefixed with the name of your device and should then be identified with an id like `sensor.solarrouter_real_power` or `sensor.solarrouter_theorical_energy_diverted`.  
-  Check your sensors to adapt the configuration.
+**Power meters** and **energy sensors** are updated every second.  
+By default, the Home Assistant *recorder* saves these values in its database.  
+To keep storage under control, exclude the noisiest entities.
 
-* Then **Create a `recorder` configuration for Home Assistant**  
-  Add the following lines in your `configuration.yaml` to filter out `real_power` and `theorical_energy_diverted` data:  
+This page is part of the [Home Assistant integration](home_assistant.md) guide.
 
-    ```yaml
-    recorder:
-      exclude:
-        entities:
-          - sensor.solarrouter_real_power
-          - sensor.solarrouter_theorical_energy_diverted
-    ```
+## Configuration
+
+1. **Identify the sensors to filter out**  
+   The power meter provides `real_power`.  
+   The theoretical energy counter provides sensors such as total energy diverted / power divertion.  
+   In Home Assistant they are prefixed with your device name, for example `sensor.solarrouter_real_power` or `sensor.solarrouter_total_energy_diverted`.  
+   Check your device entities and adapt the list.
+
+2. **Add a `recorder` exclude block** in `configuration.yaml`:
+
+```yaml
+recorder:
+  exclude:
+    entities:
+      - sensor.solarrouter_real_power
+      - sensor.solarrouter_total_energy_diverted
+      - sensor.solarrouter_power_divertion
+```
+
 !!! note "About recorder"
-    Home Assistant `recorder` is constantly saves data in database. Refer to [recorder configuration](https://www.home-assistant.io/integrations/recorder/) for details.  
-    **It is strongly advised to have a look to data produced by your solar router and adapt your configuration according to your needs.**
-
+    Home Assistant `recorder` continuously saves data. See the [recorder documentation](https://www.home-assistant.io/integrations/recorder/) for details.  
+    **Review the data produced by your solar router and adapt the exclude list to your needs.**
 
 !!! warning "If you are using InfluxDB"
-    If you are using InfluxDB, you should pay the same attention about data recording.  
-    Refer to the [integration documentation](https://www.home-assistant.io/integrations/influxdb/) to exclude `real_power` and `theorical_energy_diverted` from your database.
-
-
+    Apply the same exclusions in InfluxDB.  
+    See the [InfluxDB integration](https://www.home-assistant.io/integrations/influxdb/).
