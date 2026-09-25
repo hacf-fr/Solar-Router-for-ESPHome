@@ -8,7 +8,7 @@
 4. Renseignez les `vars` de chaque package d'après sa documentation (étape 3).
 5. Téléversez le firmware via OTA depuis Home Assistant (étape 4).
 
-Pour un YAML prêt à l'emploi, partez de l'[exemple autonome](example_standalone.md) ou de l'[exemple proxy](example_proxy.md). Si quelque chose ne fonctionne pas après le flash, voir [Dépannage](troubleshooting.md).
+Pour un YAML prêt à l'emploi, partez de l'[exemple autonome](example_standalone.md) ou de l'[exemple proxy](example_proxy.md). Voir [Intégration Home Assistant](home_assistant.md) pour les entités et tableaux de bord. Si quelque chose ne fonctionne pas après le flash, voir [Dépannage](troubleshooting.md).
 
 ```mermaid
 flowchart TD

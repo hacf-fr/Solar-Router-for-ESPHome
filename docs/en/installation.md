@@ -8,7 +8,7 @@
 4. Fill in each package `vars` from the package documentation (Step 3).
 5. Upload the firmware via OTA from Home Assistant (Step 4).
 
-For a ready-made YAML, start from the [standalone example](example_standalone.md) or the [proxy example](example_proxy.md). If something does not work after flashing, see [Troubleshooting](troubleshooting.md).
+For a ready-made YAML, start from the [standalone example](example_standalone.md) or the [proxy example](example_proxy.md). See [Home Assistant integration](home_assistant.md) for entity lists and dashboards. If something does not work after flashing, see [Troubleshooting](troubleshooting.md).
 
 ```mermaid
 flowchart TD
