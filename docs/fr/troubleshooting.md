@@ -103,3 +103,8 @@ Par convention, positif = import depuis le réseau, négatif = export. Utilisez 
 
 **Où obtenir de l'aide ?**  
 Ouvrez une issue ou une discussion sur le [dépôt GitHub](https://github.com/hacf-fr/Solar-Router-for-ESPHome).
+
+## Voir aussi
+
+- [Intégration Home Assistant](home_assistant.md)
+- [Installation](installation.md)

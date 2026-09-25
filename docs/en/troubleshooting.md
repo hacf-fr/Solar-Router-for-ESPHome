@@ -103,3 +103,8 @@ By convention, positive means import from the grid, negative means export. Use `
 
 **Where can I get help?**  
 Open an issue or discussion on the [GitHub repository](https://github.com/hacf-fr/Solar-Router-for-ESPHome).
+
+## Related
+
+- [Home Assistant integration](home_assistant.md)
+- [Installation](installation.md)
