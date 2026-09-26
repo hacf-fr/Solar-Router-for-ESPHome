@@ -11,6 +11,10 @@ Key features include a choice of dynamic energy routing algorithms (progressive,
 
 This component enables users to effortlessly monitor and control the router's functionality within the HomeAssistant ecosystem, facilitating streamlined energy management and automation.
 
+!!! danger "Important Notice"
+    This project involves working with high voltage (110 or 230 volts), which can be hazardous.  
+    Please read the [disclaimer](disclaimer.md) before proceeding with the **Solar Router for ESPHome** project. 
+
 ## Start here
 
 Choose the path that matches your installation:
@@ -37,10 +41,6 @@ flowchart LR
 ```
 
 The [firmware overview](firmware.md) explains how these building blocks are composed. The [hardware guide](hardware.md) covers the electrical architectures and safety considerations.
-
-!!! danger "Important Notice"
-    This project involves working with high voltage (110 or 230 volts), which can be hazardous.  
-    Please read the [disclaimer](disclaimer.md) before proceeding with the **Solar Router for ESPHome** project. 
 
 !!! tips "Extended capabilities with Home Assistant sensors"
 
