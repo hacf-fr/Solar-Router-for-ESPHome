@@ -1,4 +1,5 @@
 site_name: Solar Router for ESPHome
+site_url: https://hacf-fr.github.io/Solar-Router-for-ESPHome/
 repo_url: https://github.com/hacf-fr/Solar-Router-for-ESPHome
 repo_name: Fork me on GitHub
 edit_uri: ""
@@ -102,11 +103,11 @@ plugins:
                       default: true
                       name: 🇬🇧 English
                       build: true
-                      link: /Solar-Router-for-ESPHome/
+                      link: /
                     - locale: fr
                       name: 🇫🇷 Français
                       build: true
-                      link: /Solar-Router-for-ESPHome/fr/
+                      link: /fr/
                       nav_translations:
                             About: A propos
                             Alternatives: Alternatives
