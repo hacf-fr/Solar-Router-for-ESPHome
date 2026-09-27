@@ -44,9 +44,7 @@ nav:
                       - Home Assistant: temperature_limiter_home_assistant.md
                       - DS18B20: temperature_limiter_DS18B20.md
                       - Fan controller: temperature_fan_control.md
-              - Scheduler:
-                      - Overview: scheduler.md
-                      - Forced Run: scheduler_forced_run.md
+              - Scheduler: scheduler.md
       - Integrations:
               - Home Assistant:
                       - Overview: home_assistant.md
