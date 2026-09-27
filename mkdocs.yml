@@ -72,6 +72,9 @@ theme:
             text: Ubuntu
             code: Ubuntu Mono
 
+extra_css:
+  - extra.css
+  
 markdown_extensions:
       - markdown.extensions.admonition
       - markdown.extensions.meta
