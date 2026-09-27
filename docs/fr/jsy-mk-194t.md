@@ -5,7 +5,10 @@ Deux configurations sont possibles lors de l'utilisation de ce capteur :
   - standalone : on utilise les deux capteurs du JSY-MK-194T (Ch1 : capteur sur la charge, Ch2 : capteur de puissance de la maison au niveau du compteur EDF)
   - hybride (exemple : Home Assistant pour la mesure real_power + JSY-MK-194T pour l’énergie dérivée) → utile si le routeur est loin du point de mesure, ou si le contrat est en 0 injection (il faudra créer dans HA un capteur virtuel de simulation d’injection en estimant l’énergie potentielle non produite, cf. par exemple le projet [https://github.com/M3c4tr0x/ESP-PowerSunSensor](https://github.com/M3c4tr0x/ESP-PowerSunSensor))
 
-## 1 - Partie Commune : la communication avec le JSY-MK-194T :
+## Configuration de la partie commune
+
+!!! note "Configuration partagée"
+    Le fichier `solar_router/jsy-mk-194t_common.yaml` configure la communication UART et est utilisé à la fois par le compteur de puissance et le compteur d'énergie.
 
 Ce fichier gère la communication avec la carte. Vous pouvez, si vous le souhaitez, remonter les mesures du JSY-MK-194T dans Home Assistant, voir l'exemple ci-dessous.
 ```yaml linenums="1"
@@ -41,7 +44,7 @@ Liste des capteurs du JSY-MK-194T accessibles :
   NAE_Ch2_internal: "true"     # Negative Active Energy of Channel 2
 ```
 
-## 2 - Mode Standalone
+## Mode Standalone
 Ce mode permet au routeur d'être 100 % autonome au niveau des capteurs de puissance. La régulation est donc plus fine et plus rapide que lorsqu'on passe par des entités Home Assistant.
 Il est important de noter que ceci fonctionne uniquement si votre système injecte le surplus dans le réseau. Dans le cas contraire, voir le paragraphe suivant.
 
@@ -68,7 +71,7 @@ packages:
 		  consumption_sensor_internal: true # Permet d'éviter d'avoir le sensor "Consumption" d'affiché dans Home Assistant, car il n'est jamais utilisé et reste "indisponible" avec l'utilisation du JSY-MK-194T
 ```
 
-## 3 - Mode Hybride
+## Mode Hybride
 Ce mode permet l'utilisation du JSY-MK-194T pour mesurer l'énergie dans la charge uniquement. La mesure au niveau du réseau doit se faire via Home Assistant, à l'aide d'un capteur virtuel qui remonte une puissance d'injection estimée.
 Il est utile dans les systèmes où il n'y a pas d'injection réelle dans le réseau, ou si la mesure n'est pas accessible car trop éloignée.
 
