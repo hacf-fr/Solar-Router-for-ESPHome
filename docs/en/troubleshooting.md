@@ -54,7 +54,7 @@ Full details: [Engine overview — User feedback LEDs](engine.md#user-feedback-l
 * `safety_limit` is not active (temperature limiter).
 * For ON/OFF engine: start level / tempos correctly set — see [Engine 1 × switch](engine_1switch.md).
 
-### Router oscillates ON/OFF or level hunts
+### Router oscillates ON/OFF
 
 **Checks:**
 
