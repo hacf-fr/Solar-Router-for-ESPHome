@@ -19,7 +19,7 @@ Les *packages* sont :
 
 | Architecture | Cartes ESP | Cas d'usage typique | Avantages | Inconvénients |
 | --- | --- | --- | --- | --- |
-| [Autonome](#configuration-autonome) | 1 × ESP32 | Compteur et charge proches | Installation la plus simple, latence minimale | Tout le câblage sur une seule carte |
+| [Autonome](#configuration-autonome) | 1 × ESP32 | Compteur et charge proches | Installation la plus simple, latence minimale | |
 | [Proxy de compteur](#configuration-avec-proxy-de-compteur-denergie) | 1 × ESP compteur + 1 × ESP routeur | Compteur loin de la charge (ex. : tableau vs chauffe-eau) | Emplacement flexible ; le proxy peut tourner sur ESP8266/ESP8285 | Nécessite un réseau local fiable |
 | [Plusieurs routeurs](#configuration-avec-plusieurs-routeurs-solaires) | 1 × routeur primaire + 1+ routeurs secondaires | Plusieurs charges à détourner en séquence | S'étend à davantage de charges | Ajuster soigneusement réactivité et cibles pour éviter les conflits |
 

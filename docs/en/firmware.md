@@ -19,7 +19,7 @@ Packages are:
 
 | Architecture | ESP boards | Typical use | Pros | Cons |
 | --- | --- | --- | --- | --- |
-| [Standalone](#standalone-configuration) | 1 × ESP32 | Meter and load are close | Simplest setup, lowest latency | All wiring on one board |
+| [Standalone](#standalone-configuration) | 1 × ESP32 | Meter and load are close | Simplest setup, lowest latency | |
 | [Power meter proxy](#power-meter-proxy-configuration) | 1 × meter ESP + 1 × router ESP | Meter far from the load (e.g. panel vs water heater) | Flexible placement; proxy can run on ESP8266/ESP8285 | Needs a reliable local network |
 | [Multiple routers](#multiple-solar-router-configuration) | 1 × primary router + 1+ secondary routers | Several loads to divert in sequence | Scales to more loads | Tune reactivity and targets carefully to avoid conflicts |
 
