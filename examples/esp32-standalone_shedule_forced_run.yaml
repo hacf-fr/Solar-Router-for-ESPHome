@@ -57,7 +57,7 @@ packages:
     refresh: 1d
     files:
       - path: solar_router/common.yaml
-      - path: solar_router/power_meter_fronius.yaml
+      - path: solar_router/power_meter_enphase_envoy.yaml
         vars:
           power_meter_ip_address: "192.168.1.21"
       - path: solar_router/regulator_triac.yaml
