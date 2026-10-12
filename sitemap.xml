@@ -1,647 +1,619 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-        <loc>None./</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="None"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/"/>
     </url>
     <url>
-        <loc>Noneabout/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/about/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneabout/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/about/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/about/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/about/"/>
     </url>
     <url>
-        <loc>Noneactivate_button/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/alternatives/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneactivate_button/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/activate_button/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/alternatives/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/alternatives/"/>
     </url>
     <url>
-        <loc>Noneactivate_switch/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/blueprint_priority_to_ev/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneactivate_switch/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/activate_switch/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/blueprint_priority_to_ev/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/blueprint_priority_to_ev/"/>
     </url>
     <url>
-        <loc>Noneactivate_switch_3positions/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/changelog/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneactivate_switch_3positions/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/activate_switch_3positions/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/changelog/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/changelog/"/>
     </url>
     <url>
-        <loc>Nonealternatives/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/contributing/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonealternatives/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/alternatives/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/contributing/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/contributing/"/>
     </url>
     <url>
-        <loc>Noneblueprint_priority_to_ev/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/debug_sensors/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneblueprint_priority_to_ev/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/blueprint_priority_to_ev/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/debug_sensors/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/debug_sensors/"/>
     </url>
     <url>
-        <loc>Nonechangelog/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/disclaimer/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonechangelog/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/changelog/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/disclaimer/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/disclaimer/"/>
     </url>
     <url>
-        <loc>Nonecontributing/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/energy_counter_jsy-mk-194t/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonecontributing/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/contributing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/energy_counter_jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/energy_counter_jsy-mk-194t/"/>
     </url>
     <url>
-        <loc>Nonedebug_sensors/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/energy_counter_theorical/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonedebug_sensors/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/debug_sensors/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/energy_counter_theorical/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/energy_counter_theorical/"/>
     </url>
     <url>
-        <loc>Nonedisclamer/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonedisclamer/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/disclamer/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine/"/>
     </url>
     <url>
-        <loc>Noneenergy_counter_jsy-mk-194t/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneenergy_counter_jsy-mk-194t/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/energy_counter_jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer/"/>
     </url>
     <url>
-        <loc>Noneenergy_counter_theorical/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer_1bypass/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneenergy_counter_theorical/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/energy_counter_theorical/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer_1bypass/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer_1bypass/"/>
     </url>
     <url>
-        <loc>Noneengine/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer_2switches/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer_2switches/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer_2switches/"/>
     </url>
     <url>
-        <loc>Noneengine_1dimmer/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer_2switches_1bypass/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer_2switches_1bypass/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer_2switches_1bypass/"/>
     </url>
     <url>
-        <loc>Noneengine_1dimmer_1bypass/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1switch/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_1bypass/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_1bypass/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1switch/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1switch/"/>
     </url>
     <url>
-        <loc>Noneengine_1dimmer_2switches/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/example_proxy/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_2switches/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_2switches/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/example_proxy/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/example_proxy/"/>
     </url>
     <url>
-        <loc>Noneengine_1dimmer_2switches_1bypass/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/example_standalone/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_2switches_1bypass/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_2switches_1bypass/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/example_standalone/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/example_standalone/"/>
     </url>
     <url>
-        <loc>Noneengine_1switch/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/exemple_with_SO_integration/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1switch/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1switch/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/exemple_with_SO_integration/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/exemple_with_SO_integration/"/>
     </url>
     <url>
-        <loc>Noneexample_proxy/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/firmware/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneexample_proxy/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/example_proxy/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/firmware/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/firmware/"/>
     </url>
     <url>
-        <loc>Noneexample_standalone/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/hardware/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneexample_standalone/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/example_standalone/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/hardware/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/hardware/"/>
     </url>
     <url>
-        <loc>Noneexemple_with_SO_integration/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/home_assistant/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneexemple_with_SO_integration/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/exemple_with_SO_integration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/home_assistant/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/home_assistant/"/>
     </url>
     <url>
-        <loc>Nonefirmware/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/installation/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonefirmware/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/firmware/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/installation/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/installation/"/>
     </url>
     <url>
-        <loc>Nonehardware/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/jsy-mk-194t/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonehardware/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/hardware/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/jsy-mk-194t/"/>
     </url>
     <url>
-        <loc>Noneinstallation/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/license/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneinstallation/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/installation/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/license/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/license/"/>
     </url>
     <url>
-        <loc>Nonejsy-mk-194t/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/module_version/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonejsy-mk-194t/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/module_version/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/module_version/"/>
     </url>
     <url>
-        <loc>Nonelicense/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonelicense/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/license/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter/"/>
     </url>
     <url>
-        <loc>Nonemodule_version/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_fronius/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonemodule_version/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/module_version/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_fronius/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_fronius/"/>
     </url>
     <url>
-        <loc>Nonepower_meter/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_home_assistant/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_home_assistant/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_home_assistant/"/>
     </url>
     <url>
-        <loc>Nonepower_meter_fronius/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_jsy-mk-194t/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_fronius/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_fronius/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_jsy-mk-194t/"/>
     </url>
     <url>
-        <loc>Nonepower_meter_home_assistant/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_proxy_client/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_home_assistant/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_home_assistant/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_proxy_client/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_proxy_client/"/>
     </url>
     <url>
-        <loc>Nonepower_meter_jsy-mk-194t/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_shelly_em/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_jsy-mk-194t/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_shelly_em/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_shelly_em/"/>
     </url>
     <url>
-        <loc>Nonepower_meter_proxy_client/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_shelly_em3/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_proxy_client/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_proxy_client/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_shelly_em3/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_shelly_em3/"/>
     </url>
     <url>
-        <loc>Nonepower_meter_shelly_em/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/recorder_configuration/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_shelly_em/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_shelly_em/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/recorder_configuration/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/recorder_configuration/"/>
     </url>
     <url>
-        <loc>Nonepower_meter_shelly_em3/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/regulator_mechanical_relay/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_shelly_em3/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_shelly_em3/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/regulator_mechanical_relay/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/regulator_mechanical_relay/"/>
     </url>
     <url>
-        <loc>Nonerecorder_configuration/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/regulator_solid_state_relay/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonerecorder_configuration/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/recorder_configuration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/regulator_solid_state_relay/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/regulator_solid_state_relay/"/>
     </url>
     <url>
-        <loc>Noneregulator_mecanical_relay/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/regulator_triac/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_mecanical_relay/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_mecanical_relay/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/regulator_triac/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/regulator_triac/"/>
     </url>
     <url>
-        <loc>Noneregulator_solid_state_relay/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/scheduler_forced_run/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_solid_state_relay/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_solid_state_relay/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/scheduler_forced_run/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/scheduler_forced_run/"/>
     </url>
     <url>
-        <loc>Noneregulator_triac/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/solar_router/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_triac/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_triac/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/solar_router/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/solar_router/"/>
     </url>
     <url>
-        <loc>Nonescheduler/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_fan_control/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonescheduler/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/scheduler/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_fan_control/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_fan_control/"/>
     </url>
     <url>
-        <loc>Nonescheduler_forced_run/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_limiter/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonescheduler_forced_run/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/scheduler_forced_run/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_limiter/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_limiter/"/>
     </url>
     <url>
-        <loc>Nonesolar_router/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_limiter_DS18B20/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonesolar_router/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/solar_router/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_limiter_DS18B20/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_limiter_DS18B20/"/>
     </url>
     <url>
-        <loc>Nonetemperature_fan_control/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_limiter_home_assistant/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_fan_control/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_fan_control/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_limiter_home_assistant/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_limiter_home_assistant/"/>
     </url>
     <url>
-        <loc>Nonetemperature_limiter/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/troubleshooting/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/troubleshooting/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/troubleshooting/"/>
     </url>
     <url>
-        <loc>Nonetemperature_limiter_DS18B20/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter_DS18B20/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter_DS18B20/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/"/>
     </url>
     <url>
-        <loc>Nonetemperature_limiter_home_assistant/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/about/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter_home_assistant/"/>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter_home_assistant/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/about/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/about/"/>
     </url>
     <url>
-        <loc>Nonefr/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/alternatives/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="None"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/alternatives/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/alternatives/"/>
     </url>
     <url>
-        <loc>Nonefr/about/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/blueprint_priority_to_ev/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/about/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneabout/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/blueprint_priority_to_ev/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/blueprint_priority_to_ev/"/>
     </url>
     <url>
-        <loc>Nonefr/activate_button/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/changelog/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/activate_button/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneactivate_button/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/changelog/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/changelog/"/>
     </url>
     <url>
-        <loc>Nonefr/activate_switch/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/contributing/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/activate_switch/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneactivate_switch/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/contributing/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/contributing/"/>
     </url>
     <url>
-        <loc>Nonefr/activate_switch_3positions/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/debug_sensors/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/activate_switch_3positions/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneactivate_switch_3positions/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/debug_sensors/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/debug_sensors/"/>
     </url>
     <url>
-        <loc>Nonefr/alternatives/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/disclaimer/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/alternatives/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonealternatives/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/disclaimer/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/disclaimer/"/>
     </url>
     <url>
-        <loc>Nonefr/blueprint_priority_to_ev/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/energy_counter_jsy-mk-194t/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/blueprint_priority_to_ev/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneblueprint_priority_to_ev/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/energy_counter_jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/energy_counter_jsy-mk-194t/"/>
     </url>
     <url>
-        <loc>Nonefr/changelog/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/energy_counter_theorical/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/changelog/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonechangelog/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/energy_counter_theorical/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/energy_counter_theorical/"/>
     </url>
     <url>
-        <loc>Nonefr/contributing/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/contributing/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonecontributing/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine/"/>
     </url>
     <url>
-        <loc>Nonefr/debug_sensors/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/debug_sensors/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonedebug_sensors/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer/"/>
     </url>
     <url>
-        <loc>Nonefr/disclamer/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer_1bypass/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/disclamer/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonedisclamer/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer_1bypass/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer_1bypass/"/>
     </url>
     <url>
-        <loc>Nonefr/energy_counter_jsy-mk-194t/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer_2switches/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/energy_counter_jsy-mk-194t/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneenergy_counter_jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer_2switches/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer_2switches/"/>
     </url>
     <url>
-        <loc>Nonefr/energy_counter_theorical/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer_2switches_1bypass/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/energy_counter_theorical/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneenergy_counter_theorical/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1dimmer_2switches_1bypass/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1dimmer_2switches_1bypass/"/>
     </url>
     <url>
-        <loc>Nonefr/engine/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1switch/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/engine_1switch/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/engine_1switch/"/>
     </url>
     <url>
-        <loc>Nonefr/engine_1dimmer/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/example_proxy/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/example_proxy/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/example_proxy/"/>
     </url>
     <url>
-        <loc>Nonefr/engine_1dimmer_1bypass/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/example_standalone/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_1bypass/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_1bypass/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/example_standalone/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/example_standalone/"/>
     </url>
     <url>
-        <loc>Nonefr/engine_1dimmer_2switches/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/exemple_with_SO_integration/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_2switches/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_2switches/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/exemple_with_SO_integration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/exemple_with_SO_integration/"/>
     </url>
     <url>
-        <loc>Nonefr/engine_1dimmer_2switches_1bypass/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/firmware/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1dimmer_2switches_1bypass/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1dimmer_2switches_1bypass/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/firmware/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/firmware/"/>
     </url>
     <url>
-        <loc>Nonefr/engine_1switch/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/hardware/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/engine_1switch/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneengine_1switch/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/hardware/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/hardware/"/>
     </url>
     <url>
-        <loc>Nonefr/example_proxy/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/home_assistant/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/example_proxy/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneexample_proxy/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/home_assistant/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/home_assistant/"/>
     </url>
     <url>
-        <loc>Nonefr/example_standalone/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/installation/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/example_standalone/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneexample_standalone/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/installation/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/installation/"/>
     </url>
     <url>
-        <loc>Nonefr/exemple_with_SO_integration/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/jsy-mk-194t/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/exemple_with_SO_integration/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneexemple_with_SO_integration/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/jsy-mk-194t/"/>
     </url>
     <url>
-        <loc>Nonefr/firmware/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/license/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/firmware/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonefirmware/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/license/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/license/"/>
     </url>
     <url>
-        <loc>Nonefr/hardware/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/module_version/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/hardware/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonehardware/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/module_version/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/module_version/"/>
     </url>
     <url>
-        <loc>Nonefr/installation/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/installation/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneinstallation/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter/"/>
     </url>
     <url>
-        <loc>Nonefr/jsy-mk-194t/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_fronius/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/jsy-mk-194t/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonejsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_fronius/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_fronius/"/>
     </url>
     <url>
-        <loc>Nonefr/license/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_home_assistant/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/license/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonelicense/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_home_assistant/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_home_assistant/"/>
     </url>
     <url>
-        <loc>Nonefr/module_version/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_jsy-mk-194t/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/module_version/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonemodule_version/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_jsy-mk-194t/"/>
     </url>
     <url>
-        <loc>Nonefr/power_meter/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_proxy_client/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_proxy_client/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_proxy_client/"/>
     </url>
     <url>
-        <loc>Nonefr/power_meter_fronius/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_shelly_em/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_fronius/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_fronius/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_shelly_em/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_shelly_em/"/>
     </url>
     <url>
-        <loc>Nonefr/power_meter_home_assistant/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_shelly_em3/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_home_assistant/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_home_assistant/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/power_meter_shelly_em3/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/power_meter_shelly_em3/"/>
     </url>
     <url>
-        <loc>Nonefr/power_meter_jsy-mk-194t/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/recorder_configuration/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_jsy-mk-194t/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_jsy-mk-194t/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/recorder_configuration/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/recorder_configuration/"/>
     </url>
     <url>
-        <loc>Nonefr/power_meter_proxy_client/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/regulator_mechanical_relay/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_proxy_client/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_proxy_client/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/regulator_mechanical_relay/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/regulator_mechanical_relay/"/>
     </url>
     <url>
-        <loc>Nonefr/power_meter_shelly_em/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/regulator_solid_state_relay/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_shelly_em/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_shelly_em/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/regulator_solid_state_relay/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/regulator_solid_state_relay/"/>
     </url>
     <url>
-        <loc>Nonefr/power_meter_shelly_em3/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/regulator_triac/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/power_meter_shelly_em3/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonepower_meter_shelly_em3/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/regulator_triac/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/regulator_triac/"/>
     </url>
     <url>
-        <loc>Nonefr/recorder_configuration/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/scheduler_forced_run/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/recorder_configuration/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonerecorder_configuration/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/scheduler_forced_run/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/scheduler_forced_run/"/>
     </url>
     <url>
-        <loc>Nonefr/regulator_mecanical_relay/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/solar_router/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_mecanical_relay/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_mecanical_relay/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/solar_router/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/solar_router/"/>
     </url>
     <url>
-        <loc>Nonefr/regulator_solid_state_relay/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_fan_control/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_solid_state_relay/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_solid_state_relay/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_fan_control/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_fan_control/"/>
     </url>
     <url>
-        <loc>Nonefr/regulator_triac/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_limiter/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/regulator_triac/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Noneregulator_triac/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_limiter/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_limiter/"/>
     </url>
     <url>
-        <loc>Nonefr/scheduler/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_limiter_DS18B20/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/scheduler/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonescheduler/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_limiter_DS18B20/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_limiter_DS18B20/"/>
     </url>
     <url>
-        <loc>Nonefr/scheduler_forced_run/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_limiter_home_assistant/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/scheduler_forced_run/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonescheduler_forced_run/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/temperature_limiter_home_assistant/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/temperature_limiter_home_assistant/"/>
     </url>
     <url>
-        <loc>Nonefr/solar_router/</loc>
-        <lastmod>2026-09-21</lastmod>
+        <loc>https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/troubleshooting/</loc>
+        <lastmod>2026-10-12</lastmod>
         <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/solar_router/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonesolar_router/"/>
-    </url>
-    <url>
-        <loc>Nonefr/temperature_fan_control/</loc>
-        <lastmod>2026-09-21</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_fan_control/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_fan_control/"/>
-    </url>
-    <url>
-        <loc>Nonefr/temperature_limiter/</loc>
-        <lastmod>2026-09-21</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter/"/>
-    </url>
-    <url>
-        <loc>Nonefr/temperature_limiter_DS18B20/</loc>
-        <lastmod>2026-09-21</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter_DS18B20/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter_DS18B20/"/>
-    </url>
-    <url>
-        <loc>Nonefr/temperature_limiter_home_assistant/</loc>
-        <lastmod>2026-09-21</lastmod>
-        <changefreq>daily</changefreq>
-        <xhtml:link rel="alternate" hreflang="fr" href="Nonefr/temperature_limiter_home_assistant/"/>
-        <xhtml:link rel="alternate" hreflang="en" href="Nonetemperature_limiter_home_assistant/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/fr/troubleshooting/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hacf-fr.github.io/Solar-Router-for-ESPHome/troubleshooting/"/>
     </url>
 </urlset>
