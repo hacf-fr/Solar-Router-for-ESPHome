@@ -1,12 +1,8 @@
 # Enhancing solar self-consumption using **Solar-Router-for-ESPHome** and **Solar-Optimiser**
 
-## 1 – Credits
+**Credits : [@M3c4tr0x](https://github.com/M3c4tr0x)**
 
-[@M3c4tr0x](https://github.com/M3c4tr0x)
-
----
-
-## 2 – Objective: Build a Hybrid Control System for the Solar Router
+## Objective: Build a Hybrid Control System for the Solar Router
 
 By design, a solar router starts a load in order to converge toward **zero grid injection** by dynamically modulating its power. In installations with batteries or other active loads, there is no priority management: the solar router is always the last device to be supplied and only consumes surplus energy.
 
@@ -22,9 +18,7 @@ The ideal solution is to:
 Several algorithmic approaches are possible. This document details the solution I use:
 [**Solar Optimizer (SO)**](https://github.com/jmcollin78/solar_optimizer) by [Jean-Marc COLLIN](https://github.com/jmcollin78)
 
----
-
-## 3 – Overview of Solar Optimizer (SO)
+## Overview of Solar Optimizer (SO)
 
 Solar Optimizer is a Home Assistant integration that acts as an **energy orchestration engine** for managed devices.
 
@@ -38,9 +32,7 @@ Its objective is **not** to reach zero grid injection, but rather to compute the
 * Battery charge/discharge power (if present)
 * Battery state of charge (if present)
 
----
-
-## 4 – Requirements to Use the Solar Router with SO
+## Requirements to Use the Solar Router with SO
 
 ### ON/OFF Control
 
@@ -48,8 +40,6 @@ The Solar Router does not provide a native ON/OFF switch (only AUTO/MANUAL).
 **SO** requires an ON/OFF entity.
 
 Create a template switch using an `input_boolean` as described in Chapter 6.
-
----
 
 ### Power Control
 
@@ -59,9 +49,7 @@ Two Options:
 2. Use a **number proxy**
    This method allows reshaping the control setpoint through a correction table to compensate for load non-linearity (recommended) as described in Chapter 7.
 
----
-
-## 5 – Configuring the Solar Router in SO
+## Configuring the Solar Router in SO
 
 Refer to the official **SO** documentation if needed:
 [https://github.com/jmcollin78/solar_optimizer/blob/main/README-fr.md#configurer-un-%C3%A9quipement-avec-une-puissance-variable](https://github.com/jmcollin78/solar_optimizer/blob/main/README-fr.md#configurer-un-%C3%A9quipement-avec-une-puissance-variable)
@@ -73,15 +61,11 @@ Example: 1800 W water heater
 
 ![Power settings](../images/SO_power_settings.png)
 
----
-
 ### Timing Parameters
 
 For a highly reactive configuration and a resistive load tolerant to frequent switching, the following parameters are used:
 
 ![Timing settings](../images/SO_timing_settings.png)
-
----
 
 ### Action Services
 
@@ -93,15 +77,11 @@ Define:
 
 ![Service configuration](../images/SO_service_configuration.png)
 
----
-
 ### Division Factor
 
 Used by **SO** to convert real power (0–1800 W) into routing level (0–100%).
 
 ![Division factor](../images/SO_division_factor.png)
-
----
 
 ### Optional
 
@@ -110,9 +90,7 @@ Used by **SO** to convert real power (0–1800 W) into routing level (0–100%).
 
 (Personally not used — night charging decisions are based on stored daily energy via automation.)
 
----
-
-## 6 – ON/OFF Template Switch (`input_boolean`)
+## ON/OFF Template Switch (`input_boolean`)
 
 Since the Solar Router only supports AUTO/MANUAL, an ON/OFF abstraction must be created.
 
@@ -145,9 +123,7 @@ mode: single
 metadata: {}
 ```
 
----
-
-## 7 – Operating Point Proxy (Non-Linear Compensation)
+## Operating Point Proxy (Non-Linear Compensation)
 
 ### Architecture
 
@@ -168,8 +144,6 @@ input_number.router_level_desired
 This represents the desired theoretical power percentage.
 
 `number.router_level_adapted` is a template number applying correction through interpolation.
-
----
 
 ### Template Configuration
 
@@ -216,8 +190,6 @@ This represents the desired theoretical power percentage.
 {{ adapted_value | round(1) }}
 ```
 
----
-
 Explanations : 
 
 * Updated each time `router_level_desired` changes.
@@ -225,8 +197,6 @@ Explanations :
 * The algorithm simply performs linear interpolation to determine the optimal value.
 * The final step is to update the **router_level** of the Solar Router (**SR**).
 
-
----
 
 ### Automation to update router_level with the calculated value
 
@@ -264,8 +234,6 @@ actions:
 mode: single
 ```
 
----
-
 Logic Summary
 
 On each `router_level_adapted` update:
@@ -276,9 +244,7 @@ On each `router_level_adapted` update:
 
 ![Architecture overview](../images/SO_architecture_overview.png)
 
----
-
-## 8 – Hybrid Mode Management (AUTO / MANUAL)
+## Hybrid Mode Management (AUTO / MANUAL)
 
 An automation dynamically switches:
 
@@ -291,8 +257,6 @@ based on battery state of charge.
 
 * Battery > 79% → Solar Router in AUTO mode
 * Battery < 80% → Solar Router in MANUAL mode with **SO** control
-
----
 
 ### Example Automation
 
@@ -338,9 +302,7 @@ actions:
 mode: single
 ```
 
----
-
-## 9 – Conclusion
+## Conclusion
 
 This implementation reflects my personal approach.
 Adjustments may be required depending on your installation.
@@ -350,9 +312,7 @@ However, it provides a solid technical foundation for designing hybrid solar rou
 In my case, it fully meets the original objective:
 **prioritizing water heater usage over battery charge when appropriate.**
 
----
-
-## 10 – Appendix
+## Appendix
 
 General **SO** settings and water heater device configuration:
 

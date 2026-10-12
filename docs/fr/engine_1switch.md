@@ -1,31 +1,33 @@
 # Engine 1 x switch
 
+## Description
+
 Ce package implémente le moteur du routeur solaire qui détermine si l'énergie peut être détournée vers une charge locale ou non.
 
-L'***Engine 1 x switch*** appelle le compteur d'énergie à chaque mise à jour de la valeur de celui-ci pour obtenir la puissance réelle consommée. Si l'énergie envoyée au réseau est supérieure au niveau de démarrage du détournement (en W) pendant le temps de démarrage (en s), le relais est fermé pour utiliser l'énergie localement. Lorsque l'énergie envoyée au réseau atteint le niveau défini (en W) pour arrêter le détournement pendant le temps d'arrêt (en s), le relais est ouvert et la consommation locale est arrêtée.
+**Engine 1 x switch** lit le compteur de puissance à chaque mise à jour pour obtenir la puissance réelle consommée. Si l'énergie envoyée au réseau dépasse le niveau de démarrage (W) pendant le tempo de démarrage (s), le relais se ferme pour consommer l'énergie localement. Lorsque l'énergie envoyée au réseau descend au niveau d'arrêt (W) pendant le tempo d'arrêt (s), le relais s'ouvre et la consommation locale est arrêtée.
 
-La régulation automatique du *engine_1switch* peut être activée ou désactivée avec l'interrupteur d'activation.
+La régulation automatique du moteur peut être activée ou désactivée avec l'interrupteur d'activation.
 
 Le schéma suivant représente la consommation avec ce moteur activé :
 
-![engine_1switch](images/engine_1switch.png)
+![Engine 1 x switch](images/engine_1switch.png)
 
 **Légende :**
 
- * Vert : Énergie consommée provenant des panneaux solaires (autoconsommation)
- * Jaune : Énergie envoyée au réseau
- * Rouge : Énergie consommée provenant du réseau
+ * Vert : énergie consommée provenant des panneaux solaires (autoconsommation)
+ * Jaune : énergie envoyée au réseau
+ * Rouge : énergie consommée provenant du réseau
 
 **Comment ça fonctionne ?**
 
 * **①** La partie jaune du graphique montre le niveau de démarrage. Lorsque l'énergie envoyée au réseau atteint le niveau de démarrage, l'énergie est détournée localement.
-* **②** La partie jaune du graphique montre le niveau d'arrêt. Dans cet exemple, 0W.
+* **②** La partie jaune du graphique montre le niveau d'arrêt. Dans cet exemple, 0 W.
 
 !!! Danger "Définissez soigneusement les niveaux de démarrage et d'arrêt"
     Le niveau de démarrage doit être supérieur à la puissance de la charge branchée au routeur solaire. Sinon, dès que l'énergie sera détournée vers la charge, le niveau d'arrêt sera atteint et vous verrez le routeur basculer entre ON et OFF (en fonction de la temporisation que vous avez définie).
 
-!!! Astuce "Ajustez finement les temps de démarrage et d'arrêt"
-    Les temps de démarrage et d'arrêt déterminent la réactivité de la régulation. Ces délais doivent être finement ajustés pour éviter les oscillations. Par exemple, si vous avez une cuisinière électrique, faites attention aux délais de chauffe.
+!!! tip "Ajustez finement les tempos de démarrage et d'arrêt"
+    Les tempos de démarrage et d'arrêt déterminent la réactivité de la régulation. Ces délais doivent être finement ajustés pour éviter les oscillations. Par exemple, si vous avez une cuisinière électrique, faites attention aux délais de chauffe.
 
 ## Configuration
 
@@ -46,8 +48,15 @@ packages:
           hide_leds: 'True'
 ```
 
-Il est necessaire de définir `green_led_pin` et `yellow_led_pin` dans la section `vars` comme montré dans l'exemple ci-dessus.
+Lorsque ce package est utilisé, il est nécessaire de définir `green_led_pin` et `yellow_led_pin` dans la section `vars` comme montré dans l'exemple ci-dessus.
 
- * Le paramètre `xxx_led_inverted` permet de définir si la LED est active sur niveau haut ou bas. Ce paramètre est optionnel.
- * Le paramètre `hide_regulators` permet de définir si le capteur de régulateur est affiché dans HA. Ce paramètre est optionnel.
- * Le paramètre `hide_leds` permet de définir si les valeurs des leds sont affichées dans HA. Ce paramètre est optionnel.
+### Variables
+
+| Variable | Requis | Défaut | Description |
+| --- | --- | --- | --- |
+| `green_led_pin` | oui | — | Broche GPIO pour la LED verte d'état |
+| `yellow_led_pin` | oui | — | Broche GPIO pour la LED jaune réseau/erreur |
+| `green_led_inverted` | non | `'False'` | Mettre à `'True'` si la LED verte est active à l'état bas |
+| `yellow_led_inverted` | non | `'False'` | Mettre à `'True'` si la LED jaune est active à l'état bas |
+| `hide_regulators` | non | `'True'` | Mettre à `'False'` pour exposer l'état des relais dans Home Assistant |
+| `hide_leds` | non | `'True'` | Mettre à `'False'` pour exposer l'état des LED dans Home Assistant |

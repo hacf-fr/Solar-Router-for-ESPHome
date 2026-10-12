@@ -1,17 +1,24 @@
 # Engine 1 x dimmer
 
-Ce package implémente le moteur du routeur solaire qui détermine quand et quelle quantité d'énergie doit être déviée vers la charge.
+## Description
 
-L'**Engine 1 x dimmer** appelle le compteur d'énergie à chaque mise à jour de la valeur de celui-ci pour obtenir l'énergie réelle échangée avec le réseau. Si l'énergie produite est supérieure à l'énergie consommée et dépasse la cible d'échange définie, le moteur déterminera le **pourcentage d'ouverture du régulateur** et l'ajustera dynamiquement pour atteindre la cible.
+Ce package implémente le moteur du routeur solaire qui détermine quand et quelle quantité d'énergie doit être détournée vers la charge.
+
+**Engine 1 x dimmer** lit le compteur de puissance à chaque mise à jour pour obtenir l'énergie réelle échangée avec le réseau. Si l'énergie produite dépasse l'énergie consommée et que le surplus dépasse la cible d'échange configurée, le moteur calcule le **pourcentage d'ouverture du régulateur** et l'ajuste dynamiquement pour atteindre la cible.
 
 La régulation automatique du moteur peut être activée ou désactivée avec l'interrupteur d'activation.
- - Lors de son activation, l'interrupteur ON/OFF du mode manuel est coupé.
 
-Un second interrupteur permet le ON/OFF général en mode manuel. Il est nécessaire de l'ajouter pour rendre le projet compatible avec https://github.com/jmcollin78/solar_optimizer
- - Lors de son activation, l'interrupteur du mode automatique est coupé.
- - Lors de la désactivation de cet interrupteur, la consigne d'angle de conduction du triac passe à 0.
+## Router Level vs Regulator Opening
 
-Pour que le triac puisse être piloté, il faut qu'un de ces deux interrupteurs soit activé, sinon le triac reste sur OFF.
+Le routeur solaire utilise deux contrôles de niveau distincts mais liés :
+
+- **Router Level** : c'est le contrôle principal du système (0-100 %) qui représente l'état global du routage. Il pilote les indicateurs LED et la logique du compteur d'énergie. Lorsque la régulation automatique est activée, ce niveau est ajusté dynamiquement en fonction des mesures de puissance.
+
+- **Regulator Opening** : cela représente le niveau d'ouverture réel (0-100 %) du régulateur physique. Par défaut, il reflète le niveau du routeur puisqu'il n'y a qu'un seul régulateur. Bien qu'il puisse être contrôlé indépendamment, les changements de `regulator_opening` seuls n'affectent pas le `router_level` et ne déclenchent pas de changements d'état des LED.
+
+L'entité d'ouverture du régulateur est masquée de Home Assistant par défaut. Pour l'exposer, définissez `hide_regulators: 'False'` dans vos `vars`.
+
+Note : il est recommandé d'ajuster le `router_level` plutôt que le `regulator_opening` directement, afin d'assurer un retour d'état correct via les LED et le suivi d'énergie.
 
 ## Configuration
 
@@ -32,10 +39,15 @@ packages:
           hide_leds: 'True'
 ```
 
-Il est necessaire de définir `green_led_pin` et `yellow_led_pin` dans la section `vars` comme montré dans l'exemple ci-dessus.
+Lorsque ce package est utilisé, il est nécessaire de définir `green_led_pin` et `yellow_led_pin` dans la section `vars` comme montré dans l'exemple ci-dessus.
 
- * Le paramètre `xxx_led_inverted` permet de définir si la LED est active sur niveau haut ou bas. Ce paramètre est optionnel.
- * Le paramètre `hide_regulators` permet de définir si le capteur de régulateur est affiché dans HA. Ce paramètre est optionnel.
- * Le paramètre `hide_leds` permet de définir si les valeurs des leds sont affichées dans HA. Ce paramètre est optionnel.
+### Variables
 
-
+| Variable | Requis | Défaut | Description |
+| --- | --- | --- | --- |
+| `green_led_pin` | oui | — | Broche GPIO pour la LED verte d'état |
+| `yellow_led_pin` | oui | — | Broche GPIO pour la LED jaune réseau/erreur |
+| `green_led_inverted` | non | `'False'` | Mettre à `'True'` si la LED verte est active à l'état bas |
+| `yellow_led_inverted` | non | `'False'` | Mettre à `'True'` si la LED jaune est active à l'état bas |
+| `hide_regulators` | non | `'True'` | Mettre à `'False'` pour exposer les capteurs de régulateur dans Home Assistant |
+| `hide_leds` | non | `'True'` | Mettre à `'False'` pour exposer l'état des LED dans Home Assistant |

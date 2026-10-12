@@ -22,7 +22,7 @@ device page. Each one is named after the package file it comes from, and its sta
 The list you see *is* the composition of your router. A package that is not loaded publishes
 nothing, so the regulator, the power meter and the engine can all be told apart at a glance — which
 matters most for the regulators, since `regulator_triac`, `regulator_solid_state_relay` and
-`regulator_mecanical_relay` publish no other entity at all.
+`regulator_mechanical_relay` publish no other entity at all.
 
 ## Reading the versions
 
@@ -50,9 +50,9 @@ cannot change while the device is running. Two consequences worth knowing:
 
 ## Packages loaded more than once
 
-`regulator_mecanical_relay` and `scheduler_forced_run` can be loaded several times, so their entity
+`regulator_mechanical_relay` and `scheduler_forced_run` can be loaded several times, so their entity
 name carries their unique id. With three mechanical relays you get
-`regulator_mecanical_relay_1`, `_2` and `_3`; with the default scheduler you get
+`regulator_mechanical_relay_1`, `_2` and `_3`; with the default scheduler you get
 `scheduler_forced_run_Forced`.
 
 !!! warning "One module is invisible"

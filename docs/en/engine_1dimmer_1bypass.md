@@ -1,12 +1,14 @@
 # Engine 1 x dimmer + 1 x bypass
 
+## Description
+
 This package implements the engine of the solar router which determines when and how much energy has to be diverted to the load, with a bypass function for maximum efficiency.
 
-When the regulator is intensively used for an extended period, the regulator will tends to overheat. This engine is designed to avoid this issue by activating a bypass relay and turning off the regulator when the regulator is opened at 100% for an extended period. To avoid flickering, the bypass relay is activated only when the regulator is opened at 100% for a number of consecutive regulation.
+When the regulator is used intensively for an extended period, it tends to overheat. This engine avoids this issue by activating a bypass relay and switching off the regulator when the regulator has been fully open (100 %) for a configurable number of consecutive regulation cycles. To prevent flickering the bypass relay is only activated after this threshold is reached.
 
-**Engine 1 x dimmer + 1 x bypass** calls the power meter everytime it's updated to get the actual energy exchanged with the grid. If energy produced is greater than energy consumed and exceeds the defined exchange target, the engine will determine the **percentage of regulator opening** and adjusts it dynamically to reach the target. When the regulator reaches 100% for an extended period, the bypass relay is activated for maximum efficiency.
+**Engine 1 x dimmer + 1 x bypass** reads the power meter on every update to get the actual energy exchanged with the grid. If energy produced exceeds energy consumed and the surplus exceeds the configured exchange target, the engine calculates the **percentage of regulator opening** and adjusts it dynamically to reach the target. When the regulator stays at 100 % for the configured number of cycles, the bypass relay is activated for maximum efficiency.
 
-Engine's automatic regulation can be activated or deactivated with the activation switch.
+Engine automatic regulation can be activated or deactivated with the activation switch.
 
 ## How to wire the bypass relay
 
@@ -26,7 +28,7 @@ The solar router uses three distinct but related level controls:
 
 - **Regulator Opening**: This represents the actual opening level (0-100%) of the physical regulator. By default, it mirrors the router level since there is only one regulator. While it can be controlled independently, changes to regulator_opening alone won't affect the router_level or trigger LED state changes.
 
-- **Bypass Relay**: This represents the actual state (ON/OFF) of the physical bypass relay. When the Regulation is enabled, this relay automatically turns on after the duration `Bypass tempo` defined in Home Assistant. When the Regulation is disabled, you can manually trigger this relay to fully energized your load, LEDs and Energy Counter (if enabled) will not be triggered. You can also set the *Router Level* to 100, this will enable the relay, fully energized your load, trigger LEDs and Energy Counter.
+- **Bypass Relay**: This represents the actual state (ON/OFF) of the physical bypass relay. When regulation is enabled, this relay automatically turns on after the duration `Bypass tempo` defined in Home Assistant. When regulation is disabled, you can manually trigger this relay to fully energize your load; LEDs and Energy Counter (if enabled) will not be triggered. You can also set the *Router Level* to 100: this enables the relay, fully energizes your load, and triggers LEDs and Energy Counter.
 
 ## Configuration
 
@@ -47,11 +49,18 @@ packages:
           hide_leds: 'True'
 ```
 
-When this package is used it is required to define `green_led_pin` and `yellow_led_pin` in `vars` section as show in the upper example.
+When this package is used it is required to define `green_led_pin` and `yellow_led_pin` in the `vars` section as shown in the example above.
 
-* `xxx_led_inverted` can define is led is active on high or low signal and is optional.
-* `hide_regulators` allow to hide or show regulators sensors from HA and is optionnal.
-* `hide_leds` allow to hide or show leds values from HA and is optionnal.
+### Variables
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `green_led_pin` | yes | — | GPIO pin for the green status LED |
+| `yellow_led_pin` | yes | — | GPIO pin for the yellow network/error LED |
+| `green_led_inverted` | no | `'False'` | Set to `'True'` if the green LED is active low |
+| `yellow_led_inverted` | no | `'False'` | Set to `'True'` if the yellow LED is active low |
+| `hide_regulators` | no | `'True'` | Set to `'False'` to expose regulator sensors in Home Assistant |
+| `hide_leds` | no | `'True'` | Set to `'False'` to expose LED state sensors in Home Assistant |
 
 !!! tip "Adjusting Bypass Tempo"
-    The `Bypass Tempo` determines how many consecutive regulations at 100% are needed before activating the bypass relay. A lower value will make the bypass more reactive but might cause more frequent switching (flickering). If your powermeter is updated 1 time per second, `Bypass Tempo` can be approximated as the time in second with the regulator at 100% before which the the bypass relay is activated, else this correpond to the number of time that your powermeter is updated.
+    The `Bypass Tempo` determines how many consecutive regulations at 100% are needed before activating the bypass relay. A lower value will make the bypass more reactive but might cause more frequent switching (flickering). If your power meter is updated 1 time per second, `Bypass Tempo` can be approximated as the time in seconds with the regulator at 100% before the bypass relay is activated; otherwise it corresponds to the number of times your power meter is updated.

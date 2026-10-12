@@ -1,12 +1,8 @@
-# Optimisation de l'autoconsommation grâce à **Solar-Router-for-ESPHome** et **Solar-Oprimiser**
+# Optimisation de l'autoconsommation grâce à **Solar-Router-for-ESPHome** et **Solar Optimizer**
 
-## 1 – Crédit
+**Credits : [@M3c4tr0x](https://github.com/M3c4tr0x)**
 
-[@M3c4tr0x](https://github.com/M3c4tr0x)
-
----
-
-## 2 – Objectif : Mettre en place une gestion hybride du Solar Router
+## Objectif : Mettre en place une gestion hybride du Solar Router
 
 Par conception, le routeur solaire permet de piloter une charge afin de converger vers une **injection réseau nulle** en modulant dynamiquement sa puissance.
 
@@ -23,13 +19,11 @@ Dans une installation avec batterie, cette logique est contre-productive :
 L’objectif est donc de pouvoir :
 
 * Exploiter le routeur en **mode manuel** via home assistant lorsqu'on veut prioriser le routeur sur la charge batterie
-* Basculer en **mode automatique** lorsque la batterie est suffisament chargée et qu'on veut augmenter la réactiviter du routage
+* Basculer en **mode automatique** lorsque la batterie est suffisamment chargée et que l'on veut augmenter la réactivité du routage
 
 La solution présentée repose sur l’intégration  [**Solar Optimizer (SO)**](https://github.com/jmcollin78/solar_optimizer) développée par [Jean-Marc COLLIN](https://github.com/jmcollin78)
 
----
-
-## 3 – Présentation de Solar Optimizer (SO)
+## Présentation de Solar Optimizer (SO)
 
 Solar Optimizer est une intégration Home Assistant qui agit comme le « chef d'orchestre »du pilotage des différents appareils qu'il
 gère.
@@ -46,9 +40,7 @@ Contrairement à un routeur classique, son objectif n’est pas d’atteindre l�
 
 **SO** peut gérer plusieurs équipements simultanément.
 
----
-
-## 4 – Pré-requis pour intégrer le Solar Router dans SO
+## Pré-requis pour intégrer le Solar Router dans SO
 
 ### Gestion ON / OFF
 
@@ -57,8 +49,6 @@ Le Solar Router ne possède pas de switch ON/OFF natif (uniquement AUTO/MANUAL).
 Or **SO** nécessite une entité ON/OFF.
 
 Il faut donc créer un **template switch basé sur un `input_boolean`** comme décrit dans le chapitre 6.
-
----
 
 ### Gestion de la puissance
 
@@ -69,9 +59,7 @@ Deux possibilités :
 
 La seconde méthode permet d’appliquer une table de correction pour compenser la non-linéarité réelle de la charge.
 
----
-
-## 5 – Configuration du Solar Router dans SO
+## Configuration du Solar Router dans SO
 
 ### Pas de puissance
 
@@ -80,15 +68,11 @@ Exemple pour un chauffe-eau 1800W
 
 ![Power settings](../images/SO_power_settings.png)
 
----
-
 ### Paramètres temporels
 
 Pour un équipement résistif tolérant les commutations fréquentes, et afin d’obtenir une forte réactivité :
 
 ![Timing settings](../images/SO_timing_settings.png)
-
----
 
 ### Services d’action
 
@@ -100,15 +84,11 @@ Pour un équipement résistif tolérant les commutations fréquentes, et afin d�
 
 ![Services](../images/SO_service_configuration.png)
 
----
-
 ### Facteur de division
 
 Permet à **SO** de convertir la puissance réelle (0–1800W) vers un niveau de routage (0–100%).
 
 ![Division factor](../images/SO_division_factor.png)
-
----
 
 ### Paramètres optionnels
 
@@ -118,9 +98,7 @@ Permet à **SO** de convertir la puissance réelle (0–1800W) vers un niveau de
 Dans mon cas, ces paramètres ne sont pas utilisés.
 La décision de forçage nocturne repose sur l’énergie stockée en fin de journée via une automatisation dédiée.
 
----
-
-## 6 – Template Switch ON/OFF (`input_boolean`)
+## Template Switch ON/OFF (`input_boolean`)
 
 Comme le Solar Router ne gère pas ON/OFF directement :
 
@@ -153,9 +131,7 @@ mode: single
 metadata: {}
 ```
 
----
-
-## 7 – Proxy de réglage du point de fonctionnement
+## Proxy de réglage du point de fonctionnement
 
 ### Architecture
 
@@ -176,8 +152,6 @@ input_number.router_level_desired
 Cette valeur représente le pourcentage théorique souhaité.
 
 `number.router_level_adapted` applique une correction par interpolation.
-
----
 
 ### Template de correction
 
@@ -224,16 +198,12 @@ Cette valeur représente le pourcentage théorique souhaité.
 {{ adapted_value | round(1) }}
 ```
 
----
-
 Explications :
 
 * Mise à jour à chaque modification de `router_level_desired`
 * La table `point` sert de correspondance pour faire correspondre le % demandé à la bonne valeur de réglage du routeur pour tomber le plus proche possible du point de fonctionnement théorique équivalent.\ Elle peut être obtenu facilement en mesurant la puissance de la charge à différent % de consigne de **router_level**.\
 * L'algorithme réalise simplement une interpolation linéaire et trouve la valeur idéale.
 * Reste maintenant à mettre à jour le **router_level** de **SR**.
-
----
 
 ### Automatisation de mise à jour de **routeur_level** avec la valeur calculée
 
@@ -286,9 +256,7 @@ Explications : à chaque changement de **router_level_adapted** :
 Récapitulatif visuel des informations principales :
 
 ![](../images/SO_architecture_overview.png)
----
-
-## 8 – Gestion hybride (AUTO / MANUEL)
+## Gestion hybride (AUTO / MANUEL)
 
 Une automatisation pilote :
 
@@ -301,8 +269,6 @@ en fonction du SOC batterie.
 
 * Batterie > 79% → Mode AUTO (gestion surplus directe)
 * Batterie < 80% → Mode MANUEL avec gestion par **SO**
-
----
 
 ### Automatisation
 
@@ -348,9 +314,7 @@ actions:
 mode: single
 ```
 
----
-
-## 9 – Conclusion
+##Conclusion
 
 Cette implémentation représente ma vision d’une gestion hybride efficace.
 
@@ -364,9 +328,7 @@ Dans mon cas, elle répond parfaitement à l’objectif initial :
 
 **Prioriser l’usage du chauffe-eau par rapport à la charge batterie lorsque nécessaire.**
 
----
-
-## 10 – Annexes
+## Annexes
 
 Réglages généraux **SO** + configuration chauffe-eau :
 

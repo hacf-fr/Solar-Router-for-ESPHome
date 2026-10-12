@@ -1,12 +1,12 @@
 !!! note "Changelog update"
-    ChangeLog is only available in officially published [documentation](https://hacf-fr.github.io/Solar-Router-for-ESPHome/changelog/).  
-    Changelog is updated manually after a new release is published.
+    The official changelog is available in the [published documentation](https://hacf-fr.github.io/Solar-Router-for-ESPHome/changelog/).
 
-    Changelog is generated using `git-cliff`.  
-    Version are based on tags.  
-    Lines added in changelog are based on *merge commit messages*.  
-    The script `tools/update_documantation.sh` is designed to update automatically and upload the documentation to gh-pages.  
-    The log of the current version is used to describe the release on GitHub.
+    **Generation Process**:
+    - The changelog is automatically generated using [git-cliff](https://github.com/orhun/git-cliff) based on conventional commit messages.
+    - Versions are based on Git tags.
+    - Lines are extracted from *merge commit messages*.
 
-    The script `tools\update_documentation.sh` is designed to update `changelog.md`, generate and publish `mkdocs` documentation on [github pages](https://hacf-fr.github.io/Solar-Router-for-ESPHome/).  
-    **The script updating the documentation is entented to be used by repository maintainer only whe a new release is published.**
+    **Documentation Update**:
+    The `tools/update_documentation.sh` script (maintained by repository maintainers only) updates `changelog.md`, builds the MkDocs site, and deploys to [GitHub Pages](https://hacf-fr.github.io/Solar-Router-for-ESPHome/). The current version's log is used to describe the GitHub release.
+
+    **Note**: This script is intended to be used only by the repository maintainer when a new release is published.

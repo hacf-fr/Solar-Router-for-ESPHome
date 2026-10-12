@@ -1,11 +1,19 @@
-# Power meter Fronius
+# Fronius Power Meter
 
-Ce *power meter* est conçu pour fonctionner avec le [Fronius Smart Meter](https://www.fronius.com/en-gb/uk/solar-energy/installers-partners/technical-data/all-products/system-monitoring/hardware/fronius-smart-meter/fronius-smart-meter-ts-100a-1) en conjonction avec un [Onduleur Fronius](https://www.fronius.com/en-gb/uk/solar-energy/installers-partners/technical-data/all-products/inverters/fronius-primo-gen24/fronius-primo-gen24-3-0).
+## Description
 
-Fronius fournit une *Interface Ouverte* appelée [Fronius Solar API](https://www.fronius.com/en-gb/uk/solar-energy/installers-partners/technical-data/all-products/system-monitoring/open-interfaces/fronius-solar-api-json-) qui permet d'interroger l'onduleur et d'obtenir des données **localement**.
+Ce compteur de puissance fonctionne avec un [Fronius Smart Meter](https://www.fronius.com/en-gb/uk/solar-energy/installers-partners/technical-data/all-products/system-monitoring/hardware/fronius-smart-meter/fronius-smart-meter-ts-100a-1) associé à un [onduleur Fronius](https://www.fronius.com/en-gb/uk/solar-energy/installers-partners/technical-data/all-products/inverters/fronius-primo-gen24/fronius-primo-gen24-3-0).
+
+Fronius fournit une interface ouverte appelée [Fronius Solar API](https://www.fronius.com/en-gb/uk/solar-energy/installers-partners/technical-data/all-products/system-monitoring/open-interfaces/fronius-solar-api-json-) qui permet d'interroger l'onduleur et d'obtenir des données **localement**.
+
+Ce package est activé/désactivé via la globale `power_meter_activated`. Par défaut, un compteur de puissance est désactivé au démarrage. L'interrupteur d'activation dans Home Assistant détermine si le compteur doit tourner.
+
+!!! warning "Dépendance réseau"
+    Ce compteur de puissance nécessite le réseau pour recueillir les informations sur l'énergie échangée avec le réseau électrique.
+
+## Configuration
 
 Pour utiliser ce package, ajoutez les lignes suivantes à votre fichier de configuration :
-
 
 ```yaml linenums="1"
 packages:
@@ -17,16 +25,13 @@ packages:
           power_meter_ip_address: "192.168.1.21"
 ```
 
-Cette intégration doit connaître l'adresse IP du proxy du *power meter*. Cette adresse IP doit être définie dans `power_meter_ip_address` dans la section `vars` de votre configuration, comme dans l'exemple ci-dessus.
+Si ce compteur est utilisé à l'intérieur d'un proxy, activez-le au démarrage en définissant `power_meter_activated_at_start` à `"1"` dans la section `vars`.
 
-Ce package est activé/désactivé à l'aide d'une variable globale `power_meter_activated`. Par défaut, un compteur de puissance est désactivé au démarrage. L'interrupteur d'activation dans home assistant détermine si le compteur de puissance doit être démarré ou non.
+### Variables
 
-Si ce compteur de puissance est utilisé à l'intérieur d'un proxy, il est nécessaire de l'activer au démarrage en définissant `power_meter_activated_at_start` à `1` dans votre fichier de configuration yaml, comme dans l'exemple ci-dessous :
-
-```yaml linenums="1"
-power_meter_activated_at_start: "1"
-```
-
-!!! warning "Dépendance réseau"
-    Ce compteur électrique nécessite une connexion réseau pour recueillir des informations sur l'énergie échangée avec le réseau électrique.
-
+| Variable | Requis | Défaut | Description |
+| --- | --- | --- | --- |
+| `power_meter_ip_address` | oui | — | Adresse IP de l'onduleur Fronius |
+| `power_meter_activated_at_start` | non | `"0"` | Mettre à `"1"` pour activer le compteur au démarrage (requis en mode proxy) |
+| `power_sign` | non | `"1"` | Multiplicateur de polarité (`"-1"` pour inverser l'orientation du TC) |
+| `consumption_sensor_internal` | non | `"false"` | Mettre à `"true"` pour masquer le capteur Consumption dans Home Assistant |

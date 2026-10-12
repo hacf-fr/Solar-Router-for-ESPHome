@@ -1,6 +1,15 @@
 # Shelly EM Power Meter
 
-This power meter is designed get power consumption directly from Shelly EM sensor.
+## Description
+
+This power meter reads power consumption directly from a Shelly EM energy meter over HTTP.
+
+This package is activated/deactivated with the global `power_meter_activated`. By default, a power meter is deactivated at startup. The activation switch in Home Assistant determines whether the power meter should run.
+
+!!! warning "Network dependency"
+    This power meter requires the network to gather information about energy exchanged with the grid.
+
+## Configuration
 
 To use this package, add the following lines to your configuration file:
 
@@ -8,25 +17,22 @@ To use this package, add the following lines to your configuration file:
 packages:
   power_meter:
     url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
-    file: solar_router/power_meter_shelly_em.yaml
-    vars:
-      power_meter_ip_address: "192.168.1.21"
-      emeter_index: "0"
+    files:
+      - path: solar_router/power_meter_shelly_em.yaml
+        vars:
+          power_meter_ip_address: "192.168.1.21"
+          emeter_index: "0"
 ```
 
-This package needs to know the IP address of the inverter. This IP address has to be defined by `power_meter_ip_address` and `emeter_index` into `vars` section as show upper.
+If this power meter is used inside a proxy, activate it at startup by setting `power_meter_activated_at_start` to `"1"` in the `vars` section.
 
-!!! note "HTTP Authentication Header"
-    This power meter allow to define HTTP Authentication Header with the variable `power_meter_auth_header`.
-    This variable can be set in `vars` section.
+### Variables
 
-This package is activated/deactivated with the variable `power_meter_activated`. By default, a power meter is deactivated at startup. The activation switch in home assistant determines if the power meter should be started or not.
-
-This power meter can be use in a proxy (a Solar Router only using a power meter). If this power meter is used in a proxy, it is required to activate it at startup by setting `power_meter_activated_at_start` to `1` in your yaml in the `vars` section defining the power meter configuration :
-
-```yaml linenums="1"
-power_meter_activated_at_start: "1"
-```
-
-!!! warning "Network dependency"
-    This power meter require the network to gather information about energy exchanged with the grid.
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `power_meter_ip_address` | yes | — | IP address of the Shelly EM |
+| `emeter_index` | yes | — | Shelly EM channel index (`"0"` or `"1"`) |
+| `power_meter_auth_header` | no | — | HTTP Authorization header (Basic auth) if the Shelly requires authentication |
+| `power_meter_activated_at_start` | no | `"0"` | Set to `"1"` to activate the power meter at boot (required for proxy use) |
+| `power_sign` | no | `"1"` | Polarity multiplier (`"-1"` to invert CT orientation) |
+| `consumption_sensor_internal` | no | `"false"` | Set to `"true"` to hide the Consumption sensor in Home Assistant |

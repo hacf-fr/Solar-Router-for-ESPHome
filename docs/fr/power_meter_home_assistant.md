@@ -1,9 +1,21 @@
-# Power meter pour Home Assistant
+# Home Assistant Power Meter
 
-Ce *power meter* est conçu pour obtenir la consommation électrique directement à partir d'un capteur Home Assistant.
+## Description
+
+Ce compteur de puissance lit la consommation directement depuis des capteurs Home Assistant.
+
+* `main_power_sensor` représente la puissance échangée avec le réseau. Il est attendu en Watts (W), positif (> 0) lorsque l'électricité est consommée depuis le réseau, et négatif (< 0) lorsque l'électricité est envoyée au réseau.
+
+* `consumption_sensor` représente la puissance consommée par votre maison. Cette valeur sert, par exemple, au calcul de l'énergie détournée.
+
+!!! warning "Disponibilité des données et fréquence de rafraîchissement"
+    Ce compteur s'appuie sur Home Assistant pour recueillir la valeur de l'énergie échangée avec le réseau. Il dépend également de la fréquence de mise à jour des capteurs. Si un capteur est mis à jour trop lentement, la régulation peut ne pas fonctionner comme prévu.
+
+    Contrairement à ce compteur Home Assistant, les compteurs natifs sont autonomes et peuvent continuer à réguler même si Home Assistant est hors ligne. Certains compteurs ont un accès direct aux mesures et peuvent même être indépendants du réseau.
+
+## Configuration
 
 Pour utiliser ce package, ajoutez les lignes suivantes à votre fichier de configuration :
-
 
 ```yaml linenums="1"
 packages:
@@ -16,14 +28,10 @@ packages:
           consumption_sensor: "sensor.solarnet_power_load_consumed"
 ```
 
-Ce package doit connaître le capteur à utiliser pour obtenir l'énergie échangée avec le réseau et l'énergie consommé par la maison. Le capteur déchange d'énergie avec le réseau doit être défini par `main_power_sensor` et la capteur de consommation par `consumption_sensor` dans la section `substitutions` de votre configuration comme présenté dans l'exemple ci-dessus.
+### Variables
 
-* `main_power_sensor` représent l'energie echangée avec le réseau. Il est attendu que ce capteur soit en Watts (W), qu'il soit positif (>0) lorsque l'électricité est consommée depuis le réseau et négatif (<0) lorsque l'électricité est envoyée au réseau. 
-
-* `consumption_sensor` représente l'énergie consomée par votre maison. Cette imformation permet, par exemple, le calcul de l'énergie théorique reroutée.
-
-!!! warning "Disponibilité des données et fréquence de rafraîchissement"
-    Ce compteur électrique s'appuie sur Home Assistant pour recueillir la valeur de l'énergie échangée avec le réseau. Il dépend également de la fréquence de mise à jour des capteurs. Si un capteur est mis à jour trop lentement, la régulation peut ne pas fonctionner comme prévu.
-
-    Contrairement aux compteurs électriques de Home Assistant, les compteurs électriques natifs sont autonomes et peuvent continuer à réguler même si Home Assistant est hors ligne. Certains compteurs électriques peuvent avoir un accès direct aux mesures et peuvent même être indépendants du réseau.
-
+| Variable | Requis | Défaut | Description |
+| --- | --- | --- | --- |
+| `main_power_sensor` | oui | — | Identifiant d'entité Home Assistant pour la puissance d'échange réseau (W) |
+| `consumption_sensor` | oui | — | Identifiant d'entité Home Assistant pour la consommation de la maison (W) |
+| `power_sign` | non | `"1"` | Multiplicateur de polarité (`"-1"` pour inverser le signe de `main_power_sensor`) |
