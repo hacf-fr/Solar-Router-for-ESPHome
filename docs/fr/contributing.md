@@ -118,6 +118,6 @@ La documentation est stockée dans le répertoire `docs`. Pour voir vos modifica
     Les versions sont basées sur les tags.  
     Les lignes ajoutées dans le changelog sont basées sur les *messages de commit de fusion*.
 
-    Le script `tools\update_documentation.sh` est conçu pour mettre à jour `changelog.md`, générer et publier la documentation `mkdocs` sur les [pages github](https://hacf-fr.github.io/Solar-Router-for-ESPHome/).  
+    Le script `tools/update_documentation.sh` est conçu pour mettre à jour `changelog.md`, générer et publier la documentation `mkdocs` sur les [pages github](https://hacf-fr.github.io/Solar-Router-for-ESPHome/).  
     **Le script de mise à jour de la documentation est destiné à être utilisé uniquement par le mainteneur du dépôt.**
 
