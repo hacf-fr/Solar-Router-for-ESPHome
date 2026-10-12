@@ -11,7 +11,10 @@ Ce package lit la puissance d'échange réseau sur le canal 2 du JSY-MK-194T via
 
 ![jsy-mk-194t](../images/jsy-mk-194t.png)
 
-## 1 – Partie commune : communication avec le JSY-MK-194T
+## Configuration de la partie commune
+
+!!! note "Configuration partagée"
+    Le fichier `solar_router/jsy-mk-194t_common.yaml` configure la communication UART et est utilisé à la fois par le compteur de puissance et le compteur d'énergie.
 
 Ce fichier gère la communication avec la carte. Ajoutez `jsy-mk-194t_common.yaml`
 et configurez les GPIO selon votre matériel comme dans l'exemple ci-dessous :
@@ -54,7 +57,7 @@ packages:
 | `PF_Ch2_internal` | non | `"true"` | Masque Power Factor Ch2 si `"true"` |
 | `NAE_Ch2_internal` | non | `"true"` | Masque Negative Active Energy Ch2 si `"true"` |
 
-## 2 – Activation du compteur de puissance
+## Configuration du compteur de puissance
 
 Pour activer le compteur de puissance, ajoutez-le à votre configuration comme
 dans l'exemple ci-dessous :

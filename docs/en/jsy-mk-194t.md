@@ -5,7 +5,10 @@ Two configurations are possible when using this sensor:
 - **standalone**: both sensors of the JSY-MK-194T are used (Ch1: sensor on the load, Ch2: household power sensor at the utility meter)
 - **hybrid** (example: Home Assistant for real_power measurement + JSY-MK-194T for derived energy): useful if the router is far from the measurement point, or if the contract is zero-injection (you will need to create a virtual sensor in Home Assistant to simulate injection by estimating the potential energy not produced; see for example the project https://github.com/M3c4tr0x/ESP-PowerSunSensor)
 
-## 1 – Common Part: Communication with the JSY-MK-194T
+## Common Configuration
+
+!!! note "Shared configuration"
+    `solar_router/jsy-mk-194t_common.yaml` configures UART communication and is used by both the power meter and the energy counter.
 
 This file manages communication with the board. If you wish, you can expose the JSY-MK-194T measurements in Home Assistant; see the example below.
 
@@ -44,7 +47,7 @@ List of available JSY-MK-194T sensors:
   NAE_Ch2_internal: "true"     # Negative Active Energy on Channel 2
 ```
 
-## 2 – Standalone Mode
+## Standalone Mode
 
 This mode allows the router to be 100% autonomous regarding power sensors. Regulation is therefore more precise and faster than when using Home Assistant entities.
 Note that this only works if your system injects surplus power into the grid. Otherwise, see the next section.
@@ -72,7 +75,7 @@ packages:
 		  consumption_sensor_internal: true # Prevents the “Consumption” sensor from being displayed in Home Assistant, as it is never used and remains “unavailable” when using the JSY-MK-194T
 ```
 
-## 3 – Hybrid Mode
+## Hybrid Mode
 
 This mode allows the JSY-MK-194T to be used to measure energy on the load only. Grid-level measurement must be done via Home Assistant, using a virtual sensor that reports an estimated injection power.
 It is useful in systems with no real grid injection, or where the measurement point is inaccessible or too far away.

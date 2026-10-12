@@ -11,7 +11,10 @@ This package reads grid exchange power from channel 2 of the JSY-MK-194T over UA
 
 ![jsy-mk-194t](../images/jsy-mk-194t.png)
 
-## 1 – Common Part: Communication with the JSY-MK-194T
+## Common Configuration
+
+!!! note "Shared configuration"
+    `solar_router/jsy-mk-194t_common.yaml` configures UART communication and is used by both the power meter and the energy counter.
 
 This file manages communication with the board. Add `jsy-mk-194t_common.yaml`
 and configure the GPIOs according to your hardware as shown in the example below:
@@ -54,7 +57,7 @@ packages:
 | `PF_Ch2_internal` | no | `"true"` | Hide Power Factor Ch2 when `"true"` |
 | `NAE_Ch2_internal` | no | `"true"` | Hide Negative Active Energy Ch2 when `"true"` |
 
-## 2 – Enabling the Power Meter
+## Power Meter Configuration
 
 To enable the power meter, simply add it to your configuration as shown
 in the example below:
