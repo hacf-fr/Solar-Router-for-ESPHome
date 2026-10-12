@@ -99,7 +99,7 @@ Voir l'[aperçu des limiteurs de température](temperature_limiter.md).
 
 | Planificateur | Description |
 | --- | --- |
-| [Marche forcée](scheduler_forced_run.md) | Force ou inhibe le routage pendant une fenêtre horaire |
+| [Marche forcée](scheduler.md#forced-run) | Force ou inhibe le routage pendant une fenêtre horaire |
 
 ## Étape 3 : Configurer votre routeur solaire
 

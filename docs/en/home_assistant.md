@@ -66,7 +66,7 @@ Entity IDs depend on your device name. The **Name** column is what ESPHome publi
 
 ### Scheduler (optional)
 
-See [Scheduler Forced Run](scheduler_forced_run.md): Activate scheduler, begin/end hour and minute, router level, checking end threshold.
+See [Scheduler — Forced Run](scheduler.md#forced-run): Activate scheduler, begin/end hour and minute, router level, checking end threshold.
 
 ## Suggested Lovelace dashboard
 

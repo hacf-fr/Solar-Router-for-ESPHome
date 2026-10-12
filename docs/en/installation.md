@@ -99,7 +99,7 @@ See the [temperature limiter overview](temperature_limiter.md).
 
 | Scheduler | Description |
 | --- | --- |
-| [Forced run](scheduler_forced_run.md) | Force or inhibit routing during a time window |
+| [Forced run](scheduler.md#forced-run) | Force or inhibit routing during a time window |
 
 ## Step 3: Configure your solar router
 
