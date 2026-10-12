@@ -54,7 +54,7 @@ Détails : [Aperçu des engines — LED de retour utilisateur](engine.md#leds-de
 * `safety_limit` n'est pas actif (limiteur de température).
 * Pour le moteur ON/OFF : niveau de démarrage / tempos correctement réglés — voir [Engine 1 × switch](engine_1switch.md).
 
-### Le routeur oscille ON/OFF ou le niveau chasse
+### Le routeur oscille ON/OFF
 
 **Vérifications :**
 
