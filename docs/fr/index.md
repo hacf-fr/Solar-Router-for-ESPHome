@@ -8,7 +8,7 @@ Ce composant permet aux utilisateurs de surveiller et de contrôler facilement l
 
 !!! danger "Avis important"
     Ce projet implique de travailler avec de la haute tension (110 ou 230 volts), ce qui peut être dangereux.  
-    Veuillez lire l'[avertissement](disclamer.md) avant de mettre en oeuvre le projet **Solar Router for ESPHome**.
+    Veuillez lire l'[avertissement](disclaimer.md) avant de mettre en oeuvre le projet **Solar Router for ESPHome**.
 
 !!! tips "Capacités étendues avec les capteurs Home Assistant"
 

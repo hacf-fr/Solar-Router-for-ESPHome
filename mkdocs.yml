@@ -6,7 +6,7 @@ copyright: © Copyright hacf-fr (See authors in github repository) - 2024-2025
 
 nav:
       - Home: index.md
-      - Disclamer: disclamer.md
+      - Disclaimer: disclaimer.md
       - Solar Router / Diverter: solar_router.md
       - Hardware: hardware.md
       - Firmware:
@@ -105,7 +105,7 @@ plugins:
                             Blueprint Priority to EV: Blueprint Priorité au VE
                             Blueprint use cases: Cas d'utilisation du blueprint
                             Contributing: Contribution
-                            Disclamer: Avertissement
+                            Disclaimer: Avertissement
                             Energy Counter: Compteur d'énergie
                             Fan controller: Contrôle du ventilateur
                             Usage Examples: Exemples d'utilisation
