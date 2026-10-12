@@ -1,85 +1,115 @@
 # Installation and Configuration
 
-To install your solar router, you need to define the archtecture of your solution between [standalone](firmware.md#standalone-configuration) installation; installation working with [proxy](firmware.md#power-meter-proxy-configuration) or [multiple solar router](firmware.md#multiple-solar-router-configuration) installation.
+## Quick Start
 
-### Step 1: Install and configure ESPHome firmware
+1. Choose your [architecture](firmware.md#choosing-an-architecture) (standalone, proxy, or multiple routers).
+2. Flash an empty ESPHome device and adopt it in Home Assistant (Step 1).
+3. Add the required packages: **power meter** + **engine** + **regulator** (a proxy needs only a power meter).
+4. Fill in each package `vars` from the package documentation (Step 3).
+5. Upload the firmware via OTA from Home Assistant (Step 4).
 
-Install [ESPHome](https://esphome.io) on your ESP as described into [Ready-Made Project](https://esphome.io/projects/) documentation.  
+For a ready-made YAML, start from the [standalone example](example_standalone.md) or the [proxy example](example_proxy.md). If something does not work after flashing, see [Troubleshooting](troubleshooting.md).
+
+```mermaid
+flowchart TD
+  start[Start] --> arch{Architecture?}
+  arch -->|One ESP near meter and load| standalone[Standalone]
+  arch -->|Meter far from load| proxy[Power meter proxy]
+  arch -->|Several loads to divert| multi[Multiple routers]
+  standalone --> pkgs[Pick power meter + engine + regulator]
+  proxy --> proxyPkgs[Proxy ESP: power meter only]
+  proxyPkgs --> clientPkgs[Router ESP: proxy client + engine + regulator]
+  multi --> pkgs
+  pkgs --> configure[Configure vars and flash OTA]
+  clientPkgs --> configure
+```
+
+## Step 1: Install and configure ESPHome firmware
+
+Install [ESPHome](https://esphome.io) on your ESP as described in the [Ready-Made Project](https://esphome.io/projects/) documentation.  
 Select **"Empty ESPHome device"**.
 
 Adopt it into [Home Assistant](https://home-assistant.io).
 
-!!! important "Wifi reconnection"
+!!! important "WiFi reconnection"
     Remove `ap:` and `captive_portal:`.  
-    *This could prevent the solar router from connecting to WiFi in case of loss of connection* 
+    *These can prevent the solar router from reconnecting to WiFi after a connection loss.*
 
-### Step 2: Select packages
+## Step 2: Select packages
 
-A **solar router** needs 3 packages: a **power meter**, a **regulator** and an **engine**.
+A **solar router** needs at least three packages: a **power meter**, a **regulator**, and an **engine**.
 
-A **proxy** just need 1 **power meter** package
+A **proxy** needs only one **power meter** package (activated at startup).
 
-#### Step 2.1: Select a Power Meter 
+### Step 2.1: Select a Power Meter
 
-* [Fronius](power_meter_fronius.md)  
-    Get power data from Fronius inverter (Tested on Gen24 Primo)
-* [Home Assistant](power_meter_home_assistant.md)  
-    Get power data from Home Assistant sensor
-* [Shelly EM](power_meter_shelly_em.md)  
-    Get power data from a shelly EM
-* [Shelly EM3 Pro / Pro 3EM](power_meter_shelly_em3.md)  
-    Get 3-phase power data from a Shelly EM3 Pro / Pro 3EM
-* [Proxy client](power_meter_proxy_client.md)  
-    Get power data from outside from solar router
+| Power meter | Description |
+| --- | --- |
+| [Fronius](power_meter_fronius.md) | Power data from a Fronius inverter (tested on Gen24 Primo) |
+| [Home Assistant](power_meter_home_assistant.md) | Power data from a Home Assistant sensor |
+| [Shelly EM](power_meter_shelly_em.md) | Power data from a Shelly EM |
+| [Shelly EM3 Pro / Pro 3EM](power_meter_shelly_em3.md) | Three-phase power data from a Shelly EM3 Pro / Pro 3EM |
+| [JSY-MK-194T](power_meter_jsy-mk-194t.md) | Local UART meter (no network required) |
+| [Proxy client](power_meter_proxy_client.md) | Power data from another ESPHome device over the network |
 
 !!! abstract "Contribute"
-    You are developer and your power meter is missing fron this list, refer to [contributing](contributing.md) section to see how to contribute to this project.
+    If you are a developer and your power meter is missing from this list, see [contributing](contributing.md).
 
-#### Step 2.2: Select a Regulator
+### Step 2.2: Select a Regulator
 
-* For regulators which can be controlled from 0% to 100%
-    * [Triac](regulator_triac.md)  
-    Regulate energy with a Triac
-    * [Solid State Relay](regulator_solid_state_relay.md)  
-    Regulate energy with a Solid State Relay
-* For regulators which can only be switched ON/OFF
-    * [Mechanical relay](regulator_mechanical_relay.md)  
-    Regulate energy with a mechanical relay
-
+| Type | Regulator | Description |
+| --- | --- | --- |
+| Progressive (0–100 %) | [Triac](regulator_triac.md) | Phase-control AC dimmer |
+| Progressive (0–100 %) | [Solid State Relay](regulator_solid_state_relay.md) | Burst-fire regulation |
+| ON/OFF | [Mechanical relay](regulator_mechanical_relay.md) | Simple relay switching |
 
 !!! abstract "Contribute"
-    You are developer and your regulator is missing from this list, refer to [contributing](contributing.md) section to see how to contribute to this project.
+    If you are a developer and your regulator is missing from this list, see [contributing](contributing.md).
 
+### Step 2.3: Add an Engine
 
-#### Step 2.3: Add an Engine
+| Engine | Description |
+| --- | --- |
+| [1 × dimmer](engine_1dimmer.md) | Progressive regulation for a single load |
+| [1 × switch](engine_1switch.md) | ON/OFF regulation with start/stop thresholds |
+| [1 × dimmer + bypass](engine_1dimmer_1bypass.md) | Progressive regulation with bypass relay at 100 % |
+| [1 × dimmer + 2 × switches](engine_1dimmer_2switches.md) | Three-channel sequential distribution |
+| [1 × dimmer + 2 × switches + bypass](engine_1dimmer_2switches_1bypass.md) | Three channels with bypass on the third |
 
-* [Progressive Engine](engine_1dimmer.md)  
-  Read power exchange with the grid, determine and apply the percentage of router level.
+See the [engines overview](engine.md) for LED behaviour and common options.
 
-* [ON/OFF Engine](engine_1switch.md)  
-  Read power exchange with the grid, and start to divert energy if a threshold is reached and stop if another threshold is reached.
+### Step 2.4: Add an Energy Counter (*optional*)
 
-#### Step 2.4: Add an Energy Counter (*Optional*)
+| Energy counter | Description |
+| --- | --- |
+| [Theoretical](energy_counter_theorical.md) | Estimates diverted energy from router level and load power |
+| [JSY-MK-194T](energy_counter_jsy-mk-194t.md) | Measures diverted energy from the JSY-MK-194T |
 
-* [Energy Counter Theorical](energy_counter_theorical.md)  
-  Calculate energy savec base on energy diverted and load power.
+### Step 2.5: Add a Temperature Limiter (*optional*)
 
-#### Step 2.5 : Add a Scheduler (*Optionnel*)
+| Temperature limiter | Description |
+| --- | --- |
+| [Home Assistant](temperature_limiter_home_assistant.md) | Safety limit from an HA temperature sensor |
+| [DS18B20](temperature_limiter_DS18B20.md) | Safety limit from a local DS18B20 sensor |
+| [Fan controller](temperature_fan_control.md) | Fan cooling based on temperature |
 
-* [Scheduler Forced Run](scheduler_forced_run.md)  
-  Stop solar routing and force load power between begin and end hour.
+See the [temperature limiter overview](temperature_limiter.md).
 
-### Step 3: Configure your solar router
+### Step 2.6: Add a Scheduler (*optional*)
 
-Each package requires a configuration which is done in `vars` section of `packages`.  
-*Refer to documentation of packages selected and add configuration to the end of your yaml file.*
+| Scheduler | Description |
+| --- | --- |
+| [Forced run](scheduler_forced_run.md) | Force or inhibit routing during a time window |
 
-You can refer to examples to see how to configure your yaml for a [standalone](example_standalone.md) installation a [proxy based](example_proxy.md) installation.
+## Step 3: Configure your solar router
 
-!!! example "More examples are available in [github](https://github.com/hacf-fr/Solar-Router-for-ESPHome)"
+Each package is configured in the `vars` section of `packages`.  
+Refer to the documentation of the selected packages and add the configuration to your YAML file.
 
+You can refer to examples for a [standalone](example_standalone.md) installation, a [proxy-based](example_proxy.md) installation, or a [JSY-MK-194T](jsy-mk-194t.md) setup.
 
-### Step 4: Upload firmware
+!!! example "More examples are available on [GitHub](https://github.com/hacf-fr/Solar-Router-for-ESPHome)"
+
+## Step 4: Upload firmware
 
 Install Solar Router on your ESP using OTA from Home Assistant.
-
