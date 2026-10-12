@@ -1,22 +1,12 @@
-# Scheduler / Planificateur
+# Scheduler Forced Run / Planificateur Marche forcée
 
 ## Description
 
-Un *scheduler* / planificateur exécute une automatisation directement sur ESPHome afin que le routeur solaire reste robuste même en cas de perte de liaison avec Home Assistant.
+Le *Scheduler Forced Run* / planificateur marche forcée automatise l'arrêt du routeur solaire et la marche forcée à un niveau de puissance configuré pendant une fenêtre horaire.
 
-Chaque *scheduler* expose des contrôles pour personnaliser l'automatisation depuis l'interface Home Assistant.
+Il s'agit d'un **planificateur purement logiciel** sans exigence matérielle supplémentaire. Il fonctionne en contrôlant l'activation principale du routeur et les paramètres de niveau du routeur en fonction des plages horaires configurées, garantissant que le routeur solaire reste robuste même en cas de perte de liaison avec Home Assistant.
 
-### Planificateurs disponibles
-
-| Planificateur | Cas d'usage |
-| --- | --- |
-| [Marche forcée](#forced-run) | Force la charge ON ou OFF pendant une fenêtre horaire configurée (ex. : heures creuses). |
-
-## Marche forcée { #forced-run }
-
-Le *scheduler forced run* / planificateur marche forcée automatise l'arrêt du routeur solaire et la marche forcée à un niveau de puissance configuré pendant une fenêtre horaire.
-
-Exemples d'utilisation :
+### Cas d'usage
 
 - Permettre une marche forcée de la charge pendant les heures creuses (Router Level = 100 %)
 - Désactiver le routeur et éteindre la charge afin de laisser la place à d'autres usages (Router Level = 0 %)
@@ -24,8 +14,8 @@ Exemples d'utilisation :
 Ce *scheduler* expose des contrôles pour personnaliser l'automatisation depuis l'interface Home Assistant.
 
 ![HA](images/SchedulerForcedRunInHomeAssistant.png){ align=left }
-!!! note ""
-    **Contrôles**
+
+!!! note "Contrôles"
 
     * ***Activer le planificateur***
       Contrôle si le planificateur doit être activé ou non.
@@ -49,9 +39,9 @@ Ce *scheduler* expose des contrôles pour personnaliser l'automatisation depuis 
       De 0 % à 100 % avec un pas de 1 %.
       Définit le niveau cible auquel le routeur sera réglé pendant le fonctionnement du planificateur entre l'heure de début et de fin.
 
-### Configuration
+## Configuration
 
-#### Configuration basique
+### Configuration basique
 
 Pour utiliser une seule instance de ce package, ajoutez les lignes suivantes à votre fichier de configuration :
 
@@ -63,7 +53,7 @@ packages:
       - path: solar_router/scheduler_forced_run.yaml
 ```
 
-#### Configuration multiple
+### Configuration multiple
 
 Pour utiliser plusieurs instances de ce package, par exemple une marche forcée en journée et une autre la nuit, ajoutez les lignes suivantes à votre fichier de configuration :
 
@@ -80,7 +70,7 @@ packages:
           scheduler_unique_id: "DayForced"
 ```
 
-#### Configuration avancée (script personnalisé)
+### Configuration avancée (script personnalisé)
 
 Ce package peut appeler un script personnalisé toutes les 5 minutes pendant l'exécution de la planification.
 
@@ -110,7 +100,7 @@ script:
                 - switch.turn_off: NightForced_scheduler_activate
 ```
 
-#### Variables
+### Variables
 
 | Variable | Requis | Défaut | Description |
 | --- | --- | --- | --- |

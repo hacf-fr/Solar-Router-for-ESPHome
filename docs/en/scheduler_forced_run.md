@@ -1,31 +1,21 @@
-# Scheduler
+# Scheduler Forced Run
 
 ## Description
 
-A *scheduler* runs automation directly on ESPHome so the solar router remains robust even if the connection to Home Assistant is lost.
+The *Scheduler Forced Run* automates solar router shutdown and forced run at a configured load power level during a time window.
 
-Each *scheduler* exposes controls so you can customize the automation from the Home Assistant interface.
+This is a **software-only** scheduler with no additional hardware requirements. It works by controlling the main router activation and router level settings based on configured time schedules, ensuring the solar router remains robust even if the connection to Home Assistant is lost.
 
-### Available schedulers
-
-| Scheduler | Use case |
-| --- | --- |
-| [Forced run](#forced-run) | Force the load on or off during a configured time window (e.g. off-peak hours). |
-
-## Forced Run { #forced-run }
-
-The *scheduler forced run* automates solar router shutdown and forced run at a configured load power level during a time window.
-
-Examples of use:
+### Use Cases
 
 - Enable forced run of the load during off-peak hours (Router Level = 100 %)
 - Deactivate the router and switch off the load to make room for other uses (Router Level = 0 %)
 
-This *scheduler* exposes controls for customizing automation from the Home Assistant interface.
+This scheduler exposes controls for customizing automation from the Home Assistant interface.
 
 ![HA](images/SchedulerForcedRunInHomeAssistant.png){ align=left }
-!!! note ""
-    **Controls**
+
+!!! note "Controls"
 
     * ***Activate scheduler***
         Controls whether the scheduler should be activated or not.
@@ -49,9 +39,9 @@ This *scheduler* exposes controls for customizing automation from the Home Assis
         From 0 % to 100 % in 1 % steps.
         Defines the target level at which the router will be set while the scheduler is running between the start and end times.
 
-### Configuration
+## Configuration
 
-#### Simple configuration
+### Simple configuration
 
 To use a single instance of this package, add the following lines to your configuration file:
 
@@ -63,7 +53,7 @@ packages:
       - path: solar_router/scheduler_forced_run.yaml
 ```
 
-#### Multiple configuration
+### Multiple configuration
 
 If you want several instances of this package, for example one forced operation during the day and another at night, add the following lines to your configuration file:
 
@@ -80,7 +70,7 @@ packages:
           scheduler_unique_id: "DayForced"
 ```
 
-#### Advanced configuration (custom script)
+### Advanced configuration (custom script)
 
 This package can call a custom script every 5 minutes during schedule execution.
 
@@ -110,7 +100,7 @@ script:
                 - switch.turn_off: NightForced_scheduler_activate
 ```
 
-#### Variables
+### Variables
 
 | Variable | Required | Default | Description |
 | --- | --- | --- | --- |

@@ -66,7 +66,7 @@ Les identifiants d'entités dépendent du nom de votre appareil. La colonne **No
 
 ### Planificateur (optionnel)
 
-Voir [Planificateur — Marche forcée](scheduler.md#forced-run) : Activate scheduler, heure/minute de début et de fin, niveau du routeur, seuil de vérification de fin.
+Voir [Scheduler Forced Run / Planificateur Marche forcée](scheduler_forced_run.md) : Activate scheduler, heure/minute de début et de fin, niveau du routeur, seuil de vérification de fin.
 
 ## Tableau de bord Lovelace suggéré
 
