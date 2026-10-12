@@ -8,53 +8,54 @@ nav:
       - Home: index.md
       - Disclaimer: disclaimer.md
       - Solar Router / Diverter: solar_router.md
-      - Hardware: hardware.md
-      - Firmware:
+      - Getting started:
               - Overview: firmware.md
               - Installation: installation.md
-              - Troubleshooting: troubleshooting.md
-      - Usage Examples:
               - Standalone: example_standalone.md
               - With proxy: example_proxy.md
+              - Troubleshooting: troubleshooting.md
+      - Hardware and components:
+              - Hardware: hardware.md
+              - Power Meter:
+                      - Overview: power_meter.md
+                      - Fronius: power_meter_fronius.md
+                      - Home Assistant: power_meter_home_assistant.md
+                      - JSY-MK-194T: power_meter_jsy-mk-194t.md
+                      - Proxy client: power_meter_proxy_client.md
+                      - Shelly EM: power_meter_shelly_em.md
+                      - Shelly EM3 Pro / Pro 3EM: power_meter_shelly_em3.md
+              - Regulator:
+                      - Triac: regulator_triac.md
+                      - Solid State Relay: regulator_solid_state_relay.md
+                      - Mechanical relay: regulator_mechanical_relay.md
+              - Engine:
+                      - Overview: engine.md
+                      - 1 x dimmer: engine_1dimmer.md
+                      - 1 x dimmer + bypass: engine_1dimmer_1bypass.md
+                      - 1 x dimmer + 2 x switches: engine_1dimmer_2switches.md
+                      - 1 x dimmer + 2 x switches + bypass: engine_1dimmer_2switches_1bypass.md
+                      - 1 x switch: engine_1switch.md
+              - Energy Counter:
+                      - Theorical: energy_counter_theorical.md
+                      - JSY-MK-194T: energy_counter_jsy-mk-194t.md
+              - Temperature limiter:
+                      - Overview: temperature_limiter.md
+                      - Home Assistant: temperature_limiter_home_assistant.md
+                      - DS18B20: temperature_limiter_DS18B20.md
+                      - Fan controller: temperature_fan_control.md
+              - Scheduler:
+                      - Overview: scheduler.md
+                      - Forced Run: scheduler_forced_run.md
+      - Integrations:
+              - Home Assistant:
+                      - Overview: home_assistant.md
+                      - Recorder configuration: recorder_configuration.md
+                      - Debug sensors: debug_sensors.md
+                      - Module versions: module_version.md
+                      - Blueprint Priority to EV: blueprint_priority_to_ev.md
               - JSY-MK-194T: jsy-mk-194t.md
-              - With Solar Optimizer integration: exemple_with_SO_integration.md
-      - Power Meter:
-              - Overview: power_meter.md
-              - Fronius: power_meter_fronius.md
-              - Home Assistant: power_meter_home_assistant.md
-              - JSY-MK-194T: power_meter_jsy-mk-194t.md
-              - Proxy client: power_meter_proxy_client.md
-              - Shelly EM: power_meter_shelly_em.md
-              - Shelly EM3 Pro / Pro 3EM: power_meter_shelly_em3.md
-      - Regulator:
-              - Triac: regulator_triac.md
-              - Solid State Relay: regulator_solid_state_relay.md
-              - Mechanical relay: regulator_mechanical_relay.md
-      - Engine:
-              - Overview: engine.md
-              - 1 x dimmer: engine_1dimmer.md
-              - 1 x dimmer + bypass: engine_1dimmer_1bypass.md
-              - 1 x dimmer + 2 x switches: engine_1dimmer_2switches.md
-              - 1 x dimmer + 2 x switches + bypass: engine_1dimmer_2switches_1bypass.md
-              - 1 x switch: engine_1switch.md
-      - Energy Counter:
-              - Theorical: energy_counter_theorical.md
-              - JSY-MK-194T: energy_counter_jsy-mk-194t.md
-      - Temperature limiter:
-              - Overview: temperature_limiter.md
-              - Home Assistant: temperature_limiter_home_assistant.md
-              - DS18B20: temperature_limiter_DS18B20.md
-              - Fan controller: temperature_fan_control.md
-      - Scheduler:
-              - Overview: scheduler.md
-              - Forced Run: scheduler_forced_run.md
-      - Home Assistant:
-              - Overview: home_assistant.md
-              - Recorder configuration: recorder_configuration.md
-              - Debug sensors: debug_sensors.md
-              - Module versions: module_version.md
-              - Blueprint Priority to EV: blueprint_priority_to_ev.md
-      - About:
+              - Solar Optimizer: exemple_with_SO_integration.md
+      - Project:
               - ChangeLog: changelog.md
               - License: license.md
               - Contributing: contributing.md
@@ -72,6 +73,7 @@ theme:
 
 markdown_extensions:
       - markdown.extensions.admonition
+      - markdown.extensions.meta
       - markdown.extensions.toc:
               permalink: true
       - pymdownx.details
@@ -114,21 +116,26 @@ plugins:
                             Disclaimer: Avertissement
                             Energy Counter: Compteur d'énergie
                             Fan controller: Contrôle du ventilateur
-                            Usage Examples: Exemples d'utilisation
-                            Hardware: Materiel
+                            Getting started: Démarrage
+                            Hardware: Matériel
+                            Hardware and components: Matériel et composants
                             Home: Accueil
+                            Integrations: Intégrations
                             License: Licence
-                            Mecanical relay: Relais mécanique
                             Module versions: Versions des modules
-                            ON/OFF regulation: Regulation tout ou rien
                             Overview: Aperçu
+                            Power Meter: Compteur de puissance
+                            Project: Projet
                             Progressive regulation: Régulation progressive
                             Proxy client: Client proxy
-                            Recorder configuration: Configuration des recorder
-                            Scheduler: Plannificateur
+                            Recorder configuration: Configuration du Recorder
+                            Regulator: Régulateur
+                            Scheduler: Planificateur
                             Solar Router / Diverter: Routeur solaire
+                            Solar Optimizer: Solar Optimizer
                             Standalone: Routeur autonome
                             Temperature Limiter: Limiteur de température
+                            Temperature limiter: Limiteur de température
                             Theorical: Théorique
                             Troubleshooting: Dépannage
                             With proxy: Router utilisant un proxy
