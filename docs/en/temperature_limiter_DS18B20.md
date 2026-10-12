@@ -1,8 +1,10 @@
 # Temperature limiter DS 18B20
 
-This package is designed to monitor a temperature coming from a DS18B20 sensor connected on ESP32 and determines if a temperature threshold as been reached or not.
+## Description
 
-When safety limit is reached, it is possible to turn on a LED. LED configuration has to be added in `vars` section of `packages` as explained below.
+This package monitors the temperature from a **DS18B20 1-Wire sensor** wired directly to the ESP board and determines whether a temperature threshold has been reached. When the safety limit is triggered, the energy diversion is stopped and, optionally, a red LED is turned on to signal the safety condition.
+
+The DS18B20 is a digital temperature sensor communicating over a single data wire, making it easy to integrate without additional circuitry beyond a pull-up resistor.
 
 !!! danger "WARNING: Conduct some tests before letting the system regulate alone"
     This temperature limit monitoring and safety limit may have some bug. It is strongly advised to validate the behaviour of your system carefully before letting the system working by its own.
@@ -10,6 +12,8 @@ When safety limit is reached, it is possible to turn on a LED. LED configuration
 The following schematic is representing the wiring of the temperature sensor:
 
 ![DS18B20](images/DS18B20_wiring.png){width=400}
+
+## Configuration
 
 To use this package, add the following lines to your configuration file:
 
@@ -26,6 +30,12 @@ packages:
           red_led_pin: GPIO4
 ```
 
-This package needs to know the GPIO used by the temperature to get the temperature. This GPIO has to be defined by `DS18B20_pin` into `vars` section of your configuration as in example ballow:
+### Variables
 
-Additionnal optional parameters can be set into `vars` section such as `DS18B20_address` (which is optional), `temperature_update_interval` (which is set by default to `5s`) and `red_led_inverted` defining if the LED is active on high or low level of pin (which is set default set to `False`).
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `DS18B20_pin` | yes | — | GPIO pin connected to the DS18B20 data wire |
+| `DS18B20_address` | no | `"0"` | ROM address of the sensor (useful with multiple sensors on the same bus) |
+| `temperature_update_interval` | no | `5s` | Polling interval for temperature reading |
+| `red_led_pin` | yes | — | GPIO pin for the red safety LED |
+| `red_led_inverted` | no | `"False"` | Set to `"True"` if the red LED is active low |

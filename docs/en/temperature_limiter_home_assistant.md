@@ -1,11 +1,15 @@
 # Temperature limiter Home Assistant
 
-This package is designed to monitor a temperature coming from a sensor in Home Assistant and determines if a temperature threshold as been reached or not.
+## Description
 
-When safety limit is reached, it is possible to turn on a LED. LED configuration has to be added in `vars` section of `packages` as explained below.
+This package monitors a temperature from **any sensor available in Home Assistant** and determines whether a temperature threshold has been reached. When the safety limit is triggered, the energy diversion is stopped and, optionally, a red LED is turned on to signal the safety condition.
+
+This approach is ideal when a temperature sensor is already integrated into Home Assistant (e.g. a Zigbee probe, a smart thermostat, or any other platform), avoiding the need to wire an additional sensor to the ESP.
 
 !!! danger "WARNING: Conduct some tests before letting the system regulate alone"
     This temperature limit monitoring and safety limit may have some bug. It is strongly advised to validate the behaviour of your system carefully before letting the system working by its own.
+
+## Configuration
 
 To use this package, add the following lines to your configuration file:
 
@@ -20,9 +24,13 @@ packages:
           red_led_pin: GPIO4
 ```
 
-This package needs to know which sensor to use to obtain the temperature to be monitored. This sensor must be defined as `temperature_sensor` into `vars` section of your configuration, as in the example above.
-
-Additionnal optional parameters can be set into `vars` section such as `red_led_inverted` defining if the LED is active on high or low level of pin (which is set default set to `False`).
-
 !!! warning "Data availability and refresh rate"
     This temperature limiter rely on Home Assistant to gather the temperature. It also depends on the rate of sensor update. If a sensor is updated too slowly, the regulation may not work as expected.
+
+### Variables
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `temperature_sensor` | yes | — | Entity ID of the Home Assistant temperature sensor to monitor |
+| `red_led_pin` | yes | — | GPIO pin for the red safety LED |
+| `red_led_inverted` | no | `"False"` | Set to `"True"` if the red LED is active low |
