@@ -1,4 +1,4 @@
-# Mecanical Relay Regulator
+# Mechanical Relay Regulator
 
 This regulator is performing an **All or Nothing Regulation**.
 
@@ -8,7 +8,7 @@ A relay is able to let current pass to the load or not.
 
 The following schematic is representing the wiring of the relay:
 
-![relay](images/mecanical_relay.drawio.png)
+![relay](images/mechanical_relay.drawio.png)
 
 !!! Warning "Be carefull during wiring and use the Normally Open (NO) pin."
 
@@ -21,7 +21,7 @@ packages:
   regulator:
     url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
-      - path: solar_router/regulator_mecanical_relay.yaml
+      - path: solar_router/regulator_mechanical_relay.yaml
         vars:
           relay_regulator_gate_pin: GPIO22
 ```

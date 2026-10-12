@@ -43,7 +43,7 @@ Un **proxy** n'a besoin que d'un package **power meter**
     * [Relais Statique](regulator_solid_state_relay.md)  
     Réguler l'énergie avec un relais statique
 * Pour les regulators qui ne peuvent être que allumés/éteints
-    * [Relais mécanique](regulator_mecanical_relay.md)  
+    * [Relais mécanique](regulator_mechanical_relay.md)  
     Réguler l'énergie avec un relais mécanique
 
 !!! abstract "Contribuer"

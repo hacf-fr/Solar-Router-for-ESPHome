@@ -37,7 +37,7 @@ packages:
         vars:
           main_power_sensor: "sensor.smart_meter_ts_100a_1_puissance_reelle"
           consumption_sensor: "sensor.solarnet_power_load_consumed"
-      - path: solar_router/regulator_mecanical_relay.yaml
+      - path: solar_router/regulator_mechanical_relay.yaml
         vars:
           relay_regulator_gate_pin: GPIO0
       - path: solar_router/engine_1switch.yaml

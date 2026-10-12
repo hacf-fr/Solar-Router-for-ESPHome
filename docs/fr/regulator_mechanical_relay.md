@@ -1,4 +1,4 @@
-# Mecanical Relay regulator
+# Mechanical Relay Regulator
 
 Ce régulateur effectue une **Régulation Tout ou Rien**.
 
@@ -8,7 +8,7 @@ Un relais est capable de laisser passer ou non le courant vers la charge.
 
 Le schéma suivant représente le câblage du relais :
 
-![relais](images/mecanical_relay.drawio.png)
+![relais](images/mechanical_relay.drawio.png)
 
 !!! Attention "Soyez prudent lors du câblage et utilisez la broche Normalement Ouverte (NO)."
 
@@ -21,7 +21,7 @@ packages:
   regulator:
     url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     files:
-      - path: solar_router/regulator_mecanical_relay.yaml
+      - path: solar_router/regulator_mechanical_relay.yaml
         vars:
           relay_regulator_gate_pin: GPIO22
 ```
