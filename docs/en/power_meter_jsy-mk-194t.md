@@ -1,9 +1,13 @@
 # JSY-MK-194T Power Meter
 
+## Description
+
 The JSY-MK-194T power meter shares common code with the
 [JSY-MK-194T energy counter](energy_counter_jsy-mk-194t.md) to communicate with the module.
 The rest of this documentation explains how to configure this common part
 and how to configure a JSY-MK-194T power meter.
+
+This package reads grid exchange power from channel 2 of the JSY-MK-194T over UART, so it does not require the network.
 
 ![jsy-mk-194t](../images/jsy-mk-194t.png)
 
@@ -12,7 +16,7 @@ and how to configure a JSY-MK-194T power meter.
 This file manages communication with the board. Add `jsy-mk-194t_common.yaml`
 and configure the GPIOs according to your hardware as shown in the example below:
 
-```yaml
+```yaml linenums="1"
 packages:
   solar_router:
     url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
@@ -27,41 +31,52 @@ packages:
           AP_Ch2_internal: "false" # optional, allows displaying one of the JSY-MK-194T sensors
 ```
 
-List of available JSY-MK-194T sensors:
+### Variables (common)
 
-```yaml
-  U_Ch1_internal: "true"       # Voltage on Channel 1
-  I_Ch1_internal: "true"       # Current on Channel 1
-  AP_Ch1_internal: "true"      # Active Power on Channel 1
-  PAE_Ch1_internal: "true"     # Positive Active Energy on Channel 1
-  PF_Ch1_internal: "true"      # Power Factor on Channel 1
-  NAE_Ch1_internal: "true"     # Negative Active Energy on Channel 1
-  PD_Ch1_internal: "true"      # Power Direction on Channel 1
-  PD_Ch2_internal: "true"      # Power Direction on Channel 2
-  frequency_internal: "true"   # Frequency
-  # Voltage on Channel 2 not implemented => same as Voltage on Channel 1
-  I_Ch2_internal: "true"       # Current on Channel 2
-  AP_Ch2_internal: "true"      # Active Power on Channel 2
-  PAE_Ch2_internal: "true"     # Positive Active Energy on Channel 2
-  PF_Ch2_internal: "true"      # Power Factor on Channel 2
-  NAE_Ch2_internal: "true"     # Negative Active Energy on Channel 2
-```
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `uart_tx_pin` | yes | — | GPIO pin for UART TX to the JSY-MK-194T |
+| `uart_rx_pin` | yes | — | GPIO pin for UART RX from the JSY-MK-194T |
+| `uart_baud_rate` | yes | — | UART baud rate (typically `4800`) |
+| `U_Ch1_internal` | no | `"true"` | Hide Voltage Ch1 in Home Assistant when `"true"` |
+| `I_Ch1_internal` | no | `"true"` | Hide Current Ch1 in Home Assistant when `"true"` |
+| `AP_Ch1_internal` | no | `"true"` | Hide Active Power Ch1 in Home Assistant when `"true"` |
+| `PAE_Ch1_internal` | no | `"true"` | Hide Positive Active Energy Ch1 when `"true"` |
+| `PF_Ch1_internal` | no | `"true"` | Hide Power Factor Ch1 when `"true"` |
+| `NAE_Ch1_internal` | no | `"true"` | Hide Negative Active Energy Ch1 when `"true"` |
+| `PD_Ch1_internal` | no | `"true"` | Hide Power Direction Ch1 when `"true"` |
+| `PD_Ch2_internal` | no | `"true"` | Hide Power Direction Ch2 when `"true"` |
+| `frequency_internal` | no | `"true"` | Hide Frequency when `"true"` |
+| `U_Ch2_internal` | no | `"true"` | Hide Voltage Ch2 when `"true"` |
+| `I_Ch2_internal` | no | `"true"` | Hide Current Ch2 when `"true"` |
+| `AP_Ch2_internal` | no | `"true"` | Hide Active Power Ch2 when `"true"` (set `"false"` to expose) |
+| `PAE_Ch2_internal` | no | `"true"` | Hide Positive Active Energy Ch2 when `"true"` |
+| `PF_Ch2_internal` | no | `"true"` | Hide Power Factor Ch2 when `"true"` |
+| `NAE_Ch2_internal` | no | `"true"` | Hide Negative Active Energy Ch2 when `"true"` |
 
 ## 2 – Enabling the Power Meter
 
 To enable the power meter, simply add it to your configuration as shown
 in the example below:
 
-```yaml
+```yaml linenums="1"
 packages:
   solar_router:
     url: https://github.com/hacf-fr/Solar-Router-for-ESPHome/
     refresh: 1s
     files: 
       - path: solar_router/power_meter_jsy-mk-194t.yaml
-		vars:
-		  consumption_sensor_internal: true # Prevents the “Consumption” sensor from being displayed in Home Assistant, as it is never used and remains “unavailable” when using the JSY-MK-194T
+        vars:
+          consumption_sensor_internal: "true" # Hide unused Consumption sensor in Home Assistant
 ```
 
 For a complete implementation example, refer to the
 [JSY-MK-194T example](jsy-mk-194t.md).
+
+### Variables (power meter)
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `power_meter_activated_at_start` | no | `"0"` | Set to `"1"` to activate the power meter at boot |
+| `power_sign` | no | `"1"` | Polarity multiplier (`"-1"` to invert CT orientation) |
+| `consumption_sensor_internal` | no | `"false"` | Set to `"true"` to hide the unused Consumption sensor in Home Assistant |
