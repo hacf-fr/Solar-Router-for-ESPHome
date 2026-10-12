@@ -2,14 +2,14 @@
 
 The hardware used for development is the one proposed by [F1ATB.fr](https://f1atb.fr/fr/routeur-photovoltaique-realisation-materielle/) ![fr](images/france.png).
 
-On the photos bellow; as the heat dissipator provided by RobotDyn is under dimensionned, the triac has been unsoldered from the board and screwed into a big heat dissipator. Wires have been added to link the triac into the board.
+On the photos below; as the heat sink provided by RobotDyn is under-dimensioned, the triac has been unsoldered from the board and screwed into a big heat sink. Wires have been added to link the triac into the board.
 
 A 12V power supply is used in addition with a buck converter to power the system. The 12V may be used to power a fan in an event of an over heating.
 
 ![SolarRouteOpen](images/SolarRouterOpen.png){ width=360 }
 ![SolarRouteClose](images/SolarRouterClosed.png){ width=300 }
 
-The router has been built to be connected to a frost protection system and then provide standard electricals sockets.
+The router has been built to be connected to a frost protection system and then provide standard electrical sockets.
 
 ## Using a regulator base on a triac
 

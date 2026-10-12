@@ -1,4 +1,4 @@
-# Optimisation de l'autoconsommation grâce à **Solar-Router-for-ESPHome** et **Solar-Oprimiser**
+# Optimisation de l'autoconsommation grâce à **Solar-Router-for-ESPHome** et **Solar Optimizer**
 
 ## 1 – Crédit
 
@@ -23,7 +23,7 @@ Dans une installation avec batterie, cette logique est contre-productive :
 L’objectif est donc de pouvoir :
 
 * Exploiter le routeur en **mode manuel** via home assistant lorsqu'on veut prioriser le routeur sur la charge batterie
-* Basculer en **mode automatique** lorsque la batterie est suffisament chargée et qu'on veut augmenter la réactiviter du routage
+* Basculer en **mode automatique** lorsque la batterie est suffisamment chargée et que l'on veut augmenter la réactivité du routage
 
 La solution présentée repose sur l’intégration  [**Solar Optimizer (SO)**](https://github.com/jmcollin78/solar_optimizer) développée par [Jean-Marc COLLIN](https://github.com/jmcollin78)
 

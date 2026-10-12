@@ -37,12 +37,12 @@ A **proxy** just need 1 **power meter** package
 
 #### Step 2.2: Select a Regulator
 
-* For regulator which can be controlled from 0% to 100%
+* For regulators which can be controlled from 0% to 100%
     * [Triac](regulator_triac.md)  
     Regulate energy with a Triac
     * [Solid State Relay](regulator_solid_state_relay.md)  
-    Regulate energy with a Solid State Relais
-* For regulator wich can only be switched ON/OFF
+    Regulate energy with a Solid State Relay
+* For regulators which can only be switched ON/OFF
     * [Mechanical relay](regulator_mechanical_relay.md)  
     Regulate energy with a mechanical relay
 

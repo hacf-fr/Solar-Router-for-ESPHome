@@ -18,12 +18,12 @@ packages:
       - path: solar_router/energy_counter_theorical.yaml
 ```
 
-!!! question "What happen if theorical energy diverted is not consumed?"
-    If the water in boiler is already hot, the regulation grow up to 100% but no energy will be consumed.  
-    If the power meter used is providing the energy consumed, the energy counter detects this situation and reports 0 energy diverted.  
-    If energy consumed is not reported, the theorical energy consumed will be calculated at its maximum.
+!!! question "What happens if theoretical diverted energy is not consumed?"
+    If the water in the boiler is already hot, regulation can rise to 100%, but no energy will be consumed.
+    If the power meter provides consumption data, the energy counter detects this situation and reports 0 diverted energy.
+    If consumption is not reported, the theoretical diverted energy is calculated at its maximum.
 
-Then you have to define the **load power** in Home Assistant `Control` interface. The power entered has to reflect the power of the element plugged on solar router.
+Then you have to define the **load power** in Home Assistant `Control` interface. The power entered has to reflect the power of the element plugged on the solar router.
 
 ![alt text](images/SolarRouterEnergyCounterTheoricalConfiguration.png)
 
