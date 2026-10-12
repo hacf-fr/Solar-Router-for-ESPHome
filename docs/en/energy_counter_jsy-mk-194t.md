@@ -1,9 +1,10 @@
 # JSY-MK-194T Energy Counter
 
-The JSY-MK-194T energy counter shares common code with the
-[JSY-MK-194T power meter](power_meter_jsy-mk-194t.md) to communicate with the module.
-The rest of this documentation explains how to configure this common part
-and how to configure a JSY-MK-194T energy counter.
+## Description
+
+The **JSY-MK-194T Energy Counter** measures the actual energy diverted to the load using the **current readings from the JSY-MK-194T dual-channel power meter**. Unlike the theoretical counter, this module uses real hardware measurements rather than calculations based on a declared load power, giving a more accurate account of the energy effectively consumed.
+
+This package shares the UART communication layer with the [JSY-MK-194T power meter](power_meter_jsy-mk-194t.md) via the `jsy-mk-194t_common.yaml` package. Both packages must be included together in your configuration.
 
 ![jsy-mk-194t](../images/jsy-mk-194t.png)
 
@@ -63,3 +64,9 @@ packages:
 
 For a complete implementation example, refer to the
 [JSY-MK-194T example](jsy-mk-194t.md).
+
+### Variables
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| — | — | — | This module has no configuration variables. It uses the JSY-MK-194T measurements configured via `jsy-mk-194t_common.yaml`. |
