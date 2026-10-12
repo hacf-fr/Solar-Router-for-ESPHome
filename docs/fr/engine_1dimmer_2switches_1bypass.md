@@ -1,29 +1,32 @@
 # Engine 1 x dimmer + 2 x switches + 1 x bypass
 
-Ce package implémente le moteur du routeur solaire qui détermine quand et quelle quantité d'énergie doit être déviée vers trois charges utilisant trois canaux, ou une seule charge avec trois canaux comme un chauffe-eau avec trois résistances de chauffage, le troisième canal ayant une fonctionnalité de bypass pour une efficacité maximale.
+## Description
 
-Le moteur utilise trois relais pour contrôler les différentes charges, le troisième relais étant doté d'un régulateur supplémentaire pour un contrôle fin de la puissance. Les charges sont activées de manière séquentielle au fur et à mesure que la puissance devient disponible :
-1. 1er canal : Relay 1 (On/Off)
-2. 2ème canal: Relay 2 (On/Off)
-3. 3ème canal: Relay 3 ET un gradateur TRIAC ou SSR (Contrôl variable)
+Ce package implémente le moteur du routeur solaire qui détermine quand et quelle quantité d'énergie doit être détournée vers trois charges utilisant trois canaux, ou une seule charge à trois canaux comme un chauffe-eau à trois résistances, le troisième canal disposant d'une fonction de bypass pour une efficacité maximale.
 
-Lorsque les besoins en énergie augmentent :
+Le moteur utilise trois relais pour contrôler différentes charges, avec un régulateur supplémentaire pour un contrôle fin de la puissance. Les charges sont activées séquentiellement à mesure que plus de puissance devient disponible :
 
-- Tout d'abord, le régulateur du canal 3 augmente progressivement la puissance.
+1. Premier canal : Relais 1 (contrôle On/Off)
+2. Deuxième canal : Relais 2 (contrôle On/Off)
+3. Troisième canal : Relais 3 ET gradateur (contrôle de puissance variable)
+
+Lorsque les besoins en puissance augmentent :
+
+- D'abord, le régulateur du canal 3 augmente progressivement la puissance
 - Lorsque le régulateur atteint 33,33 %, le relais 1 s'active
 - Lorsque le régulateur atteint 66,66 %, le relais 2 s'active
-- Lorsque le régulateur atteint 100 %, le relais 3 s'active et contourne le régulateur.
+- Lorsque le régulateur atteint 100 %, le relais 3 s'active et contourne le régulateur
 
-**Le moteur 1 x variateur + 2 x interrupteurs + 1 x bypass** appelle toutes les secondes le compteur électrique pour obtenir l'énergie réelle échangée avec le réseau. Si l'énergie produite est supérieure à l'énergie consommée et dépasse l'objectif d'échange défini, le moteur déterminera la combinaison appropriée de relais et d'ouverture du régulateur pour atteindre l'objectif.
+**Engine 1 x dimmer + 2 x switches + 1 x bypass** interroge chaque seconde le compteur de puissance pour obtenir l'énergie réelle échangée avec le réseau. Si l'énergie produite est supérieure à l'énergie consommée et dépasse la cible d'échange définie, le moteur détermine la combinaison appropriée de relais et d'ouverture du régulateur pour atteindre la cible.
 
-La régulation automatique du moteur peut être activée ou désactivée à l'aide de du switch d'activation.
+La régulation automatique du moteur peut être activée ou désactivée avec l'interrupteur d'activation.
 
 ## Comment câbler les relais (canaux 1 et 2)
 
-- Ligne sur le relais Commun (COM)
-- Normalement ouvert (NO) du relais de la charge d'entrée directement à la charge
+- Phase sur le Commun (COM) du relais
+- Normalement Ouvert (NO) du relais de l'entrée Charge directement vers la charge
 
-## Comment câbler le relais de bypass (Canal 3)
+## Comment câbler le régulateur et le relais de bypass (canal 3)
 
 - Phase sur le Commun (COM) du relais de bypass et sur le relais vers l'entrée Phase du régulateur
 - Normalement Fermé (NC) flottant
@@ -33,9 +36,9 @@ La régulation automatique du moteur peut être activée ou désactivée à l'ai
     Ne branchez pas l'entrée Phase du régulateur au Normalement Fermé (NC) du relais ! Votre charge serait mise hors tension lors de la commutation du relais, créant potentiellement des arcs à l'intérieur du relais.
     Plus d'informations dans cette [discussion](https://github.com/hacf-fr/Solar-Router-for-ESPHome/pull/51#issuecomment-2625724543).
 
-## Schema d'exemple de cablage
+## Schéma d'exemple de câblage
 
-![Wiring schema example for water heater](images/3ResistorsWaterHeaterExampleWithBypass.svg)
+![Schéma d'exemple de câblage pour chauffe-eau](images/3ResistorsWaterHeaterExampleWithBypass.svg)
 
 ## Configuration
 
@@ -55,31 +58,39 @@ packages:
           hide_regulators: 'True'
           hide_leds: 'True'
 ```
-Il est necessaire de définir `green_led_pin` et `yellow_led_pin` dans la section `vars` comme montré dans l'exemple ci-dessus.
- 
- * Le paramètre `xxx_led_inverted` permet de définir si la LED est active sur niveau haut ou bas. Ce paramètre est optionnel.
- * Le paramètre `hide_regulators` permet de définir si le capteur de régulateur est affiché dans HA. Ce paramètre est optionnel.
- * Le paramètre `hide_leds` permet de définir si les valeurs des leds sont affichées dans HA. Ce paramètre est optionnel.
+
+Lorsque ce package est utilisé, il est nécessaire de définir `green_led_pin` et `yellow_led_pin` dans la section `vars` comme montré dans l'exemple ci-dessus.
+
+### Variables
+
+| Variable | Requis | Défaut | Description |
+| --- | --- | --- | --- |
+| `green_led_pin` | oui | — | Broche GPIO pour la LED verte d'état |
+| `yellow_led_pin` | oui | — | Broche GPIO pour la LED jaune réseau/erreur |
+| `green_led_inverted` | non | `'False'` | Mettre à `'True'` si la LED verte est active à l'état bas |
+| `yellow_led_inverted` | non | `'False'` | Mettre à `'True'` si la LED jaune est active à l'état bas |
+| `hide_regulators` | non | `'True'` | Mettre à `'False'` pour exposer les capteurs de régulateur dans Home Assistant |
+| `hide_leds` | non | `'True'` | Mettre à `'False'` pour exposer l'état des LED dans Home Assistant |
 
 !!! note "Distribution de la puissance"
-    Le moteur divise la puissance totale disponible en trois parties égales (33,33 % chacune). Cela permet des transitions en douceur entre les différents niveaux de puissance et une distribution efficace de l'énergie solaire excédentaire sur plusieurs charges.
+    Le moteur divise la puissance totale disponible en trois parts égales (33,33 % chacune). Cela permet des transitions fluides entre les différents niveaux de puissance et une distribution efficace du surplus solaire sur plusieurs charges.
 
-!!! tip "Ajustement du Bypass tempo"
-    Le `Bypass tempo` détermine combien de régulations consécutives à 33.33%, 66.66% ou 100% sont nécessaires avant d'activer le relais de bypass. Une valeur plus basse rendra le bypass plus réactif mais pourrait causer des commutations plus fréquentes (scintillement). Comme il y a environ 1 régulation par seconde, `Bypass tempo` peut être approximé comme le temps en secondes avec le régulateur à 33.33% ou 66.66%  ou 100% avant que le relais de bypass ne soit activé.
+!!! tip "Ajustement du Bypass Tempo"
+    Le Bypass Tempo détermine combien de régulations consécutives à 33,33 %, 66,66 % ou 100 % sont nécessaires avant d'activer le relais de _bypass_. Une valeur plus basse rendra le bypass plus réactif mais pourrait causer des commutations plus fréquentes (scintillement). Comme il y a environ 1 régulation par seconde, le Bypass Tempo peut être approximé comme le temps en secondes avec le régulateur à 33,33 %, 66,66 % ou 100 % avant activation des relais.
 
 ![HA](images/countdown_engine_1dimmer_2switch_1bypass.png){ align=left }
 !!! note ""
     **Capteurs**
     
-    * ***Compte à rebours du relai n° X***  
-      Pour chaque relai on affiche le compte à rebours en cours.
-      Au départ le compte à rebours est égale à la valeur du bypass tempo, puis à chaque régulation d'énergie où le régulateur est à 100% on diminue le compte à rebours, enfin lorsque le compte à rebours est égale à zéro on active le relai.
-    * ***Ouverture du régulateur***  
-      Caché par défaut (voir `hide_regulators`), permet d'affiché le niveau du régulateur (TRIAC ou SSR).
+    * ***Compte à rebours du relais n° X*** 
+        Pour chaque relais, le compte à rebours en cours est affiché.
+        Au départ, le compte à rebours est égal à la valeur du Bypass Tempo, puis à chaque régulation d'énergie où le régulateur est à 100 % le compte à rebours diminue ; enfin, lorsqu'il atteint zéro, le relais est activé.
+    * ***Ouverture du régulateur*** 
+        Masquée par défaut (voir `hide_regulators`), affiche le niveau du régulateur (TRIAC ou SSR).
 
-Ce paquet nécessite l'utilisation du package Relais ET d'un package régulateur (TRIAC ou SSR). N'oubliez pas de les inclure également.
+Ce package nécessite l'utilisation du package régulateur à relais mécanique ET d'un package régulateur (TRIAC ou SSR). N'oubliez pas de les inclure également.
 
-Vous trouverez ci-dessous l'exemple de configuration pour les relais :
+Vous trouverez ci-dessous un exemple de configuration pour les relais :
 
 ```yaml linenums="1"
 packages:
@@ -106,5 +117,5 @@ packages:
           relay_unique_id: "3"
 ```
 
-!!! note "Relay Ids"
-    Les identifiants uniques des relais ne peuvent pas être modifiés pour utiliser ce moteur, en particulier l'identifiant unique `relay_unique_id : « 3 »` est toujours utilisé pour le relais de bypass.
+!!! note "Identifiants des relais"
+    Les identifiants uniques des relais ne peuvent pas être modifiés pour utiliser ce moteur ; en particulier, `relay_unique_id: "3"` est toujours utilisé pour le relais de bypass.

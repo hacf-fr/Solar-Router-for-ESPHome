@@ -1,9 +1,20 @@
 # Moteur de routeur solaire
 
-Un moteur est conçu pour définir la quantité et le moment où l'énergie doit être détournée.
+## Description
 
-Différents types de moteurs existent, qui peuvent progressivement détourner l'énergie vers une charge et gérer un interrupteur ON/OFF.  
-Pour plus de détails, référez vous aux pages dédiées des moteurs.
+Un moteur implémente la logique de décision du routeur solaire : il lit les mesures de puissance du compteur et pilote les régulateurs pour détourner l'énergie solaire excédentaire vers des charges locales plutôt que de l'exporter vers le réseau.
+
+Le moteur est le cœur du routeur solaire. Il possède l'interrupteur `activate`, le `router_level` (0–100 %) et le script `energy_regulation`. Lorsque la régulation automatique est activée, il ajuste en continu le niveau du routeur en fonction des mesures de puissance en temps réel pour maintenir l'échange avec le réseau proche de la cible configurée.
+
+### Moteurs disponibles
+
+| Moteur | Cas d'usage |
+| --- | --- |
+| [`engine_1dimmer`](engine_1dimmer.md) | Charge unique avec contrôle progressif (TRIAC/SSR). Le choix le plus simple et le plus courant. |
+| [`engine_1switch`](engine_1switch.md) | Charge unique avec relais ON/OFF (ex. : pompe, résistance sans gradation). Commute selon des seuils de puissance et des temporisations configurables. |
+| [`engine_1dimmer_1bypass`](engine_1dimmer_1bypass.md) | Gradateur + relais de bypass. Active le relais de bypass lorsque le gradateur reste à 100 % afin de réduire la chaleur du régulateur. |
+| [`engine_1dimmer_2switches`](engine_1dimmer_2switches.md) | Gradateur + 2 relais ON/OFF. Distribue la puissance sur trois canaux de manière séquentielle (ex. : chauffe-eau trois résistances). |
+| [`engine_1dimmer_2switches_1bypass`](engine_1dimmer_2switches_1bypass.md) | Gradateur + 2 relais ON/OFF + relais de bypass sur le troisième canal. Efficacité maximale pour les charges multi-résistances. |
 
 !!! note "Nommage des moteurs"
     Le nom du moteur reflète la façon dont le détournement d'énergie est effectué :  
