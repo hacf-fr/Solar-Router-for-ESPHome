@@ -1,7 +1,13 @@
 # Scheduler
 
-A *scheduler* is designed to perform automation directly via EspHome, to be more robust in the event of loss of connection with HomeAssistant, for example.
+## Description
 
-Each *scheduler* exposes controls to customize the automation to your needs from the HomeAssistant interface.
+A *scheduler* runs automation directly on ESPHome so the solar router remains robust even if the connection to Home Assistant is lost.
 
-The first example is to enable forced load operation during off-peak hours.
+Each *scheduler* exposes controls so you can customize the automation from the Home Assistant interface.
+
+### Available schedulers
+
+| Scheduler | Use case |
+| --- | --- |
+| [`scheduler_forced_run`](scheduler_forced_run.md) | Force the load on or off during a configured time window (e.g. off-peak hours). |
