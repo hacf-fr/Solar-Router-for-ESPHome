@@ -11,6 +11,10 @@ Les principales caractéristiques comprennent un choix d'algorithmes de routage 
 
 Ce composant permet aux utilisateurs de surveiller et de contrôler facilement les fonctionnalités du routeur au sein de l'écosystème *Home Assistant*, facilitant ainsi la gestion et l'automatisation de l'énergie.
 
+!!! danger "Avis important"
+    Ce projet implique de travailler avec de la haute tension (110 ou 230 volts), ce qui peut être dangereux.  
+    Veuillez lire l'[avertissement](disclaimer.md) avant de mettre en oeuvre le projet **Solar Router for ESPHome**.
+
 ## Commencer ici
 
 Choisissez le parcours correspondant à votre installation :
@@ -37,10 +41,6 @@ flowchart LR
 ```
 
 La [vue d'ensemble du firmware](firmware.md) explique comment ces blocs sont assemblés. Le [guide matériel](hardware.md) présente les architectures électriques et les précautions de sécurité.
-
-!!! danger "Avis important"
-    Ce projet implique de travailler avec de la haute tension (110 ou 230 volts), ce qui peut être dangereux.  
-    Veuillez lire l'[avertissement](disclaimer.md) avant de mettre en oeuvre le projet **Solar Router for ESPHome**.
 
 !!! tips "Capacités étendues avec les capteurs Home Assistant"
 
